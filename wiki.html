@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>custrel</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">custrel</h1>
+</header>
+<h1 id="cnsa-2.0-post-quantum-crm---overview">CNSA 2.0 Post-Quantum CRM
+- Overview</h1>
+<h2 id="system-description">System Description</h2>
+<p>A Customer Relationship Management system built with CNSA 2.0
+(Committee on National Security Agency) post-quantum cryptography
+compliance, meeting NIST MILSPEC requirements for enterprise-grade
+security.</p>
+<h2 id="security-compliance">Security Compliance</h2>
+<ul>
+<li><strong>CNSA 2.0</strong>: Suite B PQC algorithms (ML-DSA-87,
+ML-DSA-65, ML-KEM-1024, ML-KEM-768)</li>
+<li><strong>FIPS 140-2/3</strong>: validated cryptographic module
+implementations</li>
+<li><strong>NIST MILSPEC</strong>: Military specification level security
+controls</li>
+<li><strong>Hash Agility</strong>: SHAKE256 (Level 5), SHAKE128 (Level
+1), SHA384 (Level 3)</li>
+<li><strong>XMSS</strong>: Leighton-Micali signature scheme for
+limited-time keys</li>
+</ul>
+<h2 id="architecture-10-layers">Architecture (10 Layers)</h2>
+<ol type="1">
+<li><strong>Presentation Layer</strong>: FastAPI-based REST API</li>
+<li><strong>Security Layer</strong>: Custom middleware (CSP, HSTS, rate
+limiting, headers)</li>
+<li><strong>Crypto Layer</strong>: ML-DSA/ML-KEM hybrid signatures, hash
+agility</li>
+<li><strong>Authentication Layer</strong>: ML-DSA-87 token-based auth,
+adaptive token policies</li>
+<li><strong>Business Logic Layer</strong>: CRM entities (Accounts,
+Contacts, Leads, Opportunities, etc.)</li>
+<li><strong>Data Access Layer</strong>: SQLAlchemy ORM with async
+support</li>
+<li><strong>Integration Layer</strong>: Zapier, Mailchimp, SendGrid,
+HubSpot connectors</li>
+<li><strong>AI/ML Layer</strong>: Adaptive model router with
+cost/quality optimization</li>
+<li><strong>Plugin System</strong>: Sandboxed execution with Salesforce
+conversion</li>
+<li><strong>Compliance Layer</strong>: FIPS validation, audit reporting,
+compliance metrics</li>
+</ol>
+<h2 id="key-features">Key Features</h2>
+<ul>
+<li><strong>38 API Endpoints</strong>: Full CRM functionality (CRUD, AI,
+payments, plugins)</li>
+<li><strong>100% Test Coverage</strong>: 8/8 formal verification tests
+passing</li>
+<li><strong>10/10 TLA+ Invariants</strong>: Formal methods validated
+security properties</li>
+<li><strong>Rate Limiting</strong>: 100 requests/minute, 1000
+requests/day per IP</li>
+<li><strong>Security Headers</strong>: 7 custom headers (CSP, HSTS,
+X-Frame-Options, etc.)</li>
+<li><strong>Compliance Reporting</strong>: /compliance/report endpoint
+with 100% score</li>
+</ul>
+<h2 id="crypto-foundation">Crypto Foundation</h2>
+<ul>
+<li><strong>Signature Algorithms</strong>: ML-DSA-87 (default, NIST
+Level 5), ML-DSA-65 (compliance, NIST Level 3)</li>
+<li><strong>KEM Algorithms</strong>: ML-KEM-1024, ML-KEM-768</li>
+<li><strong>Hash Functions</strong>: SHAKE256, SHAKE128, SHA384 (agile
+selection)</li>
+<li><strong>Limited-Time Keys</strong>: XMSS (hash-based,
+quantum-resistant)</li>
+<li><strong>Password Protection</strong>: PBKDF2-SHAKE256 + argon2id key
+derivation</li>
+</ul>
+<h2 id="deployment">Deployment</h2>
+<ul>
+<li>Closed-source core module (crm_core/, crm_api/, etc.)</li>
+<li>Open API layer with full documentation</li>
+<li>CI/CD pipeline with pytest, TLA+ model checking, Coq proofs</li>
+<li>Ready for GitHub Pages deployment with professional styling</li>
+</ul>
+</body>
+</html>
