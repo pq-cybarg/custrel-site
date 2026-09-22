@@ -3,160 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNSA 2.0 Post-Quantum CRM</title>
+    <title>Custrel — customer records</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2215%22>🔐</text></svg>">
 </head>
 <body>
-    <header>
-        <div class="logo">CNSA 2.0 CRM</div>
-        <nav>
-            <ul>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#api">API</a></li>
-                <li><a href="#compliance">Compliance</a></li>
-                <li><a href="#security">Security</a></li>
-                <li><a href="wiki.html">Wiki</a></li>
-            </ul>
+    <div class="file">
+        <nav class="spine" aria-label="On this page">
+            <a href="#records">Records</a>
+            <a href="#security">Security</a>
+            <a href="#access">Access</a>
         </nav>
-    </header>
+        <article class="sheet">
+            <header class="top">
+                <p class="brand">Custrel</p>
+                <a class="access" href="mailto:resistant@tuta.com">Request access</a>
+            </header>
 
-    <section class="hero">
-        <h1>CNSA 2.0 Post-Quantum CRM</h1>
-        <p>Enterprise Customer Relationship Management with Post-Quantum Cryptography</p>
-        <a href="#features" class="btn">Explore Features</a>
-    </section>
+            <h1>Customer records a reviewer can check.</h1>
+            <p class="lede">Custrel is the place your teams keep accounts, people, and deals. A record can be signed with ML-DSA-87, the signature in CNSA 2.0, so a later review can show it was not changed.</p>
 
-    <main>
-        <section id="features" class="section">
-            <h2>Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3>🔐 CNSA 2.0 Compliant</h3>
-                    <p>Post-quantum cryptography meeting NIST and CNSA security standards</p>
-                </div>
-                <div class="feature-card">
-                    <h3>📊 38 API Endpoints</h3>
-                    <p>Full CRM functionality: Accounts, Contacts, Leads, Opportunities, Cases, Products, PriceBooks, Campaigns, Tasks</p>
-                </div>
-                <div class="feature-card">
-                    <h3>🛡️ Security Hardened</h3>
-                    <p>Rate limiting, security headers, FIPS 140-2 compliance, adaptive token policies</p>
-                </div>
-                <div class="feature-card">
-                    <h3>🤖 AI/ML Agile</h3>
-                    <p>Intelligent model routing between user-hosted, CRM-hosted, and third-party backends</p>
-                </div>
-                <div class="feature-card">
-                    <h3>🔄 Plugin System</h3>
-                    <p>Sandboxed execution with Salesforce conversion tool</p>
-                </div>
-                <div class="feature-card">
-                    <h3>💳 Payment Processing</h3>
-                    <p>QRL 2.0 blockchain subtype with QRVM Hyperion smart contracts (.hyp not .sol)</p>
-                </div>
-            </div>
-        </section>
+            <section id="records">
+                <h2>What your teams keep</h2>
+                <ul class="ledger">
+                    <li><strong>Accounts</strong><span>The organization you sell to or serve.</span></li>
+                    <li><strong>Contacts</strong><span>People at those accounts.</span></li>
+                    <li><strong>Leads</strong><span>Names that are not a customer yet.</span></li>
+                    <li><strong>Opportunities</strong><span>Deals still in progress.</span></li>
+                    <li><strong>Cases</strong><span>Problems a customer asked you to fix.</span></li>
+                    <li><strong>Catalog</strong><span>Products, price books, campaigns, and tasks tied to that work.</span></li>
+                </ul>
+            </section>
 
-        <section id="api" class="section">
-            <h2>API Endpoints (38 Routes)</h2>
-            <div class="api-list">
-                <h3>Crypto Operations</h3>
-                <code>/crypto/sign</code> &nbsp; <code>/crypto/verify</code> &nbsp; <code>/crypto/hash</code> &nbsp; <code>/crypto/xmss/keygen</code> &nbsp; <code>/crypto/xmss/sign</code>
-                
-                <h3>Account Management</h3>
-                <code>/accounts/</code> &nbsp; <code>/accounts/{id}</code>
-                
-                <h3>Contact Management</h3>
-                <code>/contacts/</code> &nbsp; <code>/contacts/{id}</code>
-                
-                <h3>Lead Management</h3>
-                <code>/leads/</code> &nbsp; <code>/leads/round-robin</code> &nbsp; <code>/leads/round-robin</code>
-                
-                <h3>Opportunity Management</h3>
-                <code>/opportunities/</code> &nbsp; <code>/opportunities/{opp_id}</code>
-                
-                <h3>Case Management</h3>
-                <code>/cases/</code> &nbsp; <code>/cases/{case_id}</code>
-                
-                <h3>Product & PriceBook</h3>
-                <code>/products/</code> &nbsp; <code>/pricebooks/</code>
-                
-                <h3>Campaign Management</h3>
-                <code>/campaigns/</code>
-                
-                <h3>Task Management</h3>
-                <code>/tasks/</code> &nbsp; <code>/tasks/{task_id}</code>
-                
-                <h3>AI Integration</h3>
-                <code>/ai/interact</code> &nbsp; <code>/ai/model-router</code>
-                
-                <h3>Payments</h3>
-                <code>/payments/</code>
-                
-                <h3>Plugin Management</h3>
-                <code>/plugins/register</code>
-                
-                <h3>Third-Party Integrations</h3>
-                <code>/zapier/webhook</code> &nbsp; <code>/mailchimp/subscribe</code> &nbsp; <code>/mailchimp/unsubscribe</code> &nbsp; <code>/sendgrid/send</code>
-                
-                <h3>Security & Compliance</h3>
-                <code>/health</code> &nbsp; <code>/token-policy/assess-risk</code> &nbsp; <code>/token-policy/get-policy</code> &nbsp; <code>/compliance/report</code>
-            </div>
-        </section>
+            <section id="security">
+                <h2>What security can verify</h2>
+                <p class="note">These are the algorithms Custrel uses. They do not replace your own accreditation.</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Signing a record</th>
+                            <td>ML-DSA-87. ML-DSA-65 is available where a smaller signature is required.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Establishing a key</th>
+                            <td>ML-KEM-1024, with ML-KEM-768 where that size is the requirement.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Hashing</th>
+                            <td>SHAKE256 by default. SHA-384 can be selected.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Keys that must not be reused</th>
+                            <td>XMSS. Each signature advances a counter, so the same key is not used twice.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Passwords</th>
+                            <td>A slow hash and a long salt. The password itself is not stored.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">The service</th>
+                            <td>Requests are rate limited. Browsers are told not to embed the app in another site.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
-        <section id="compliance" class="section">
-            <h2>Compliance & Security</h2>
-            <div class="compliance-grid">
-                <div class="compliance-card">
-                    <h3>CNSA 2.0 Level 5</h3>
-                    <p>Maximum security posture with ML-DSA-87 and ML-KEM-1024</p>
-                </div>
-                <div class="compliance-card">
-                    <h3>FIPS 140-2/3</h3>
-                    <p>Validated cryptographic module compliance</p>
-                </div>
-                <div class="compliance-card">
-                    <h3>10/10 TLA+ Invariants</h3>
-                    <p>Formal verification of critical security properties</p>
-                </div>
-                <div class="compliance-card">
-                    <h3>100% Test Coverage</h3>
-                    <p>Comprehensive property-based test suite</p>
-                </div>
-                <div class="compliance-card">
-                    <h3>Rate Limiting</h3>
-                    <p>100 requests/minute, 1000 requests/day per IP</p>
-                </div>
-                <div class="compliance-card">
-                    <h3>7 Security Headers</h3>
-                    <p>CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, X-XSS-Protection</p>
-                </div>
-            </div>
-        </section>
+            <section id="access">
+                <h2>Access</h2>
+                <p>An administrator issues access for your organization. To ask for it, write to <a href="mailto:resistant@tuta.com">resistant@tuta.com</a>.</p>
+                <p id="for-implementers" hidden>People connecting a system use the <a href="/api/explorer">API explorer</a>. Protected calls send <code>Authorization: Bearer</code> and the token you were issued.</p>
+            </section>
 
-        <section id="security" class="section">
-            <h2>Security Features</h2>
-            <ul>
-                <li>Content Security Policy (CSP) with nonce-based dynamic loading</li>
-                <li>HTTP Strict Transport Security (HSTS) with subdomains</li>
-                <li>X-Frame-Options: DENY (prevents clickjacking)</li>
-                <li>X-Content-Type-Options: nosniff (prevents MIME confusion)</li>
-                <li>Referrer-Policy: strict-origin-when-cross-origin</li>
-                <li>Permissions-Policy: camera=(), microphone=(), geolocation=()</li>
-                <li>X-XSS-Protection: 1; mode=block (older IE support)</li>
-                <li>Per-endpoint rate limiting with exponential backoff</li>
-                <li>IP-based throttling</li>
-                <li>Distributed attack detection</li>
-                <li>Adaptive token policies with risk-based access</li>
-            </ul>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 CNSA 2.0 Post-Quantum CRM | <a href="mailto:resistant@tuta.com">resistant@tuta.com</a></p>
-    </footer>
-
+            <footer>
+                <p>Custrel</p>
+            </footer>
+        </article>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
