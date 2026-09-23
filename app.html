@@ -113,13 +113,13 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
 
 <script>
 const API = location.origin;
-const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders"];
-const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders"};
+const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","users","profiles"];
+const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",users:"Users",profiles:"Profiles"};
 const NAV = [
   ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
-  ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],
-  ["reports","Reports"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"]
-];
+  ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["search","Search"],["reports","Reports"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+ ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
 let CURRENT = "dashboard";
@@ -185,18 +185,19 @@ async function navigate(id){
   const main=document.getElementById("main");
   main.innerHTML='<div class="muted">Loading…</div>';
   try{
-    if(id==="dashboard") await renderDashboard();
-    else if(id==="reports") await renderReports();
-    else if(id==="workflows") await renderWorkflows();
-    else if(id==="approvals") await renderApprovals();
-    else if(id==="audit") await renderAudit();
-    else if(id==="bulk") await renderBulk();
-    else if(id==="custom") await renderCustom();
-    else if(id==="graphql") await renderGraphQL();
-    else if(id==="crypto") await renderCrypto();
-    else if(id==="health") await renderHealth();
-    else if(OBJECTS.includes(id)) await renderList(id);
-    else main.innerHTML='<div class="card">Unknown view</div>';
+     if(id==="dashboard") await renderDashboard();
+     else if(id==="reports") await renderReports();
+     else if(id==="workflows") await renderWorkflows();
+     else if(id==="approvals") await renderApprovals();
+     else if(id==="audit") await renderAudit();
+     else if(id==="bulk") await renderBulk();
+     else if(id==="custom") await renderCustom();
+     else if(id==="graphql") await renderGraphQL();
+     else if(id==="crypto") await renderCrypto();
+     else if(id==="health") await renderHealth();
+     else if(id==="search") await renderSearch();
+     else if(OBJECTS.includes(id)) await renderList(id);
+     else main.innerHTML='<div class="card">Unknown view</div>';
   }catch(e){ main.innerHTML=`<div class="card"><h2>Error</h2><pre>${esc(e.message)}</pre></div>`; }
 }
 
@@ -297,6 +298,15 @@ async function renderAudit(){
       </tbody></table>
     </div>
   `;
+}
+
+async function renderSearch(){
+  const q = document.getElementById("global-q").value.trim();
+  const main=document.getElementById("main");
+     if(!q){ main.innerHTML=`<div class="card"><h2>Global Search</h2><p class="muted">Enter a query in the top bar (or below) and search across accounts/contacts/leads/opportunities/cases/products/campaigns/tasks/events/notes/attachments/quotes/orders. Uses <code>GET /search?q=</code> with PQ-JWT.</p><div class="form"><label>Query<input id="sq" placeholder="Acme"></label><div class="row"><button class="btn primary" id="btn-sq">Search</button></div></div></div>`; document.getElementById("btn-sq").onclick=()=>{ document.getElementById("global-q").value=document.getElementById("sq").value; renderSearch(); }; return; }
+  const data= await jfetch(`/search?q=${encodeURIComponent(q)}`);
+  const sections = Object.entries(data).filter(([k,v])=>Array.isArray(v));
+  main.innerHTML=`<div class="card"><h2>Global Search — "${esc(q)}"</h2><p class="muted">${sections.reduce((s,[,v])=>s+v.length,0)} hit(s) across ${sections.length} type(s) via <code>/search?q=</code></p>${sections.map(([type,rows])=>`<h3>${esc(type)} — ${rows.length}</h3><div style="overflow:auto;max-height:22rem"><table><thead><tr><th>ID</th><th>Name/Subject/Title</th><th></th></tr></thead><tbody>${rows.slice(0,25).map(r=>`<tr><td><code>${esc((r.id||"").slice(0,8))}</code></td><td>${esc(r.name||r.subject||r.title||r.first_name||JSON.stringify(r).slice(0,80))}</td><td><button class="btn" onclick="viewRow('${type}','${r.id}')">View</button></td></tr>`).join("") || `<tr><td colspan="3" class="muted">No hits.</td></tr>`}</tbody></table></div>`).join("") || `<p class="muted">No hits.</p>`}</div>`;
 }
 
 async function renderBulk(){
@@ -507,6 +517,17 @@ const FIELD_HINTS = {
   pricebooks: [{k:"name",req:1},{k:"is_active",type:"checkbox"}],
   campaigns: [{k:"name",req:1},{k:"status"}],
   tasks: [{k:"subject",req:1},{k:"status"}],
+  events: [{k:"subject",req:1},{k:"start_datetime",req:1},{k:"end_datetime"},{k:"what_id"},{k:"who_id"}],
+  notes: [{k:"title",req:1},{k:"body",req:1},{k:"parent_id"}],
+  attachments: [{k:"parent_id",req:1},{k:"name",req:1},{k:"content_type"},{k:"body"}],
+  quotes: [{k:"name",req:1},{k:"opportunity_id",req:1},{k:"status"},{k:"amount",type:"number"}],
+  orders: [{k:"name",req:1},{k:"account_id",req:1},{k:"quote_id"},{k:"status"},{k:"amount",type:"number"}],
+  users: [{k:"sub"},{k:"roles"}],
+  profiles: [{k:"name"}],
+  pricebook_entries: [{k:"product_id",req:1},{k:"unit_price",type:"number",req:1}],
+  opportunity_contact_roles: [{k:"contact_id",req:1},{k:"role",req:1},{k:"is_primary",type:"checkbox"}],
+  quote_line_items: [{k:"product_id",req:1},{k:"quantity",type:"number",req:1},{k:"unit_price",type:"number",req:1}],
+  order_items: [{k:"product_id",req:1},{k:"quantity",type:"number",req:1},{k:"unit_price",type:"number",req:1}],
 };
 async function renderList(obj){
   const q = document.getElementById("global-q").value.trim().toLowerCase();
@@ -558,6 +579,10 @@ async function renderList(obj){
     }catch(e){ document.getElementById("form-msg").textContent="Failed: "+e.message; }
   };
   document.getElementById("global-q").oninput = ()=> renderList(obj);
+  // read-only objects hide create form
+  if(obj==="users"||obj==="profiles"){
+    const fc=document.getElementById("form-card"); if(fc) fc.style.display="none";
+  }
 }
 async function viewRow(obj,id){
   const r= await jfetch(`/${obj}/${id}`);
@@ -606,6 +631,9 @@ document.getElementById("btn-logout").onclick = ()=>{
 };
 document.getElementById("btn-refresh").onclick = ()=> navigate(CURRENT);
 
+document.getElementById("global-q").addEventListener("keydown", e=>{
+  if(e.key==="Enter"){ const q=e.target.value.trim(); if(q) navigate("search"); }
+});
 // boot
 if(TOKEN){
   CLAIMS=decodeClaims(TOKEN);
