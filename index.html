@@ -65,13 +65,50 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
   <div class="card">
     <div style="letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--nav);font-size:.82rem">Custrel</div>
     <h2 style="margin:.3rem 0">CNSA 2.0 CRM — Sign in</h2>
-    <p class="muted">Click to sign in — PQ-JWT (ML-DSA-87) is minted behind the scenes. No password needed.</p>
-    <div class="row" style="margin:.6rem 0">
-      <button class="btn primary" id="btn-demo-admin">Login as Admin</button>
-      <button class="btn" id="btn-demo-user">Login as User</button>
-      <button class="btn" id="btn-demo-viewer">Login as Viewer</button>
+    <p class="muted">Argon2id (64 MiB, t=3, p=4) + PQ credential ML-DSA-87 + TOTP 2FA. Register once, then password + 6-digit code.</p>
+    <div style="display:flex;gap:.4rem;margin:.6rem 0">
+      <button class="btn primary" id="tab-login" style="flex:1">Sign in</button>
+      <button class="btn" id="tab-register" style="flex:1">Register</button>
     </div>
-    <details style="margin:.6rem 0"><summary class="muted">Advanced (custom subject/roles)</summary>
+    <div id="pane-login">
+      <div class="form">
+        <label>Username<input id="login-username" value="admin" placeholder="admin" autocomplete="username"></label>
+        <label>Password<input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password"></label>
+        <div class="row"><button class="btn primary" id="btn-pw-login" style="flex:1">Sign in</button><button class="btn" id="btn-try-health">Health check</button></div>
+      </div>
+      <div id="login-totp-box" class="form" hidden style="margin-top:.8rem;border-top:1px solid var(--line);padding-top:.8rem">
+        <label>6-digit TOTP code<input id="login-totp" placeholder="123456" inputmode="numeric" maxlength="6"></label>
+        <div class="row"><button class="btn primary" id="btn-totp-verify">Verify code</button><span id="login-totp-msg" class="muted"></span></div>
+        <p class="muted" style="margin:.4rem 0">Open Authenticator (Google Authenticator / Authy) and enter the current code.</p>
+      </div>
+      <div style="margin:.8rem 0;border-top:1px solid var(--line);padding-top:.6rem">
+        <p class="muted" style="margin:0 0 .4rem">Demo (1-click PQ-JWT, no password):</p>
+        <div class="row">
+          <button class="btn" id="btn-demo-admin">Admin</button>
+          <button class="btn" id="btn-demo-user">User</button>
+          <button class="btn" id="btn-demo-viewer">Viewer</button>
+        </div>
+      </div>
+    </div>
+    <div id="pane-register" hidden>
+      <div class="form">
+        <label>Username<input id="reg-username" placeholder="alice" autocomplete="username"></label>
+        <label>Password (≥8 chars)<input id="reg-password" type="password" placeholder="••••••••" autocomplete="new-password"></label>
+        <label>Roles (comma-separated)<input id="reg-roles" value="user" placeholder="admin,manager,user,viewer"></label>
+        <div class="row"><button class="btn primary" id="btn-register" style="flex:1">Create account</button></div>
+      </div>
+      <div id="reg-result" hidden class="card" style="margin-top:.8rem">
+        <h3>Scan with Authenticator</h3>
+        <p class="muted" id="reg-msg"></p>
+        <img id="reg-qr" style="max-width:220px;border:1px solid var(--line);border-radius:.45rem;display:none">
+        <pre id="reg-uri" style="font-size:.7rem"></pre>
+        <div class="form" style="margin-top:.6rem">
+          <label>Enter 6-digit code to verify<input id="reg-totp" placeholder="123456" inputmode="numeric" maxlength="6"></label>
+          <div class="row"><button class="btn primary" id="btn-reg-verify">Verify & enable 2FA</button><span id="reg-verify-msg" class="muted"></span></div>
+        </div>
+      </div>
+    </div>
+    <details style="margin:.6rem 0"><summary class="muted">Advanced (custom PQ-JWT)</summary>
     <div class="form" style="margin-top:.6rem">
       <label>Subject (sub)
         <input id="login-sub" value="admin" placeholder="admin">
@@ -83,8 +120,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
         <input id="login-exp" type="number" value="3600">
       </label>
       <div class="row">
-        <button class="btn primary" id="btn-login">Sign in (custom)</button>
-        <button class="btn" id="btn-try-health">Health check</button>
+        <button class="btn primary" id="btn-login">Sign in (custom JWT)</button>
       </div>
     </div>
     </details>
@@ -674,7 +710,84 @@ async function demoLogin(sub, roles){
 document.getElementById("btn-demo-admin").onclick = ()=> demoLogin("admin", ["admin","manager"]);
 document.getElementById("btn-demo-user").onclick = ()=> demoLogin("demo", ["user"]);
 document.getElementById("btn-demo-viewer").onclick = ()=> demoLogin("viewer", ["viewer"]);
-// login
+// tabs
+document.getElementById("tab-login").onclick = ()=>{
+  document.getElementById("pane-login").hidden=false; document.getElementById("pane-register").hidden=true;
+  document.getElementById("tab-login").classList.add("primary"); document.getElementById("tab-register").classList.remove("primary");
+};
+document.getElementById("tab-register").onclick = ()=>{
+  document.getElementById("pane-login").hidden=true; document.getElementById("pane-register").hidden=false;
+  document.getElementById("tab-register").classList.add("primary"); document.getElementById("tab-login").classList.remove("primary");
+};
+// register: Argon2id + PQ credential + TOTP provisioning
+let REG_USER=""; let PENDING_CHALLENGE="";
+document.getElementById("btn-register").onclick = async ()=>{
+  const u=document.getElementById("reg-username").value.trim();
+  const p=document.getElementById("reg-password").value;
+  const roles=document.getElementById("reg-roles").value.split(",").map(s=>s.trim()).filter(Boolean);
+  const msg=document.getElementById("reg-msg");
+  if(!u || p.length<8){ msg.textContent="Username required, password ≥8 chars."; return; }
+  msg.textContent="Creating account (Argon2id + ML-DSA-87)…";
+  try{
+    const r= await fetch(API+"/auth/register", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({username:u, password:p, roles})});
+    const j= await r.json();
+    if(!r.ok) throw new Error(j.detail||JSON.stringify(j));
+    REG_USER=u;
+    document.getElementById("reg-result").hidden=false;
+    msg.textContent=`Created ${u} · ${j.argon2_params||"argon2id"} · PQ ${j.pq_credential_alg||"ML-DSA-87"} pub ${String(j.pq_pub_len||2592)}B. Scan QR in Authenticator.`;
+    document.getElementById("reg-uri").textContent=j.totp_provisioning_uri||"";
+    const qr=document.getElementById("reg-qr");
+    if(j.totp_qr_b64){ qr.src="data:image/png;base64,"+j.totp_qr_b64; qr.style.display="block"; }
+  }catch(e){ msg.textContent="Register failed: "+e.message; }
+};
+document.getElementById("btn-reg-verify").onclick = async ()=>{
+  const code=document.getElementById("reg-totp").value.trim();
+  const out=document.getElementById("reg-verify-msg");
+  if(!REG_USER || code.length!==6){ out.textContent="Enter 6-digit code."; return; }
+  try{
+    const r= await fetch(API+"/auth/2fa/verify", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({username:REG_USER, code})});
+    const j= await r.json();
+    if(!r.ok) throw new Error(j.detail||JSON.stringify(j));
+    out.textContent="2FA enabled. Now sign in with password + code.";
+    document.getElementById("tab-login").click();
+    document.getElementById("login-username").value=REG_USER;
+  }catch(e){ out.textContent="Verify failed: "+e.message; }
+};
+// password login: step 1 Argon2id+PQ, step 2 TOTP if required
+document.getElementById("btn-pw-login").onclick = async ()=>{
+  const u=document.getElementById("login-username").value.trim();
+  const p=document.getElementById("login-password").value;
+  const msg=document.getElementById("login-msg");
+  if(!u || !p){ msg.textContent="Username and password required."; return; }
+  msg.textContent="Verifying Argon2id + PQ credential…";
+  try{
+    const r= await fetch(API+"/auth/login", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({username:u, password:p})});
+    const j= await r.json();
+    if(!r.ok) throw new Error(j.detail||JSON.stringify(j));
+    if(j.totp_required){
+      PENDING_CHALLENGE=j.challenge_id;
+      document.getElementById("login-totp-box").hidden=false;
+      msg.textContent="Password OK (Argon2id + PQ verified). Enter TOTP code.";
+      document.getElementById("login-totp").focus();
+    } else if(j.access_token){
+      setToken(j.access_token); msg.textContent="Signed in (2FA not yet enabled — enable in Register)."; showApp();
+    } else {
+      msg.textContent="Unexpected response: "+JSON.stringify(j);
+    }
+  }catch(e){ msg.textContent="Login failed: "+e.message; }
+};
+document.getElementById("btn-totp-verify").onclick = async ()=>{
+  const code=document.getElementById("login-totp").value.trim();
+  const out=document.getElementById("login-totp-msg");
+  if(code.length!==6){ out.textContent="Enter 6-digit code."; return; }
+  try{
+    const r= await fetch(API+"/auth/login/totp", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({challenge_id:PENDING_CHALLENGE, code})});
+    const j= await r.json();
+    if(!r.ok) throw new Error(j.detail||JSON.stringify(j));
+    setToken(j.access_token); document.getElementById("login-msg").textContent="Signed in — ML-DSA-87 JWT issued."; showApp();
+  }catch(e){ out.textContent="Code invalid: "+e.message; }
+};
+// login (custom PQ-JWT)
 document.getElementById("btn-login").onclick = async ()=>{
   const sub=document.getElementById("login-sub").value.trim()||"admin";
   const roles=document.getElementById("login-roles").value.split(",").map(s=>s.trim()).filter(Boolean);
