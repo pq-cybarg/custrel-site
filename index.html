@@ -156,12 +156,12 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
 
 <script>
 const API = location.origin;
-const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","users","profiles"];
-const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",users:"Users",profiles:"Profiles"};
+const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","quantum-keys","aimcp-bridges","tokens","users","profiles"];
+const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles"};
 const NAV = [
   ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
   ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
-  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["search","Search"],["reports","Reports"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["reports","Reports"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
  ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
@@ -243,8 +243,10 @@ async function navigate(id){
      else if(id==="crypto") await renderCrypto();
      else if(id==="health") await renderHealth();
       else if(id==="search") await renderSearch();
-      else if(id==="mcp") await renderMCP();
-      else if(OBJECTS.includes(id)) await renderList(id);
+       else if(id==="mcp") await renderMCP();
+       else if(id==="plugins") await renderPlugins();
+       else if(id==="salesforce") await renderSalesforce();
+       else if(OBJECTS.includes(id)) await renderList(id);
       else main.innerHTML='<div class="card">Unknown view</div>';
   }catch(e){ main.innerHTML=`<div class="card"><h2>Error</h2><pre>${esc(e.message)}</pre></div>`; }
 }
@@ -348,6 +350,22 @@ async function renderAudit(){
   `;
 }
 
+async function renderPlugins(){
+  const main=document.getElementById("main");
+  main.innerHTML=`<div class="card"><h2>Plugins — ML-DSA-87 verified</h2><p class="muted">GET /plugins · POST /plugins/register {plugin_id, name, version, author, signature?, pubkey_hex?} · POST /plugins/{name}/install|uninstall (admin).</p><div class="form"><label>Plugin ID<input id="pl-id" value="demo-plugin"></label><label>Name<input id="pl-name" value="Demo"></label><label>Version<input id="pl-ver" value="1.0.0"></label><label>Author<input id="pl-author" value="custrel"></label><div class="row"><button class="btn primary" id="btn-pl-reg">Register</button><button class="btn" id="btn-pl-list">List</button></div><pre id="pl-out">—</pre><label style="margin-top:.6rem">Install name<input id="pl-inst" placeholder="demo-plugin"></label><div class="row"><button class="btn" id="btn-pl-install">Install</button><button class="btn danger" id="btn-pl-uninstall">Uninstall</button></div></div></div>`;
+  document.getElementById("btn-pl-reg").onclick=async()=>{const body={plugin_id:document.getElementById("pl-id").value, name:document.getElementById("pl-name").value, version:document.getElementById("pl-ver").value, author:document.getElementById("pl-author").value}; try{const r=await jfetch("/plugins/register",{method:"POST",body}); document.getElementById("pl-out").textContent=JSON.stringify(r,null,2);}catch(e){document.getElementById("pl-out").textContent="Error: "+e.message;}};
+  document.getElementById("btn-pl-list").onclick=async()=>{try{const r=await jfetch("/plugins"); document.getElementById("pl-out").textContent=JSON.stringify(r,null,2);}catch(e){document.getElementById("pl-out").textContent="Error: "+e.message;}};
+  document.getElementById("btn-pl-install").onclick=async()=>{const n=document.getElementById("pl-inst").value.trim()||document.getElementById("pl-id").value.trim(); try{const r=await jfetch(`/plugins/${encodeURIComponent(n)}/install`,{method:"POST",body:{}}); document.getElementById("pl-out").textContent=JSON.stringify(r,null,2);}catch(e){document.getElementById("pl-out").textContent="Error: "+e.message;}};
+  document.getElementById("btn-pl-uninstall").onclick=async()=>{const n=document.getElementById("pl-inst").value.trim()||document.getElementById("pl-id").value.trim(); try{const r=await jfetch(`/plugins/${encodeURIComponent(n)}/uninstall`,{method:"POST",body:{}}); document.getElementById("pl-out").textContent=JSON.stringify(r,null,2);}catch(e){document.getElementById("pl-out").textContent="Error: "+e.message;}};
+  try{const r=await jfetch("/plugins"); document.getElementById("pl-out").textContent=JSON.stringify(r,null,2);}catch(e){}
+}
+async function renderSalesforce(){
+  const main=document.getElementById("main");
+  main.innerHTML=`<div class="card"><h2>Salesforce Conversion — real mappings</h2><p class="muted">SF_FIELD_MAP 25+ fields, CUSTOM_FIELD __c, PICKLIST/FORMULA, CONVERSION_RULES /services/data/v60.0/sobjects/*</p><div class="grid2"><div class="form"><label>SF field (e.g. Industry__c)<input id="sf-field" value="Industry__c"></label><div class="row"><button class="btn" id="btn-sf-field">POST /salesforce/convert/field</button></div><label style="margin-top:.6rem">SF endpoint<input id="sf-ep" value="/services/data/v60.0/sobjects/Account"></label><div class="row"><button class="btn" id="btn-sf-ep">Convert endpoint</button></div><pre id="sf-out">—</pre></div><div class="form"><label>Migrate JSON (SF record)<textarea id="sf-mig" placeholder='{\"attributes\":{\"type\":\"Account\"},\"Name\":\"Acme\",\"Industry__c\":\"Tech\"}'>{\"attributes\":{\"type\":\"Account\"},\"Name\":\"Acme\",\"Industry__c\":\"Tech\",\"Custom__c\":\"v\"}</textarea></label><div class="row"><button class="btn primary" id="btn-sf-mig">POST /salesforce/migrate</button></div></div></div></div>`;
+  document.getElementById("btn-sf-field").onclick=async()=>{const f=document.getElementById("sf-field").value.trim(); try{const r=await jfetch("/salesforce/convert/field",{method:"POST",body:{field:f}}); document.getElementById("sf-out").textContent=JSON.stringify(r,null,2);}catch(e){document.getElementById("sf-out").textContent="Error: "+e.message;}};
+  document.getElementById("btn-sf-ep").onclick=async()=>{const ep=document.getElementById("sf-ep").value.trim(); try{const r=await jfetch("/salesforce/convert/endpoint",{method:"POST",body:{endpoint:ep}}); document.getElementById("sf-out").textContent=JSON.stringify(r,null,2);}catch(e){document.getElementById("sf-out").textContent="Error: "+e.message;}};
+  document.getElementById("btn-sf-mig").onclick=async()=>{let payload; try{payload=JSON.parse(document.getElementById("sf-mig").value);}catch(e){document.getElementById("sf-out").textContent="Invalid JSON"; return;} const body=Array.isArray(payload)?{records:payload}:{records:[payload]}; try{const r=await jfetch("/salesforce/migrate",{method:"POST",body}); document.getElementById("sf-out").textContent=JSON.stringify(r,null,2);}catch(e){document.getElementById("sf-out").textContent="Error: "+e.message;}};
+}
 async function renderMCP(){
   const main=document.getElementById("main");
   main.innerHTML=`
@@ -609,6 +627,9 @@ const FIELD_HINTS = {
   quotes: [{k:"name",req:1},{k:"opportunity_id",req:1},{k:"status"},{k:"amount",type:"number"}],
   orders: [{k:"name",req:1},{k:"account_id",req:1},{k:"quote_id"},{k:"status"},{k:"amount",type:"number"}],
   payments: [{k:"amount",type:"number",req:1},{k:"opportunity_id"},{k:"payment_method"},{k:"currency"}],
+   "quantum-keys": [{k:"owner_id",req:1},{k:"key_type",req:1},{k:"xmss_tree_index",type:"number"}],
+  "aimcp-bridges": [{k:"user_id",req:1},{k:"backend_id",req:1},{k:"access_token"}],
+  tokens: [{k:"sub",req:1},{k:"scopes"},{k:"quantum_proof",type:"checkbox"}],
   users: [{k:"sub"},{k:"roles"}],
   profiles: [{k:"name"}],
   pricebook_entries: [{k:"product_id",req:1},{k:"unit_price",type:"number",req:1}],
