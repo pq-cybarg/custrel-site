@@ -693,15 +693,44 @@ async function renderList(obj, cursor){
          if(!amount||!oid||addr.length!==128){ out.textContent="Amount, opportunity_id and 128-hex address required."; return; }
          try{ const r=await jfetch("/payments/blockchain",{method:"POST",body:{amount,opportunity_id:oid,qrl_address:addr}}); out.textContent="QRL payment "+(r.id||"").slice(0,8)+" subtype "+(r.subtype||"QRL-2.0"); renderList(obj); }catch(e){ out.textContent="Failed: "+e.message; }
        };
-       document.getElementById("btn-qrvm").onclick=async()=>{
-         const code=document.getElementById("p-qrvm-code").value.trim();
-         const name=document.getElementById("p-qrvm-name").value.trim()||"contract.hyp";
-         const out=document.getElementById("qrvm-msg");
-         if(!code){ out.textContent="contract_code required."; return; }
-         try{ const r=await jfetch("/payments/qrvm/contract",{method:"POST",body:{contract_code:code,contract_name:name}}); out.textContent=r.format||"Hyperion (.hyp) "+(r.id||"").slice(0,8); }catch(e){ out.textContent="Failed: "+e.message; }
-       };
-     }
-   }
+        document.getElementById("btn-qrvm").onclick=async()=>{
+          const code=document.getElementById("p-qrvm-code").value.trim();
+          const name=document.getElementById("p-qrvm-name").value.trim()||"contract.hyp";
+          const out=document.getElementById("qrvm-msg");
+          if(!code){ out.textContent="contract_code required."; return; }
+          try{ const r=await jfetch("/payments/qrvm/contract",{method:"POST",body:{contract_code:code,contract_name:name}}); out.textContent=r.format||"Hyperion (.hyp) "+(r.id||"").slice(0,8); }catch(e){ out.textContent="Failed: "+e.message; }
+        };
+        const subCard=document.createElement("div");
+        subCard.className="card";
+        subCard.innerHTML=`<h3>Subscription — Recurring + Renewal</h3><p class="muted">POST /payments/subscription — amount + opportunity_id + interval (monthly|yearly|weekly), ML-DSA-87 signed. Then POST /payments/subscription/{id}/renew</p><div class="form"><label>Amount<input id="p-sub-amount" type="number" placeholder="99.99"></label><label>Opportunity ID<input id="p-sub-oid" placeholder="opportunity uuid"></label><label>Interval<select id="p-sub-interval"><option value="monthly">monthly</option><option value="yearly">yearly</option><option value="weekly">weekly</option></select></label><div class="row"><button class="btn primary" id="btn-sub">Create subscription</button><span id="sub-msg" class="muted"></span></div><label>Subscription ID to renew<input id="p-sub-id" placeholder="subscription id"></label><div class="row"><button class="btn" id="btn-sub-renew">Renew</button><span id="sub-renew-msg" class="muted"></span></div></div>`;
+        qrvmCard.after(subCard);
+        const fraudCard=document.createElement("div");
+        fraudCard.className="card";
+        fraudCard.innerHTML=`<h3>Fraud Score — ML heuristic</h3><p class="muted">GET /payments/fraud/{id} — scores amount>10k/50k + blockchain + renewals>5 => risk high/medium/low</p><div class="form"><label>Payment/Subscription ID<input id="p-fraud-id" placeholder="payment or subscription id"></label><div class="row"><button class="btn" id="btn-fraud">Check fraud score</button><span id="fraud-msg" class="muted"></span></div><pre id="fraud-out">—</pre></div>`;
+        subCard.after(fraudCard);
+        document.getElementById("btn-sub").onclick=async()=>{
+          const amount=Number(document.getElementById("p-sub-amount").value);
+          const oid=document.getElementById("p-sub-oid").value.trim();
+          const interval=document.getElementById("p-sub-interval").value;
+          const out=document.getElementById("sub-msg");
+          if(!amount||!oid){ out.textContent="Amount and opportunity_id required."; return; }
+          try{ const r=await jfetch("/payments/subscription",{method:"POST",body:{amount,opportunity_id:oid,interval}}); out.textContent="Sub "+(r.id||"").slice(0,8)+" "+interval+" renewals "+(r.renewals??0); document.getElementById("p-sub-id").value=r.id||""; renderList(obj); }catch(e){ out.textContent="Failed: "+e.message; }
+        };
+        document.getElementById("btn-sub-renew").onclick=async()=>{
+          const sid=document.getElementById("p-sub-id").value.trim();
+          const out=document.getElementById("sub-renew-msg");
+          if(!sid){ out.textContent="Subscription ID required."; return; }
+          try{ const r=await jfetch(`/payments/subscription/${encodeURIComponent(sid)}/renew`,{method:"POST",body:{}}); out.textContent="Renewed "+(r.renewals??"?")+" last "+(r.last_renewal||""); }catch(e){ out.textContent="Failed: "+e.message; }
+        };
+        document.getElementById("btn-fraud").onclick=async()=>{
+          const pid=document.getElementById("p-fraud-id").value.trim();
+          const out=document.getElementById("fraud-msg");
+          const pre=document.getElementById("fraud-out");
+          if(!pid){ out.textContent="ID required."; return; }
+          try{ const r=await jfetch(`/payments/fraud/${encodeURIComponent(pid)}`); pre.textContent=JSON.stringify(r,null,2); out.textContent="risk "+r.risk+" score "+r.score; }catch(e){ out.textContent="Failed: "+e.message; }
+        };
+      }
+    }
    // read-only objects hide create form
    if(obj==="users"||obj==="profiles"){
      const fc=document.getElementById("form-card"); if(fc) fc.style.display="none";
