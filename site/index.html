@@ -591,7 +591,7 @@ async function renderList(obj, cursor){
       <p class="muted">GET /${obj}?limit=${limit}&q=&cursor=&sort_by=created_at&sort_order=desc · X-Request-ID echoed · audited</p>
       <div style="overflow:auto;max-height:60vh">
         <table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join("")}<th></th></tr></thead><tbody>
-          ${filtered.map(r=>`<tr>${cols.map(c=>`<td>${c==="id"? `<code>${esc((r[c]||"").slice(0,8))}</code>`: esc(r[c]??"")}${c==="created_at"? " · "+fmtDate(r[c]):""}</td>`).join("")}<td><button class="btn" onclick="viewRow('${obj}','${r.id}')">View</button> <button class="btn danger" onclick="delRow('${obj}','${r.id}')">Delete</button></td></tr>`).join("") || `<tr><td colspan="${cols.length+1}" class="muted">No records. Create one.</td></tr>`}
+          ${rows.map(r=>`<tr>${cols.map(c=>`<td>${c==="id"? `<code>${esc((r[c]||"").slice(0,8))}</code>`: esc(r[c]??"")}${c==="created_at"? " · "+fmtDate(r[c]):""}</td>`).join("")}<td><button class="btn" onclick="viewRow('${obj}','${r.id}')">View</button> <button class="btn danger" onclick="delRow('${obj}','${r.id}')">Delete</button></td></tr>`).join("") || `<tr><td colspan="${cols.length+1}" class="muted">No records. Create one.</td></tr>`}
         </tbody></table>
       </div>
     </div>
