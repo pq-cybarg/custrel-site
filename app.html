@@ -157,13 +157,17 @@ function setToken(t){
 function needAuth(fn){ return async (...a)=>{ if(!TOKEN) return showLogin("Please sign in."); return fn(...a); }; }
 
 function showLogin(msg){
-  document.getElementById("login").hidden=false;
-  document.getElementById("app").hidden=true;
+  const lo=document.getElementById("login"), ap=document.getElementById("app");
+  lo.hidden=false; lo.style.display="";
+  ap.hidden=true; ap.style.display="none";
   if(msg) document.getElementById("login-msg").textContent=msg;
 }
 function showApp(){
-  document.getElementById("login").hidden=true;
-  document.getElementById("app").hidden=false;
+  const lo=document.getElementById("login"), ap=document.getElementById("app");
+  lo.hidden=true; lo.style.display="none";
+  ap.hidden=false; ap.style.display="";
+  // diagnostic: ensure app is visible even if CSS hides
+  console.log("showApp: login hidden, app visible", {token: TOKEN?TOKEN.slice(0,16):"none"});
   renderNav();
   navigate(CURRENT);
   refreshHealthMini();
