@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custrel — CNSA 2.0 CRM</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--nav:#0b2d3a;--nav2:#163a4a;--accent:#0e7a6e;--bg:#eef3f5;--card:#fff;--line:#d1dde3;--ink:#132830;--muted:#5a7180;--ok:#0e7a6e;--warn:#b7791f;--bad:#b4232a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Avenir Next",Avenir,"Segoe UI",system-ui,sans-serif}
+a{color:var(--accent)}
+.app{display:grid;grid-template-columns:16rem 1fr;min-height:100vh}
+.sbar{background:var(--nav);color:#d8e6eb;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:auto}
+.sbar h1{margin:1.1rem 1rem .3rem;font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:#cfe3e8}
+.sbar .sub{margin:0 1rem 1rem;font-size:.78rem;color:#8fb0bb}
+.sbar nav{display:flex;flex-direction:column;padding:.4rem .5rem;gap:.15rem}
+.sbar nav button{all:unset;cursor:pointer;padding:.55rem .7rem;border-radius:.4rem;font-size:.88rem;color:#d8e6eb;display:flex;justify-content:space-between;align-items:center}
+.sbar nav button:hover{background:var(--nav2)}
+.sbar nav button.active{background:#1e4a5c;color:#fff}
+.sbar nav button span.badge{font-size:.7rem;background:#0e7a6e;color:#fff;border-radius:999px;padding:.1rem .4rem}
+.sbar .foot{margin-top:auto;padding:1rem;font-size:.75rem;color:#8fb0bb;border-top:1px solid #1b3e4f}
+.topbar{background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:1rem;padding:.7rem 1.2rem;position:sticky;top:0;z-index:5}
+.topbar .brand{font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.82rem;color:var(--nav)}
+.topbar .grow{flex:1}
+.topbar input, .topbar select{border:1px solid var(--line);border-radius:.45rem;padding:.45rem .6rem;font-size:.86rem;min-width:14rem}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:.45rem;padding:.45rem .7rem;font-size:.84rem;cursor:pointer}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.danger{background:var(--bad);color:#fff;border-color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.main{padding:1.2rem 1.4rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:.6rem;padding:1rem;margin-bottom:1rem}
+.card h2{margin:0 0 .3rem;font-size:1.05rem}
+.card h3{margin:1rem 0 .4rem;font-size:.92rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.muted{color:var(--muted);font-size:.86rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:.6rem;padding:.8rem}
+.kpi b{font-size:1.35rem}
+.kpi span{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th,td{text-align:left;padding:.5rem .4rem;border-top:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;background:#f7fafb;position:sticky;top:0}
+tr:hover td{background:#f7fafb}
+.badge{display:inline-block;border-radius:999px;padding:.15rem .45rem;font-size:.72rem;font-weight:600}
+.badge.ok{background:#e6f4f1;color:#0e5a52}
+.badge.warn{background:#fef3d6;color:#7a5a12}
+.badge.bad{background:#fde8e8;color:#7a1e1e}
+.bar{height:.55rem;background:#e6eef2;border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.form{display:grid;gap:.6rem;max-width:38rem}
+.form label{font-size:.82rem;color:var(--muted);font-weight:600}
+.form input,.form select,.form textarea{border:1px solid var(--line);border-radius:.45rem;padding:.5rem .6rem;font-size:.88rem;width:100%;background:#fff}
+.form textarea{min-height:4rem}
+.row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px solid var(--line);border-radius:.45rem;padding:.6rem;font-size:.78rem;max-height:22rem;overflow:auto}
+.login{display:grid;place-items:center;min-height:100vh;background:var(--bg);padding:1rem}
+.login .card{max-width:28rem;width:100%}
+.pill{border:1px solid var(--line);border-radius:999px;padding:.2rem .5rem;font-size:.72rem;background:#fff}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sbar{height:auto;position:static}.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+  <div class="card">
+    <div style="letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--nav);font-size:.82rem">Custrel</div>
+    <h2 style="margin:.3rem 0">CNSA 2.0 CRM — Sign in</h2>
+    <p class="muted">Issues a ML-DSA-87 signed JWT (kid = pub[:16] b64). No password — PQ auth only.</p>
+    <div class="form">
+      <label>Subject (sub)
+        <input id="login-sub" value="admin" placeholder="admin">
+      </label>
+      <label>Roles (comma-separated)
+        <input id="login-roles" value="admin,manager" placeholder="admin,manager,user,viewer">
+      </label>
+      <label>Expires (seconds)
+        <input id="login-exp" type="number" value="3600">
+      </label>
+      <div class="row">
+        <button class="btn primary" id="btn-login">Sign in (PQ-JWT)</button>
+        <button class="btn" id="btn-try-health">Health check</button>
+      </div>
+      <div id="login-msg" class="muted"></div>
+      <pre id="login-token" hidden></pre>
+      <p class="muted">API: <a href="/api/explorer" target="_blank">/api/explorer</a> · <a href="/api/redoc" target="_blank">/api/redoc</a> · <a href="/graphql" target="_blank">/graphql</a></p>
+    </div>
+  </div>
+</div>
+
+<div id="app" class="app" hidden>
+  <aside class="sbar">
+    <h1>Custrel</h1>
+    <p class="sub">CNSA 2.0 · ML-DSA-87 · ML-KEM-1024 · SHAKE256_512</p>
+    <nav id="nav"></nav>
+    <div class="foot">
+      <div id="who"></div>
+      <div style="margin-top:.6rem" class="row"><button class="btn" id="btn-logout">Sign out</button><a class="btn" href="/site/">Marketing</a></div>
+      <div id="health-mini" class="muted" style="margin-top:.6rem"></div>
+    </div>
+  </aside>
+  <div style="min-width:0">
+    <div class="topbar">
+      <div class="brand">Lightning</div>
+      <input id="global-q" placeholder="Search current list (client-side)">
+      <select id="global-object"></select>
+      <button class="btn" id="btn-refresh">Refresh</button>
+      <div class="grow"></div>
+      <span id="token-pill" class="pill" title="JWT">no token</span>
+    </div>
+    <main class="main" id="main"></main>
+  </div>
+</div>
+
+<script>
+const API = location.origin;
+const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","users","profiles"];
+const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",users:"Users",profiles:"Profiles"};
+const NAV = [
+  ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
+  ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["search","Search"],["reports","Reports"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+ ];
+let TOKEN = localStorage.getItem("custrel_token")||"";
+let CLAIMS = null;
+let CURRENT = "dashboard";
+let CACHE = {};
+
+function hdr(){ return TOKEN ? {"Authorization":"Bearer "+TOKEN,"Content-Type":"application/json"} : {"Content-Type":"application/json"}; }
+async function jfetch(path, opts={}){
+  const o={...opts, headers:{...hdr(), ...(opts.headers||{})}};
+  if(o.body && typeof o.body!=="string") o.body=JSON.stringify(o.body);
+  const r= await fetch(API+path, o);
+  const ct=r.headers.get("content-type")||"";
+  let body=null;
+  if(ct.includes("application/json")){ try{ body=await r.json(); }catch(e){ body=null; } } else { body=await r.text(); }
+  if(!r.ok) throw new Error((body && (body.detail||body.error||JSON.stringify(body)))|| (r.status+" "+r.statusText));
+  return body;
+}
+function decodeClaims(t){
+  try{ const p=t.split(".")[1]; const j=JSON.parse(atob(p.replace(/-/g,"+").replace(/_/g,"/"))); return j; }catch(e){ return null; }
+}
+function setToken(t){
+  TOKEN=t; localStorage.setItem("custrel_token", t);
+  CLAIMS=decodeClaims(t);
+  const pill=document.getElementById("token-pill");
+  pill.textContent = CLAIMS ? (CLAIMS.sub+" · "+(CLAIMS.roles||[]).join(",")) : "no token";
+  pill.title = t ? t.slice(0,32)+"…" : "no token";
+  document.getElementById("who").textContent = CLAIMS ? `${CLAIMS.sub} — ${(CLAIMS.roles||[]).join(", ")}` : "";
+}
+function needAuth(fn){ return async (...a)=>{ if(!TOKEN) return showLogin("Please sign in."); return fn(...a); }; }
+
+function showLogin(msg){
+  document.getElementById("login").hidden=false;
+  document.getElementById("app").hidden=true;
+  if(msg) document.getElementById("login-msg").textContent=msg;
+}
+function showApp(){
+  document.getElementById("login").hidden=true;
+  document.getElementById("app").hidden=false;
+  renderNav();
+  navigate(CURRENT);
+  refreshHealthMini();
+}
+function renderNav(){
+  const nav=document.getElementById("nav");
+  nav.innerHTML="";
+  for(const [id,label] of NAV){
+    const b=document.createElement("button");
+    b.textContent=label;
+    b.className = id===CURRENT ? "active":"";
+    b.onclick=()=>navigate(id);
+    if(id==="approvals" && CACHE.approvals_pending){
+      const s=document.createElement("span"); s.className="badge"; s.textContent=CACHE.approvals_pending; b.appendChild(s);
+    }
+    nav.appendChild(b);
+  }
+  const sel=document.getElementById("global-object");
+  sel.innerHTML = OBJECTS.map(o=>`<option value="${o}">${LABELS[o]||o}</option>`).join("");
+  sel.value = OBJECTS.includes(CURRENT) ? CURRENT : "accounts";
+  sel.onchange=()=>navigate(sel.value);
+}
+async function navigate(id){
+  CURRENT=id;
+  renderNav();
+  const main=document.getElementById("main");
+  main.innerHTML='<div class="muted">Loading…</div>';
+  try{
+     if(id==="dashboard") await renderDashboard();
+     else if(id==="reports") await renderReports();
+     else if(id==="workflows") await renderWorkflows();
+     else if(id==="approvals") await renderApprovals();
+     else if(id==="audit") await renderAudit();
+     else if(id==="bulk") await renderBulk();
+     else if(id==="custom") await renderCustom();
+     else if(id==="graphql") await renderGraphQL();
+     else if(id==="crypto") await renderCrypto();
+     else if(id==="health") await renderHealth();
+      else if(id==="search") await renderSearch();
+      else if(id==="mcp") await renderMCP();
+      else if(OBJECTS.includes(id)) await renderList(id);
+      else main.innerHTML='<div class="card">Unknown view</div>';
+  }catch(e){ main.innerHTML=`<div class="card"><h2>Error</h2><pre>${esc(e.message)}</pre></div>`; }
+}
+
+function esc(s){ return String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function fmtDate(s){ if(!s) return ""; try{ return new Date(s).toLocaleString(); }catch(e){ return s; } }
+
+async function renderDashboard(){
+  const [rep,dash,health] = await Promise.all([
+    jfetch("/reports/overview").catch(()=>null),
+    jfetch("/dashboards/overview").catch(()=>null),
+    jfetch("/health").catch(()=>null),
+  ]);
+  const counts = rep || {};
+  const pipeline = (dash && dash.pipeline_by_stage) || {};
+  const max = Math.max(1, ...Object.values(pipeline));
+  const main=document.getElementById("main");
+  main.innerHTML = `
+    <div class="kpis">
+      <div class="kpi"><b>${counts.accounts??"—"}</b><span>Accounts</span></div>
+      <div class="kpi"><b>${counts.contacts??"—"}</b><span>Contacts</span></div>
+      <div class="kpi"><b>${counts.opportunities??"—"}</b><span>Opportunities</span></div>
+      <div class="kpi"><b>${counts.approvals_pending??"—"}</b><span>Approvals pending</span></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>Pipeline by stage</h2>${Object.keys(pipeline).length? Object.entries(pipeline).map(([k,v])=>`
+        <div style="display:grid;grid-template-columns:9rem 1fr 3rem;gap:.6rem;align-items:center;margin:.45rem 0">
+          <span class="muted">${esc(k)}</span><div class="bar"><i style="width:${Math.round(v/max*100)}%"></i></div><b>${v}</b>
+        </div>`).join("") : `<p class="muted">No opportunities yet. Create one ≥ $100k to trigger approval workflow.</p>`}
+      </div>
+      <div class="card"><h2>System</h2>
+        <p class="muted">Health: ${health? esc(health.status||"ok") : "unknown"} · Suite: ${(health&&health.suite)||"ML-DSA-87 / ML-KEM-1024 / SHAKE256_512"}</p>
+        <p class="muted">Signed in as <b>${CLAIMS? esc(CLAIMS.sub):"—"}</b> roles ${(CLAIMS&&CLAIMS.roles||[]).join(", ")}</p>
+        <div class="row"><button class="btn" onclick="navigate('reports')">Reports</button><button class="btn" onclick="navigate('approvals')">Approvals</button><button class="btn" onclick="navigate('accounts')">Accounts</button></div>
+        <h3>Quick create</h3>
+        <div class="row"><button class="btn primary" onclick="navigate('accounts')">New Account</button><button class="btn" onclick="navigate('opportunities')">New Opportunity</button><button class="btn" onclick="navigate('leads')">New Lead</button></div>
+      </div>
+    </div>
+    <div class="card"><h2>Recent audit</h2><div id="dash-audit" class="muted">Loading…</div></div>
+  `;
+  try{
+    const a= await jfetch("/audit-logs?limit=5");
+    document.getElementById("dash-audit").innerHTML = (a.logs||a||[]).slice(0,5).map(r=>`<div style="border-top:1px solid var(--line);padding:.4rem 0"><b>${esc(r.action||r.operation||"")}</b> ${esc(r.object||r.object_type||"")} <span class="muted">${esc(r.record_id||"")} · ${fmtDate(r.timestamp||r.created_at)}</span></div>`).join("") || '<span class="muted">No audit yet.</span>';
+  }catch(e){ document.getElementById("dash-audit").textContent="—"; }
+}
+
+async function renderReports(){
+  const rep= await jfetch("/reports/overview");
+  const dash= await jfetch("/dashboards/overview");
+  const main=document.getElementById("main");
+  CACHE.reports=rep;
+  main.innerHTML=`
+    <div class="card"><h2>Reports — Overview</h2><p class="muted">Counts + approvals pending</p><pre>${esc(JSON.stringify(rep,null,2))}</pre></div>
+    <div class="card"><h2>Dashboards — Overview</h2><pre>${esc(JSON.stringify(dash,null,2))}</pre></div>
+  `;
+}
+async function renderWorkflows(){
+  const w= await jfetch("/workflows");
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Workflows</h2><p class="muted">${(w.workflows||w||[]).length} workflow(s). Opportunity amount ≥ $100k creates pending approval.</p>
+      <table><thead><tr><th>Object</th><th>Event</th><th>Condition</th></tr></thead><tbody>
+        ${(w.workflows||w||[]).map(x=>`<tr><td>${esc(x.object||x.object_type||"")}</td><td>${esc(x.event||"")}</td><td><code>${esc(x.condition||"")}</code></td></tr>`).join("")}
+      </tbody></table>
+    </div>
+    <div class="card"><h3>Test workflow</h3><p class="muted">Create an Opportunity with amount 250000 and close_date to trigger approval.</p>
+      <div class="row"><button class="btn" onclick="navigate('opportunities')">Go to Opportunities</button></div>
+    </div>
+  `;
+}
+async function renderApprovals(){
+  const a= await jfetch("/approvals");
+  const list=a.approvals||a||[];
+  CACHE.approvals_pending = a.count ?? list.length;
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Approvals</h2><p class="muted">${list.length} pending (Opportunity ≥ $100k)</p>
+      <table><thead><tr><th>ID</th><th>Object</th><th>Status</th><th>Requested by</th><th>Action</th></tr></thead><tbody>
+        ${list.map(r=>`<tr><td><code>${esc(r.id).slice(0,8)}</code></td><td>${esc(r.object||"Opportunity")}</td><td><span class="badge warn">${esc(r.status)}</span></td><td>${esc(r.requested_by||"")}</td><td><button class="btn primary" onclick="decide('${esc(r.id)}','approve')">Approve</button> <button class="btn danger" onclick="decide('${esc(r.id)}','reject')">Reject</button></td></tr>`).join("") || `<tr><td colspan="5" class="muted">No pending approvals.</td></tr>`}
+      </tbody></table>
+    </div>
+  `;
+}
+async function decide(id, decision){
+  await jfetch(`/approvals/${id}/decision`, {method:"POST", body:{decision}});
+  await renderApprovals();
+}
+
+async function renderAudit(){
+  const q = document.getElementById("global-q").value.trim();
+  const data= await jfetch("/audit-logs?limit=100");
+  const logs = (data.logs||data||[]);
+  const filtered = q ? logs.filter(r=> JSON.stringify(r).toLowerCase().includes(q.toLowerCase())) : logs;
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Audit Trail</h2><p class="muted">${filtered.length} of ${logs.length} (cap 5k, newest first). Filter via top search.</p>
+      <table><thead><tr><th>When</th><th>Action</th><th>Object</th><th>Record</th><th>By</th></tr></thead><tbody>
+        ${filtered.slice(0,100).map(r=>`<tr><td>${fmtDate(r.timestamp||r.created_at)}</td><td>${esc(r.action||r.operation||"")}</td><td>${esc(r.object||r.object_type||"")}</td><td><code>${esc((r.record_id||"").slice(0,8))}</code></td><td>${esc(r.actor||r.user||CLAIMS?.sub||"")}</td></tr>`).join("") || `<tr><td colspan="5" class="muted">No audit entries.</td></tr>`}
+      </tbody></table>
+    </div>
+  `;
+}
+
+async function renderMCP(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>MCP — Model Context Protocol</h2><p class="muted">POST /mcp/{backend_id} with PQ-JWT. Capability negotiation + hybrid ML-DSA||XMSS signatures. Backends: crm, ai, payments.</p>
+      <div class="form">
+        <label>Backend<select id="mcp-backend"><option value="crm">crm</option><option value="ai">ai</option><option value="payments">payments</option></select></label>
+        <label>Action<input id="mcp-action" value="query" placeholder="query | invoke | list"></label>
+        <label>Scopes (comma)<input id="mcp-scopes" value="read" placeholder="read,write"></label>
+        <label>Context JSON<textarea id="mcp-ctx" placeholder='{\"q\":\"Acme\"}'>{}</textarea></label>
+        <div class="row"><button class="btn primary" id="btn-mcp-post">POST /mcp/{backend}</button><button class="btn" id="btn-mcp-get">GET /mcp/{backend}</button></div>
+        <pre id="mcp-out">—</pre>
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-mcp-post").onclick = async ()=>{
+    const b=document.getElementById("mcp-backend").value;
+    const action=document.getElementById("mcp-action").value.trim()||"query";
+    const scopes=document.getElementById("mcp-scopes").value.split(",").map(s=>s.trim()).filter(Boolean);
+    let ctx={}; try{ ctx=JSON.parse(document.getElementById("mcp-ctx").value); }catch(e){}
+    try{ const r=await jfetch(`/mcp/${encodeURIComponent(b)}`, {method:"POST", body:{action, scopes, context:ctx}}); document.getElementById("mcp-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("mcp-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-mcp-get").onclick = async ()=>{
+    const b=document.getElementById("mcp-backend").value;
+    try{ const r=await jfetch(`/mcp/${encodeURIComponent(b)}`); document.getElementById("mcp-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("mcp-out").textContent="Error: "+e.message; }
+  };
+}
+
+async function renderSearch(){
+  const q = document.getElementById("global-q").value.trim();
+  const main=document.getElementById("main");
+     if(!q){ main.innerHTML=`<div class="card"><h2>Global Search</h2><p class="muted">Enter a query in the top bar (or below) and search across accounts/contacts/leads/opportunities/cases/products/campaigns/tasks/events/notes/attachments/quotes/orders. Uses <code>GET /search?q=</code> with PQ-JWT.</p><div class="form"><label>Query<input id="sq" placeholder="Acme"></label><div class="row"><button class="btn primary" id="btn-sq">Search</button></div></div></div>`; document.getElementById("btn-sq").onclick=()=>{ document.getElementById("global-q").value=document.getElementById("sq").value; renderSearch(); }; return; }
+  const data= await jfetch(`/search?q=${encodeURIComponent(q)}`);
+  const sections = Object.entries(data).filter(([k,v])=>Array.isArray(v));
+  main.innerHTML=`<div class="card"><h2>Global Search — "${esc(q)}"</h2><p class="muted">${sections.reduce((s,[,v])=>s+v.length,0)} hit(s) across ${sections.length} type(s) via <code>/search?q=</code></p>${sections.map(([type,rows])=>`<h3>${esc(type)} — ${rows.length}</h3><div style="overflow:auto;max-height:22rem"><table><thead><tr><th>ID</th><th>Name/Subject/Title</th><th></th></tr></thead><tbody>${rows.slice(0,25).map(r=>`<tr><td><code>${esc((r.id||"").slice(0,8))}</code></td><td>${esc(r.name||r.subject||r.title||r.first_name||JSON.stringify(r).slice(0,80))}</td><td><button class="btn" onclick="viewRow('${type}','${r.id}')">View</button></td></tr>`).join("") || `<tr><td colspan="3" class="muted">No hits.</td></tr>`}</tbody></table></div>`).join("") || `<p class="muted">No hits.</p>`}</div>`;
+}
+
+async function renderBulk(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Bulk Ops</h2><p class="muted">Export JSON/CSV and import via <code>/bulk/{type}/import</code> (Body {records:[...]}) or <code>/bulk/{type}/import-list</code> (bare array).</p>
+      <div class="grid2">
+        <div class="form">
+          <label>Object type
+            <select id="bulk-type">${OBJECTS.map(o=>`<option value="${o}">${o}</option>`).join("")}</select>
+          </label>
+          <label>Format (export)
+            <select id="bulk-fmt"><option value="json">json</option><option value="csv">csv</option></select>
+          </label>
+          <div class="row"><button class="btn" id="btn-bulk-export">Export</button><button class="btn" id="btn-bulk-leads">Export leads demo</button></div>
+          <pre id="bulk-out" style="min-height:8rem">—</pre>
+        </div>
+        <div class="form">
+          <label>Import JSON (records array or {records:[...]})
+            <textarea id="bulk-import" placeholder='[{"name":"Acme 2"}] or {"records":[{"name":"Acme 2"}]}'></textarea>
+          </label>
+          <div class="row"><button class="btn primary" id="btn-bulk-import">Import</button></div>
+          <div id="bulk-msg" class="muted"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-bulk-export").onclick = async ()=>{
+    const t=document.getElementById("bulk-type").value;
+    const f=document.getElementById("bulk-fmt").value;
+    const data= await jfetch(`/bulk/${t}/export?format=${f}`);
+    document.getElementById("bulk-out").textContent = typeof data==="string" ? data : JSON.stringify(data,null,2);
+  };
+  document.getElementById("btn-bulk-leads").onclick = async ()=>{
+    const data= await jfetch(`/bulk/leads/export?format=json`);
+    document.getElementById("bulk-out").textContent = JSON.stringify(data,null,2);
+  };
+  document.getElementById("btn-bulk-import").onclick = async ()=>{
+    const t=document.getElementById("bulk-type").value;
+    let raw=document.getElementById("bulk-import").value.trim();
+    if(!raw) return;
+    let payload;
+    try{ payload=JSON.parse(raw); }catch(e){ document.getElementById("bulk-msg").textContent="Invalid JSON: "+e.message; return; }
+    // normalize to {records:[]}
+    const body = Array.isArray(payload) ? {records: payload} : payload;
+    try{
+      const r= await jfetch(`/bulk/${t}/import`, {method:"POST", body});
+      document.getElementById("bulk-msg").textContent = `Imported ${r.imported??r.count??"?"} record(s).`;
+    }catch(e){ document.getElementById("bulk-msg").textContent="Import failed: "+e.message; }
+  };
+}
+
+async function renderCustom(){
+  const data= await jfetch("/custom-objects");
+  const objs = data.objects||data.custom_objects||data||[];
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Custom Objects</h2><p class="muted">Admin-only POST /custom-objects. Then POST /custom/{name}.</p>
+      <table><thead><tr><th>Name</th><th>Label</th><th>Fields</th><th>Open</th></tr></thead><tbody>
+        ${(Array.isArray(objs)?objs:[]).map(o=>`<tr><td><code>${esc(o.name||o.api_name||"")}</code></td><td>${esc(o.label||"")}</td><td>${esc(JSON.stringify(o.fields||[]))}</td><td><button class="btn" onclick="openCustom('${esc(o.name||o.api_name)}')">Open</button></td></tr>`).join("") || `<tr><td colspan="4" class="muted">No custom objects. Create Invoice__c below.</td></tr>`}
+      </tbody></table>
+      <h3>Create custom object (admin)</h3>
+      <div class="form">
+        <label>Name (api_name, e.g. Invoice__c)<input id="co-name" value="Invoice__c"></label>
+        <label>Label<input id="co-label" value="Invoice"></label>
+        <label>Fields JSON array<input id="co-fields" value='[{"name":"amount","type":"currency"},{"name":"status","type":"picklist"}]'></label>
+        <div class="row"><button class="btn primary" id="btn-co-create">Create object</button></div>
+        <div id="co-msg" class="muted"></div>
+      </div>
+    </div>
+    <div id="co-detail"></div>
+  `;
+  document.getElementById("btn-co-create").onclick = async ()=>{
+    const name=document.getElementById("co-name").value.trim();
+    const label=document.getElementById("co-label").value.trim();
+    let fields=[]; try{ fields=JSON.parse(document.getElementById("co-fields").value); }catch(e){}
+    try{
+      await jfetch("/custom-objects", {method:"POST", body:{name, label, fields}});
+      document.getElementById("co-msg").textContent="Created "+name;
+      await renderCustom();
+    }catch(e){ document.getElementById("co-msg").textContent="Failed: "+e.message; }
+  };
+}
+async function openCustom(name){
+  const box=document.getElementById("co-detail");
+  box.innerHTML='<div class="card muted">Loading '+esc(name)+'…</div>';
+  let data;
+  try{ data= await jfetch(`/custom/${encodeURIComponent(name)}`); }catch(e){ box.innerHTML=`<div class="card"><pre>${esc(e.message)}</pre></div>`; return; }
+  const rows = data.records||data||[];
+  box.innerHTML=`
+    <div class="card"><h2>${esc(name)} — ${rows.length} record(s)</h2>
+      <table><thead><tr><th>ID</th><th>Data</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td><code>${esc((r.id||"").slice(0,8))}</code></td><td><code>${esc(JSON.stringify(r))}</code></td></tr>`).join("") || `<tr><td colspan="2" class="muted">No records.</td></tr>`}
+      </tbody></table>
+      <h3>New record</h3>
+      <div class="form"><label>JSON<input id="co-rec" value='{"amount": 1200, "status":"Draft"}'></label><div class="row"><button class="btn primary" id="btn-co-add">Add</button></div><div id="co-add-msg" class="muted"></div></div>
+    </div>
+  `;
+  document.getElementById("btn-co-add").onclick = async ()=>{
+    let payload={}; try{ payload=JSON.parse(document.getElementById("co-rec").value); }catch(e){ document.getElementById("co-add-msg").textContent="Invalid JSON"; return; }
+    try{ await jfetch(`/custom/${encodeURIComponent(name)}`, {method:"POST", body: payload}); document.getElementById("co-add-msg").textContent="Added."; openCustom(name); }catch(e){ document.getElementById("co-add-msg").textContent="Failed: "+e.message; }
+  };
+}
+
+async function renderGraphQL(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>GraphQL</h2><p class="muted">POST /graphql — 25 types, 13 lists, 12 mutations. Shares _accounts etc with REST (set_gql_store).</p>
+      <div class="form">
+        <label>Query (auto_camelCase true — use createAccount, accounts, etc)
+          <textarea id="gql-q" style="min-height:9rem;font-family:ui-monospace,monospace">{
+  accounts { id name industry }
+}</textarea>
+        </label>
+        <div class="row"><button class="btn primary" id="btn-gql-run">Run</button><button class="btn" id="btn-gql-mut">Example createAccount</button><a class="btn" href="/graphql" target="_blank">Playground GET</a></div>
+        <pre id="gql-out">—</pre>
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-gql-run").onclick = async ()=>{
+    const q=document.getElementById("gql-q").value;
+    try{
+      const r= await jfetch("/graphql", {method:"POST", body:{query:q}});
+      document.getElementById("gql-out").textContent = JSON.stringify(r,null,2);
+    }catch(e){ document.getElementById("gql-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-gql-mut").onclick = ()=>{
+    document.getElementById("gql-q").value = `mutation {
+  createAccount(name: "GQL Co", industry: "Technology") { ok account { id name } }
+}`;
+  };
+}
+
+async function renderCrypto(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Crypto — CNSA 2.0</h2><p class="muted">ML-DSA-87 sign/verify, Hybrid ML-DSA||XMSS, ML-KEM-1024, SHAKE256_512</p>
+      <div class="grid2">
+        <div class="form">
+          <label>Message<input id="cr-msg" value="hello custrel"></label>
+          <div class="row"><button class="btn" id="btn-cr-sign">Sign (ML-DSA-87)</button><button class="btn" id="btn-cr-hybrid">Hybrid sign</button><button class="btn" id="btn-cr-kem">KEM encapsulate</button></div>
+          <label>Signature hex (for verify)<textarea id="cr-sig" placeholder="paste signature_hex"></textarea></label>
+          <div class="row"><button class="btn primary" id="btn-cr-verify">Verify</button></div>
+          <pre id="cr-out">—</pre>
+        </div>
+        <div class="card" style="margin:0"><h3>Keys</h3><div class="row"><button class="btn" id="btn-cr-keys">GET /auth/pq/keys</button><button class="btn" id="btn-cr-xmss">XMSS keygen</button><button class="btn" id="btn-cr-cert">POST /crypto/certificate</button><button class="btn" id="btn-cr-neg">GET /crypto/negotiate</button></div><pre id="cr-keys">—</pre><label style="margin-top:.6rem">Cert identity<input id="cr-cert-id" value="custrel"></label><label>Bindings JSON<input id="cr-bind" value='{\"tls\":\"1.3\",\"suite\":\"ML-DSA-87\"}'></label></div>
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-cr-sign").onclick = async ()=>{
+    const m=document.getElementById("cr-msg").value;
+    const r= await jfetch(`/crypto/sign?data=${encodeURIComponent(m)}`, {method:"POST"});
+    document.getElementById("cr-sig").value = r.signature_hex||r.signature||"";
+    document.getElementById("cr-out").textContent = JSON.stringify(r,null,2);
+  };
+  document.getElementById("btn-cr-hybrid").onclick = async ()=>{
+    const m=document.getElementById("cr-msg").value;
+    const r= await jfetch("/crypto/hybrid/sign", {method:"POST", body:{data:m}});
+    document.getElementById("cr-out").textContent = JSON.stringify(r,null,2);
+    if(r.signature) document.getElementById("cr-sig").value = JSON.stringify(r.signature);
+  };
+  document.getElementById("btn-cr-kem").onclick = async ()=>{
+    const r= await jfetch("/crypto/kem/encapsulate", {method:"POST", body:{}});
+    document.getElementById("cr-out").textContent = JSON.stringify(r,null,2);
+  };
+  document.getElementById("btn-cr-verify").onclick = async ()=>{
+    const m=document.getElementById("cr-msg").value;
+    const sig=document.getElementById("cr-sig").value.trim();
+    if(!sig) return;
+    // try raw hex verify, else hybrid
+    try{
+      let r;
+      if(sig.startsWith("{")){
+        r= await jfetch("/crypto/hybrid/verify", {method:"POST", body:{data:m, signature: JSON.parse(sig)}});
+      } else {
+        r= await jfetch(`/crypto/verify?data=${encodeURIComponent(m)}&signature_hex=${encodeURIComponent(sig)}`, {method:"POST"});
+      }
+      document.getElementById("cr-out").textContent = JSON.stringify(r,null,2);
+    }catch(e){ document.getElementById("cr-out").textContent="Verify failed: "+e.message; }
+  };
+  document.getElementById("btn-cr-keys").onclick = async ()=>{
+    const r= await jfetch("/auth/pq/keys");
+    document.getElementById("cr-keys").textContent = JSON.stringify(r,null,2);
+  };
+  document.getElementById("btn-cr-xmss").onclick = async ()=>{
+    const r= await jfetch("/crypto/xmss/keygen", {method:"POST", body:{}});
+    document.getElementById("cr-keys").textContent = JSON.stringify(r,null,2);
+  };
+  document.getElementById("btn-cr-cert").onclick = async ()=>{
+    const identity=document.getElementById("cr-cert-id").value.trim()||"custrel";
+    let bindings={}; try{ bindings=JSON.parse(document.getElementById("cr-bind").value); }catch(e){}
+    const r= await jfetch("/crypto/certificate", {method:"POST", body:{identity, bindings}});
+    document.getElementById("cr-keys").textContent = JSON.stringify(r,null,2);
+    document.getElementById("cr-out").textContent = "Merkle root: "+(r.merkle_root||r.root||"")+" — verify via GET /crypto/certificate/{root}";
+  };
+  document.getElementById("btn-cr-neg").onclick = async ()=>{
+    const r= await jfetch("/crypto/negotiate?client_prefs=SHAKE256_512,SHA384");
+    document.getElementById("cr-keys").textContent = JSON.stringify(r,null,2);
+  };
+}
+
+async function renderHealth(){
+  const h= await jfetch("/health");
+  const k= await jfetch("/auth/pq/keys").catch(()=>null);
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Health</h2><pre>${esc(JSON.stringify(h,null,2))}</pre></div>
+    <div class="card"><h2>PQ Keys</h2><pre>${esc(JSON.stringify(k,null,2))}</pre></div>
+  `;
+}
+
+const FIELD_HINTS = {
+  accounts: [{k:"name",req:1},{k:"industry"},{k:"annual_revenue",type:"number"}],
+  contacts: [{k:"first_name",req:1},{k:"last_name",req:1},{k:"email",req:1},{k:"account_id"}],
+  leads: [{k:"first_name",req:1},{k:"last_name",req:1},{k:"email",req:1},{k:"company",req:1},{k:"status"}],
+  opportunities: [{k:"name",req:1},{k:"amount",type:"number",req:1},{k:"close_date",req:1},{k:"stage"},{k:"account_id"}],
+  cases: [{k:"subject",req:1},{k:"description"},{k:"status"},{k:"account_id"}],
+  products: [{k:"name",req:1},{k:"product_code"},{k:"is_active",type:"checkbox"}],
+  pricebooks: [{k:"name",req:1},{k:"is_active",type:"checkbox"}],
+  campaigns: [{k:"name",req:1},{k:"status"}],
+  tasks: [{k:"subject",req:1},{k:"status"}],
+  events: [{k:"subject",req:1},{k:"start_datetime",req:1},{k:"end_datetime"},{k:"what_id"},{k:"who_id"}],
+  notes: [{k:"title",req:1},{k:"body",req:1},{k:"parent_id"}],
+  attachments: [{k:"parent_id",req:1},{k:"name",req:1},{k:"content_type"},{k:"body"}],
+  quotes: [{k:"name",req:1},{k:"opportunity_id",req:1},{k:"status"},{k:"amount",type:"number"}],
+  orders: [{k:"name",req:1},{k:"account_id",req:1},{k:"quote_id"},{k:"status"},{k:"amount",type:"number"}],
+  users: [{k:"sub"},{k:"roles"}],
+  profiles: [{k:"name"}],
+  pricebook_entries: [{k:"product_id",req:1},{k:"unit_price",type:"number",req:1}],
+  opportunity_contact_roles: [{k:"contact_id",req:1},{k:"role",req:1},{k:"is_primary",type:"checkbox"}],
+  quote_line_items: [{k:"product_id",req:1},{k:"quantity",type:"number",req:1},{k:"unit_price",type:"number",req:1}],
+  order_items: [{k:"product_id",req:1},{k:"quantity",type:"number",req:1},{k:"unit_price",type:"number",req:1}],
+};
+let CURSORS={};
+async function renderList(obj, cursor){
+  const qraw = document.getElementById("global-q").value.trim();
+  const limit=20;
+  const cur=cursor||CURSORS[obj]||"";
+  const qParam=qraw?`&q=${encodeURIComponent(qraw)}`:"";
+  const curParam=cur?`&cursor=${encodeURIComponent(cur)}`:"";
+  const raw = await jfetch(`/${obj}?limit=${limit}${qParam}${curParam}&sort_by=created_at&sort_order=desc`);
+  const rows = Array.isArray(raw) ? raw : (raw[`${obj}`]||raw.accounts||raw.contacts||raw.leads||raw.opportunities||raw.cases||raw.products||raw.pricebooks||raw.campaigns||raw.tasks||raw.events||raw.notes||raw.attachments||raw.quotes||raw.orders||raw.items||[]);
+  const total=raw.total??rows.length;
+  const next=raw.next_cursor||null;
+  const hints = FIELD_HINTS[obj]||[{k:"name",req:1}];
+  const cols = [...new Set(["id", ...hints.map(h=>h.k), "created_at"])].slice(0,6);
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2>${esc(LABELS[obj]||obj)} — ${rows.length} / ${total}${next?' · more':''}</h2>
+        <div class="row"><button class="btn primary" id="btn-new">New ${esc(LABELS[obj]||obj).slice(0,-1)}</button>${next?`<button class="btn" id="btn-next">Next →</button>`:""}${cur?`<button class="btn" id="btn-prev">← First</button>`:""}</div>
+      </div>
+      <p class="muted">GET /${obj}?limit=${limit}&q=&cursor=&sort_by=created_at&sort_order=desc · X-Request-ID echoed · audited</p>
+      <div style="overflow:auto;max-height:60vh">
+        <table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join("")}<th></th></tr></thead><tbody>
+          ${filtered.map(r=>`<tr>${cols.map(c=>`<td>${c==="id"? `<code>${esc((r[c]||"").slice(0,8))}</code>`: esc(r[c]??"")}${c==="created_at"? " · "+fmtDate(r[c]):""}</td>`).join("")}<td><button class="btn" onclick="viewRow('${obj}','${r.id}')">View</button> <button class="btn danger" onclick="delRow('${obj}','${r.id}')">Delete</button></td></tr>`).join("") || `<tr><td colspan="${cols.length+1}" class="muted">No records. Create one.</td></tr>`}
+        </tbody></table>
+      </div>
+    </div>
+    <div id="detail"></div>
+    <div class="card" id="form-card">
+      <h3>Create ${esc(LABELS[obj]||obj)}</h3>
+      <div class="form" id="create-form">
+        ${hints.map(h=>`<label>${esc(h.k)}${h.req?' *':''}<input id="f-${h.k}" placeholder="${esc(h.k)}" ${h.type==="number"?'type="number"':''}></label>`).join("")}
+        <div class="row"><button class="btn primary" id="btn-create">Create</button><span id="form-msg" class="muted"></span></div>
+      </div>
+    </div>
+  `;
+  const bNext=document.getElementById("btn-next"); if(bNext) bNext.onclick=()=>{ CURSORS[obj]=next; renderList(obj,next); };
+  const bPrev=document.getElementById("btn-prev"); if(bPrev) bPrev.onclick=()=>{ CURSORS[obj]=""; renderList(obj,""); };
+  document.getElementById("btn-new").onclick = ()=> document.getElementById("create-form").scrollIntoView({behavior:"smooth"});
+  document.getElementById("btn-create").onclick = async ()=>{
+    const payload={};
+    for(const h of hints){
+      const v=document.getElementById(`f-${h.k}`).value.trim();
+      if(v) payload[h.k]= h.type==="number" ? Number(v) : (h.type==="checkbox" ? (v==="true"||v==="1") : v);
+    }
+    // defaults for required
+    if(obj==="opportunities" && !payload.close_date) payload.close_date = new Date(Date.now()+30*864e5).toISOString().slice(0,10);
+    if(obj==="opportunities" && !payload.stage) payload.stage="Prospecting";
+    if(obj==="opportunities" && !payload.amount) payload.amount=150000;
+    if(obj==="leads" && !payload.company) payload.company="Acme";
+    if(obj==="cases" && !payload.status) payload.status="New";
+    try{
+      await jfetch(`/${obj}`, {method:"POST", body: payload});
+      document.getElementById("form-msg").textContent="Created.";
+      renderList(obj);
+    }catch(e){ document.getElementById("form-msg").textContent="Failed: "+e.message; }
+  };
+  document.getElementById("global-q").oninput = ()=> renderList(obj);
+  // read-only objects hide create form
+  if(obj==="users"||obj==="profiles"){
+    const fc=document.getElementById("form-card"); if(fc) fc.style.display="none";
+  }
+}
+async function viewRow(obj,id){
+  const r= await jfetch(`/${obj}/${id}`);
+  const detail=document.getElementById("detail");
+  detail.innerHTML=`<div class="card"><h2>${esc(obj)} — <code>${esc(id.slice(0,8))}</code></h2><pre>${esc(JSON.stringify(r,null,2))}</pre><div class="row"><button class="btn" onclick="document.getElementById('detail').innerHTML=''">Close</button></div></div>`;
+  detail.scrollIntoView({behavior:"smooth"});
+}
+async function delRow(obj,id){
+  if(!confirm(`Delete ${obj} ${id.slice(0,8)}?`)) return;
+  try{ await jfetch(`/${obj}/${id}`, {method:"DELETE"}); renderList(obj); }catch(e){ alert("Delete failed: "+e.message); }
+}
+async function refreshHealthMini(){
+  try{
+    const h= await jfetch("/health");
+    document.getElementById("health-mini").textContent = `Health: ${h.status||"ok"} · ${h.suite||"CNSA 2.0"}`;
+  }catch(e){ document.getElementById("health-mini").textContent="Health: —"; }
+}
+
+// login
+document.getElementById("btn-login").onclick = async ()=>{
+  const sub=document.getElementById("login-sub").value.trim()||"admin";
+  const roles=document.getElementById("login-roles").value.split(",").map(s=>s.trim()).filter(Boolean);
+  const exp=Number(document.getElementById("login-exp").value)||3600;
+  const msg=document.getElementById("login-msg");
+  const pre=document.getElementById("login-token");
+  msg.textContent="Signing…";
+  try{
+    const r= await fetch(API+"/auth/pq/login", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({sub, roles, expires_in: exp})});
+    const j= await r.json();
+    if(!r.ok) throw new Error(j.detail||JSON.stringify(j));
+    const tok=j.access_token||j.token||"";
+    setToken(tok);
+    pre.hidden=false;
+    pre.textContent = tok.slice(0,120)+"…\n\nVerify: POST /auth/pq/verify {token}";
+    msg.textContent="Signed in. JWT alg ML-DSA-87, kid pub[:16] b64.";
+    showApp();
+  }catch(e){ msg.textContent="Login failed: "+e.message; }
+};
+document.getElementById("btn-try-health").onclick = async ()=>{
+  const msg=document.getElementById("login-msg");
+  try{ const h= await jfetch("/health"); msg.textContent="Health: "+(h.status||"ok")+" · "+(h.suite||""); }catch(e){ msg.textContent="Health failed: "+e.message; }
+};
+document.getElementById("btn-logout").onclick = ()=>{
+  TOKEN=""; localStorage.removeItem("custrel_token"); CLAIMS=null;
+  showLogin();
+};
+document.getElementById("btn-refresh").onclick = ()=> navigate(CURRENT);
+
+document.getElementById("global-q").addEventListener("keydown", e=>{
+  if(e.key==="Enter"){ const q=e.target.value.trim(); if(q) navigate("search"); }
+});
+// boot
+if(TOKEN){
+  CLAIMS=decodeClaims(TOKEN);
+  // verify token is still valid by hitting health with auth? just show app and lazy-verify on first fetch
+  document.getElementById("token-pill").textContent = CLAIMS ? (CLAIMS.sub+" · "+(CLAIMS.roles||[]).join(",")) : "token present";
+  document.getElementById("who").textContent = CLAIMS ? `${CLAIMS.sub} — ${(CLAIMS.roles||[]).join(", ")}` : "";
+  showApp();
+} else {
+  // try dev bypass token if API allows? else stay on login
+  showLogin();
+}
+</script>
+</body>
+</html>
