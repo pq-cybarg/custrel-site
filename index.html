@@ -156,12 +156,12 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
 
 <script>
 const API = location.origin;
-const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","users","profiles"];
-const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",users:"Users",profiles:"Profiles"};
+const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","users","profiles"];
+const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",users:"Users",profiles:"Profiles"};
 const NAV = [
   ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
   ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
-  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["search","Search"],["reports","Reports"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["search","Search"],["reports","Reports"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
  ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
@@ -608,6 +608,7 @@ const FIELD_HINTS = {
   attachments: [{k:"parent_id",req:1},{k:"name",req:1},{k:"content_type"},{k:"body"}],
   quotes: [{k:"name",req:1},{k:"opportunity_id",req:1},{k:"status"},{k:"amount",type:"number"}],
   orders: [{k:"name",req:1},{k:"account_id",req:1},{k:"quote_id"},{k:"status"},{k:"amount",type:"number"}],
+  payments: [{k:"amount",type:"number",req:1},{k:"opportunity_id"},{k:"payment_method"},{k:"currency"}],
   users: [{k:"sub"},{k:"roles"}],
   profiles: [{k:"name"}],
   pricebook_entries: [{k:"product_id",req:1},{k:"unit_price",type:"number",req:1}],
@@ -673,10 +674,38 @@ async function renderList(obj, cursor){
     }catch(e){ document.getElementById("form-msg").textContent="Failed: "+e.message; }
   };
   document.getElementById("global-q").oninput = ()=> renderList(obj);
-  // read-only objects hide create form
-  if(obj==="users"||obj==="profiles"){
-    const fc=document.getElementById("form-card"); if(fc) fc.style.display="none";
-  }
+   if(obj==="payments"){
+     const fc=document.getElementById("form-card");
+     if(fc){
+       const qrlCard=document.createElement("div");
+       qrlCard.className="card";
+       qrlCard.innerHTML=`<h3>Blockchain — QRL 2.0 (64-byte)</h3><p class="muted">POST /payments/blockchain — amount + opportunity_id + qrl_address 128 hex, subtype QRL-2.0, ML-DSA-87 signed</p><div class="form"><label>Amount<input id="p-qrl-amount" type="number" placeholder="10"></label><label>Opportunity ID<input id="p-qrl-oid" placeholder="opportunity uuid"></label><label>QRL address (128 hex)<input id="p-qrl-addr" placeholder="${"a".repeat(32)}… (128 hex)"></label><div class="row"><button class="btn primary" id="btn-qrl-pay">Send QRL payment</button><span id="qrl-msg" class="muted"></span></div></div>`;
+       fc.after(qrlCard);
+       const qrvmCard=document.createElement("div");
+       qrvmCard.className="card";
+       qrvmCard.innerHTML=`<h3>QRVM — Hyperion (.hyp) Smart Contract</h3><p class="muted">POST /payments/qrvm/contract — contract_code + contract_name, format Hyperion, is_evm true (not Ethereum), ML-DSA-87 signed</p><div class="form"><label>Contract name<input id="p-qrvm-name" placeholder="vault.hyp"></label><label>Contract code<textarea id="p-qrvm-code" placeholder="contract Vault { }"></textarea></label><div class="row"><button class="btn primary" id="btn-qrvm">Deploy QRVM contract</button><span id="qrvm-msg" class="muted"></span></div></div>`;
+       qrlCard.after(qrvmCard);
+       document.getElementById("btn-qrl-pay").onclick=async()=>{
+         const amount=Number(document.getElementById("p-qrl-amount").value);
+         const oid=document.getElementById("p-qrl-oid").value.trim();
+         const addr=document.getElementById("p-qrl-addr").value.trim();
+         const out=document.getElementById("qrl-msg");
+         if(!amount||!oid||addr.length!==128){ out.textContent="Amount, opportunity_id and 128-hex address required."; return; }
+         try{ const r=await jfetch("/payments/blockchain",{method:"POST",body:{amount,opportunity_id:oid,qrl_address:addr}}); out.textContent="QRL payment "+(r.id||"").slice(0,8)+" subtype "+(r.subtype||"QRL-2.0"); renderList(obj); }catch(e){ out.textContent="Failed: "+e.message; }
+       };
+       document.getElementById("btn-qrvm").onclick=async()=>{
+         const code=document.getElementById("p-qrvm-code").value.trim();
+         const name=document.getElementById("p-qrvm-name").value.trim()||"contract.hyp";
+         const out=document.getElementById("qrvm-msg");
+         if(!code){ out.textContent="contract_code required."; return; }
+         try{ const r=await jfetch("/payments/qrvm/contract",{method:"POST",body:{contract_code:code,contract_name:name}}); out.textContent=r.format||"Hyperion (.hyp) "+(r.id||"").slice(0,8); }catch(e){ out.textContent="Failed: "+e.message; }
+       };
+     }
+   }
+   // read-only objects hide create form
+   if(obj==="users"||obj==="profiles"){
+     const fc=document.getElementById("form-card"); if(fc) fc.style.display="none";
+   }
 }
 async function viewRow(obj,id){
   const r= await jfetch(`/${obj}/${id}`);
