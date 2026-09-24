@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custrel — customer records</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="file">
+        <nav class="spine" aria-label="On this page">
+            <a href="#records">Records</a>
+            <a href="#security">Security</a>
+            <a href="#access">Access</a>
+        </nav>
+        <article class="sheet">
+            <header class="top">
+                <p class="brand">Custrel</p>
+                <span><a class="access" href="app.html" style="margin-right:1rem">Open app — Lightning</a><a class="access" href="mailto:resistant@tuta.com">Request access</a></span>
+            </header>
+
+            <h1>Customer records a reviewer can check.</h1>
+            <p class="lede">Custrel is the place your teams keep accounts, people, and deals. A record can be signed with ML-DSA-87, the signature in CNSA 2.0, so a later review can show it was not changed.</p>
+
+            <section id="records">
+                <h2>What your teams keep</h2>
+                <ul class="ledger">
+                    <li><strong>Accounts</strong><span>The organization you sell to or serve.</span></li>
+                    <li><strong>Contacts</strong><span>People at those accounts.</span></li>
+                    <li><strong>Leads</strong><span>Names that are not a customer yet.</span></li>
+                    <li><strong>Opportunities</strong><span>Deals still in progress.</span></li>
+                    <li><strong>Cases</strong><span>Problems a customer asked you to fix.</span></li>
+                    <li><strong>Catalog</strong><span>Products, price books, campaigns, and tasks tied to that work.</span></li>
+                </ul>
+            </section>
+
+            <section id="security">
+                <h2>What security can verify</h2>
+                <p class="note">These are the algorithms Custrel uses. They do not replace your own accreditation.</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Signing a record</th>
+                            <td>ML-DSA-87. ML-DSA-65 is available where a smaller signature is required.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Establishing a key</th>
+                            <td>ML-KEM-1024, with ML-KEM-768 where that size is the requirement.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Hashing</th>
+                            <td>SHAKE256 by default. SHA-384 can be selected.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Keys that must not be reused</th>
+                            <td>XMSS. Each signature advances a counter, so the same key is not used twice.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Passwords</th>
+                            <td>A slow hash and a long salt. The password itself is not stored.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">The service</th>
+                            <td>Requests are rate limited. Browsers are told not to embed the app in another site.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="access">
+                <h2>Access</h2>
+                <p>An administrator issues access for your organization. To ask for it, write to <a href="mailto:resistant@tuta.com">resistant@tuta.com</a>.</p>
+                <p id="for-implementers" hidden>People connecting a system use the <a href="/api/explorer">API explorer</a>. Protected calls send <code>Authorization: Bearer</code> and the token you were issued.</p>
+            </section>
+
+            <footer>
+                <p>Custrel</p>
+            </footer>
+        </article>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
