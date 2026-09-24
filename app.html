@@ -65,8 +65,14 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
   <div class="card">
     <div style="letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--nav);font-size:.82rem">Custrel</div>
     <h2 style="margin:.3rem 0">CNSA 2.0 CRM — Sign in</h2>
-    <p class="muted">Issues a ML-DSA-87 signed JWT (kid = pub[:16] b64). No password — PQ auth only.</p>
-    <div class="form">
+    <p class="muted">Click to sign in — PQ-JWT (ML-DSA-87) is minted behind the scenes. No password needed.</p>
+    <div class="row" style="margin:.6rem 0">
+      <button class="btn primary" id="btn-demo-admin">Login as Admin</button>
+      <button class="btn" id="btn-demo-user">Login as User</button>
+      <button class="btn" id="btn-demo-viewer">Login as Viewer</button>
+    </div>
+    <details style="margin:.6rem 0"><summary class="muted">Advanced (custom subject/roles)</summary>
+    <div class="form" style="margin-top:.6rem">
       <label>Subject (sub)
         <input id="login-sub" value="admin" placeholder="admin">
       </label>
@@ -77,13 +83,14 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
         <input id="login-exp" type="number" value="3600">
       </label>
       <div class="row">
-        <button class="btn primary" id="btn-login">Sign in (PQ-JWT)</button>
+        <button class="btn primary" id="btn-login">Sign in (custom)</button>
         <button class="btn" id="btn-try-health">Health check</button>
       </div>
-      <div id="login-msg" class="muted"></div>
+    </div>
+    </details>
+      <div id="login-msg" class="muted" style="margin-top:.6rem"></div>
       <pre id="login-token" hidden></pre>
       <p class="muted">API: <a href="/api/explorer" target="_blank">/api/explorer</a> · <a href="/api/redoc" target="_blank">/api/redoc</a> · <a href="/graphql" target="_blank">/graphql</a></p>
-    </div>
   </div>
 </div>
 
@@ -648,6 +655,21 @@ async function refreshHealthMini(){
   }catch(e){ document.getElementById("health-mini").textContent="Health: —"; }
 }
 
+async function demoLogin(sub, roles){
+  const msg=document.getElementById("login-msg");
+  msg.textContent=`Signing in as ${sub}…`;
+  try{
+    const r= await fetch(API+"/auth/pq/login", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({sub, roles, expires_in: 3600})});
+    const j= await r.json();
+    if(!r.ok) throw new Error(j.detail||JSON.stringify(j));
+    setToken(j.access_token||j.token||"");
+    msg.textContent=`Signed in as ${sub}.`;
+    showApp();
+  }catch(e){ msg.textContent="Login failed: "+e.message; }
+}
+document.getElementById("btn-demo-admin").onclick = ()=> demoLogin("admin", ["admin","manager"]);
+document.getElementById("btn-demo-user").onclick = ()=> demoLogin("demo", ["user"]);
+document.getElementById("btn-demo-viewer").onclick = ()=> demoLogin("viewer", ["viewer"]);
 // login
 document.getElementById("btn-login").onclick = async ()=>{
   const sub=document.getElementById("login-sub").value.trim()||"admin";
