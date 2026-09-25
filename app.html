@@ -156,12 +156,12 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
 
 <script>
 const API = location.origin;
-const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","contracts","assets","entitlements","content_documents","feed_items","reports","dashboards","flows","quantum-keys","aimcp-bridges","tokens","users","profiles"];
-const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",contracts:"Contracts",assets:"Assets",entitlements:"Entitlements",content_documents:"Content Documents",feed_items:"Feed Items",reports:"Reports",dashboards:"Dashboards",flows:"Flows","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles"};
+const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","contracts","assets","entitlements","content_documents","feed_items","reports","dashboards","flows","service_contracts","work_orders","knowledge_articles","invoices","territories","quantum-keys","aimcp-bridges","tokens","users","profiles"];
+const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",contracts:"Contracts",assets:"Assets",entitlements:"Entitlements",content_documents:"Content Documents",feed_items:"Feed Items",reports:"Reports",dashboards:"Dashboards",flows:"Flows",service_contracts:"Service Contracts",work_orders:"Work Orders",knowledge_articles:"Knowledge Articles",invoices:"Invoices",territories:"Territories","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles"};
 const NAV = [
   ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
   ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
-  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],["reports","Reports"],["dashboards","Dashboards"],["flows","Flows"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["dashboards","Dashboards"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
  ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
@@ -635,6 +635,11 @@ const FIELD_HINTS = {
    reports: [{k:"name",req:1},{k:"report_type",req:1},{k:"format"}],
    dashboards: [{k:"title",req:1},{k:"description"}],
    flows: [{k:"label",req:1},{k:"api_name",req:1},{k:"status"}],
+   service_contracts: [{k:"account_id",req:1},{k:"start_date",req:1},{k:"status"}],
+   work_orders: [{k:"account_id",req:1},{k:"subject",req:1},{k:"status"}],
+   knowledge_articles: [{k:"title",req:1},{k:"summary"}],
+   invoices: [{k:"account_id",req:1},{k:"status"}],
+   territories: [{k:"name",req:1},{k:"description"}],
     "quantum-keys": [{k:"owner_id",req:1},{k:"key_type",req:1},{k:"xmss_tree_index",type:"number"}],
   "aimcp-bridges": [{k:"user_id",req:1},{k:"backend_id",req:1},{k:"access_token"}],
   tokens: [{k:"sub",req:1},{k:"scopes"},{k:"quantum_proof",type:"checkbox"}],
