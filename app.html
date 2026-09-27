@@ -156,12 +156,12 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
 
 <script>
 const API = location.origin;
-const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","contracts","assets","entitlements","content_documents","feed_items","reports","dashboards","flows","service_contracts","work_orders","knowledge_articles","invoices","territories","email_templates","email_messages","service_resources","service_appointments","forecasts","quotas","collaboration_groups","surveys","social_posts","social_personas","live_chat_transcripts","macros","quick_texts","network_members","ideas","topics","locations","associated_locations","service_territories","operating_hours","work_types","work_type_groups","skills","service_resource_skills","return_orders","return_order_line_items","shipments","product_requests","product_request_line_items","time_sheets","time_sheet_entries","shifts","resource_absences","resource_preferences","service_crews","service_crew_members","maintenance_plans","maintenance_assets","entitlement_contacts","contract_contact_roles","quantum-keys","aimcp-bridges","tokens","users","profiles"];
-const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",contracts:"Contracts",assets:"Assets",entitlements:"Entitlements",content_documents:"Content Documents",feed_items:"Feed Items",reports:"Reports",dashboards:"Dashboards",flows:"Flows",service_contracts:"Service Contracts",work_orders:"Work Orders",knowledge_articles:"Knowledge Articles",invoices:"Invoices",territories:"Territories",email_templates:"Email Templates",email_messages:"Email Messages",service_resources:"Service Resources",service_appointments:"Service Appointments",forecasts:"Forecasts",quotas:"Quotas",collaboration_groups:"Collaboration Groups",surveys:"Surveys",social_posts:"Social Posts",social_personas:"Social Personas",live_chat_transcripts:"Live Chat Transcripts",macros:"Macros",quick_texts:"Quick Texts",network_members:"Network Members",ideas:"Ideas",topics:"Topics",locations:"Locations",associated_locations:"Associated Locations",service_territories:"Service Territories",operating_hours:"Operating Hours",work_types:"Work Types",work_type_groups:"Work Type Groups",skills:"Skills",service_resource_skills:"Service Resource Skills",return_orders:"Return Orders",return_order_line_items:"Return Order Line Items",shipments:"Shipments",product_requests:"Product Requests",product_request_line_items:"Product Request Line Items",time_sheets:"Time Sheets",time_sheet_entries:"Time Sheet Entries",shifts:"Shifts",resource_absences:"Resource Absences",resource_preferences:"Resource Preferences",service_crews:"Service Crews",service_crew_members:"Service Crew Members",maintenance_plans:"Maintenance Plans",maintenance_assets:"Maintenance Assets",entitlement_contacts:"Entitlement Contacts",contract_contact_roles:"Contract Contact Roles","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles"};
+const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","contracts","assets","entitlements","content_documents","feed_items","reports","dashboards","flows","service_contracts","work_orders","knowledge_articles","invoices","territories","email_templates","email_messages","service_resources","service_appointments","forecasts","quotas","collaboration_groups","surveys","social_posts","social_personas","live_chat_transcripts","macros","quick_texts","network_members","ideas","topics","locations","associated_locations","service_territories","operating_hours","work_types","work_type_groups","skills","service_resource_skills","return_orders","return_order_line_items","shipments","product_requests","product_request_line_items","time_sheets","time_sheet_entries","shifts","resource_absences","resource_preferences","service_crews","service_crew_members","maintenance_plans","maintenance_assets","entitlement_contacts","contract_contact_roles","entitlement_templates","milestones","service_level_agreements","asset_relationships","products_consumed","queues","queue_members","quick_actions","quantum-keys","aimcp-bridges","tokens","users","profiles"];
+const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",contracts:"Contracts",assets:"Assets",entitlements:"Entitlements",content_documents:"Content Documents",feed_items:"Feed Items",reports:"Reports",dashboards:"Dashboards",flows:"Flows",service_contracts:"Service Contracts",work_orders:"Work Orders",knowledge_articles:"Knowledge Articles",invoices:"Invoices",territories:"Territories",email_templates:"Email Templates",email_messages:"Email Messages",service_resources:"Service Resources",service_appointments:"Service Appointments",forecasts:"Forecasts",quotas:"Quotas",collaboration_groups:"Collaboration Groups",surveys:"Surveys",social_posts:"Social Posts",social_personas:"Social Personas",live_chat_transcripts:"Live Chat Transcripts",macros:"Macros",quick_texts:"Quick Texts",network_members:"Network Members",ideas:"Ideas",topics:"Topics",locations:"Locations",associated_locations:"Associated Locations",service_territories:"Service Territories",operating_hours:"Operating Hours",work_types:"Work Types",work_type_groups:"Work Type Groups",skills:"Skills",service_resource_skills:"Service Resource Skills",return_orders:"Return Orders",return_order_line_items:"Return Order Line Items",shipments:"Shipments",product_requests:"Product Requests",product_request_line_items:"Product Request Line Items",time_sheets:"Time Sheets",time_sheet_entries:"Time Sheet Entries",shifts:"Shifts",resource_absences:"Resource Absences",resource_preferences:"Resource Preferences",service_crews:"Service Crews",service_crew_members:"Service Crew Members",maintenance_plans:"Maintenance Plans",maintenance_assets:"Maintenance Assets",entitlement_contacts:"Entitlement Contacts",contract_contact_roles:"Contract Contact Roles",entitlement_templates:"Entitlement Templates",milestones:"Milestones",service_level_agreements:"Service Level Agreements",asset_relationships:"Asset Relationships",products_consumed:"Products Consumed",queues:"Queues",queue_members:"Queue Members",quick_actions:"Quick Actions","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles"};
 const NAV = [
-  ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
+  ["dashboard","Dashboard"],["limits","Limits"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
   ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
-  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["dashboards","Dashboards"],["query","SOQL Query"],["sharing","Sharing"],["validation","Validation"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["bulk2","Bulk 2.0"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["reports-run","Reports Run"],["cdc","CDC Streaming"],["dashboards","Dashboards"],["query","SOQL Query"],["sharing","Sharing"],["validation","Validation"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["entitlement_templates","Entitlement Templates"],["milestones","Milestones"],["service_level_agreements","Service Level Agreements"],["asset_relationships","Asset Relationships"],["products_consumed","Products Consumed"],["queues","Queues"],["queue_members","Queue Members"],["quick_actions","Quick Actions"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["bulk2","Bulk 2.0"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["scheduled","Scheduled Jobs"],["health","Health"],["users","Users"],["profiles","Profiles"]
  ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
@@ -242,16 +242,20 @@ async function navigate(id){
   try{
      if(id==="dashboard") await renderDashboard();
      else if(id==="reports") await renderReports();
+      else if(id==="reports-run") await renderReportsRun();
+      else if(id==="cdc") await renderCDC();
      else if(id==="workflows") await renderWorkflows();
      else if(id==="approvals") await renderApprovals();
      else if(id==="audit") await renderAudit();
       else if(id==="bulk") await renderBulk();
       else if(id==="bulk2") await renderBulk2();
       else if(id==="custom") await renderCustom();
-     else if(id==="graphql") await renderGraphQL();
-     else if(id==="crypto") await renderCrypto();
-     else if(id==="health") await renderHealth();
-      else if(id==="search") await renderSearch();
+     else if(id==="limits") await renderLimits();
+      else if(id==="graphql") await renderGraphQL();
+      else if(id==="crypto") await renderCrypto();
+      else if(id==="scheduled") await renderScheduled();
+      else if(id==="health") await renderHealth();
+        else if(id==="search") await renderSearch();
         else if(id==="mcp") await renderMCP();
         else if(id==="plugins") await renderPlugins();
         else if(id==="salesforce") await renderSalesforce();
@@ -314,6 +318,112 @@ async function renderReports(){
     <div class="card"><h2>Reports — Overview</h2><p class="muted">Counts + approvals pending</p><pre>${esc(JSON.stringify(rep,null,2))}</pre></div>
     <div class="card"><h2>Dashboards — Overview</h2><pre>${esc(JSON.stringify(dash,null,2))}</pre></div>
   `;
+}
+
+async function renderReportsRun(){
+  const main=document.getElementById("main");
+  let types = [];
+  try{ const r=await jfetch("/reports/types"); types=r.types||[];}catch(e){ types=["Accounts","Opportunities","Cases","Contacts","Leads"]; }
+  main.innerHTML=`
+    <div class="card"><h2>Reports — Execution Engine</h2><p class="muted">POST /reports {name, report_type, group_by, aggregates, filters} · POST /reports/{'{id}'}/run · GET /reports/types</p>
+      <div class="form">
+        <label>Name<input id="rr-name" value="Industry Report"></label>
+        <label>Report Type<select id="rr-type">${types.map(x=>`<option value="${x}">${x}</option>`).join("")}</select></label>
+        <label>Group By<input id="rr-group" value="industry" placeholder="industry"></label>
+        <label>Aggregates JSON<textarea id="rr-aggs" placeholder='[{"function":"count"}] or [{"field":"amount","function":"sum"}]'>[{"function":"count"}]</textarea></label>
+        <label>Filters JSON (optional)<textarea id="rr-filters" placeholder='[{"field":"industry","operator":"=","value":"Technology"}]'></textarea></label>
+        <div class="row"><button class="btn primary" id="btn-rr-create">POST /reports</button><button class="btn" id="btn-rr-list">Refresh list</button></div>
+        <pre id="rr-out">—</pre>
+      </div>
+      <div id="rr-table" class="muted">Loading...</div>
+      <h3>Run Report</h3><div class="form"><label>Report ID<input id="rr-run-id" placeholder="paste id"></label><div class="row"><button class="btn primary" id="btn-rr-run">POST /reports/{'{id}'}/run</button></div><pre id="rr-run-out">—</pre></div>
+    </div>
+  `;
+  const load=async()=>{
+    try{
+      const data=await jfetch("/reports");
+      const rows=(data.data||data.reports||data||[]);
+      const list=Array.isArray(rows)? rows : Object.values(rows);
+      document.getElementById("rr-table").innerHTML = list.length ? `<table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Group By</th><th>Aggs</th><th></th></tr></thead><tbody>${list.map(r=>`<tr><td><code>${esc((r.id||"").slice(0,8))}</code></td><td>${esc(r.name||"")}</td><td>${esc(r.report_type||"")}</td><td>${esc(r.group_by||"")}</td><td><code>${esc(JSON.stringify(r.aggregates||[]))}</code></td><td><button class="btn primary" onclick="runReport(\'${r.id}\')">Run</button> <button class="btn danger" onclick="delReport(\'${r.id}\')">Del</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No reports.</span>';
+    }catch(e){ document.getElementById("rr-table").textContent="Error: "+e.message; }
+  };
+  window.runReport=async(id)=>{
+    document.getElementById("rr-run-id").value=id;
+    try{ const r=await jfetch(`/reports/${encodeURIComponent(id)}/run`,{method:"POST",body:{}}); document.getElementById("rr-run-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("rr-run-out").textContent="Error: "+e.message; }
+  };
+  // also support direct DELETE /reports/{id}
+  window.delReport=async(id)=>{ try{ await jfetch(`/reports/${encodeURIComponent(id)}`,{method:"DELETE"}); load(); }catch(e){ alert(e.message); } };
+  document.getElementById("btn-rr-create").onclick=async()=>{
+    const name=document.getElementById("rr-name").value.trim();
+    const report_type=document.getElementById("rr-type").value.trim();
+    const group_by=document.getElementById("rr-group").value.trim()||null;
+    let aggs=null; let filters=null;
+    try{ aggs=JSON.parse(document.getElementById("rr-aggs").value); }catch(e){ aggs=[{"function":"count"}]; }
+    const fraw=document.getElementById("rr-filters").value.trim();
+    if(fraw){ try{ filters=JSON.parse(fraw);}catch(e){ document.getElementById("rr-out").textContent="Invalid filters JSON"; return; } }
+    const body={name, report_type, group_by, aggregates:aggs, filters};
+    try{ const r=await jfetch("/reports",{method:"POST",body}); document.getElementById("rr-out").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("rr-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-rr-list").onclick=load;
+  document.getElementById("btn-rr-run").onclick=async()=>{
+    const id=document.getElementById("rr-run-id").value.trim();
+    if(!id){ document.getElementById("rr-run-out").textContent="Report ID required"; return; }
+    try{ const r=await jfetch(`/reports/${encodeURIComponent(id)}/run`,{method:"POST",body:{}}); document.getElementById("rr-run-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("rr-run-out").textContent="Error: "+e.message; }
+  };
+  load();
+}
+async function renderCDC(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>CDC Streaming — Change Data Capture</h2><p class="muted">POST /streaming/channels {channel_name} (admin) · GET /streaming/channels · DELETE /streaming/channels/{'{name}'} · POST /streaming/events/publish {channel, payload} · GET /streaming/events?channel=&replayId=</p>
+      <div class="grid2">
+        <div class="form">
+          <h3>Channels</h3><label>Channel Name<input id="cdc-name" value="/data/AccountChangeEvent" placeholder="/data/AccountChangeEvent"></label>
+          <div class="row"><button class="btn primary" id="btn-cdc-create">Create Channel</button><button class="btn" id="btn-cdc-list">Refresh</button></div>
+          <pre id="cdc-ch-out">—</pre>
+          <div id="cdc-ch-table" class="muted">Loading...</div>
+          <h3>Delete Channel</h3><label>Name<input id="cdc-del" placeholder="channel"></label><div class="row"><button class="btn danger" id="btn-cdc-del">DELETE</button></div>
+        </div>
+        <div class="form">
+          <h3>Publish Event</h3><label>Channel<input id="cdc-pub-ch" value="/data/AccountChangeEvent"></label>
+          <label>Payload JSON<textarea id="cdc-payload" placeholder='{"Name":"Acme"}'>{"Name":"Acme"}</textarea></label>
+          <div class="row"><button class="btn primary" id="btn-cdc-pub">POST /streaming/events/publish</button></div>
+          <pre id="cdc-pub-out">—</pre>
+          <h3>Subscribe / Poll</h3><label>Channel Filter (optional)<input id="cdc-sub-ch" placeholder="/data/AccountChangeEvent"></label>
+          <label>ReplayId<input id="cdc-replay" value="0" type="number"></label>
+          <div class="row"><button class="btn" id="btn-cdc-poll">GET /streaming/events</button></div>
+          <pre id="cdc-sub-out">—</pre>
+        </div>
+      </div>
+    </div>
+  `;
+  const load=async()=>{
+    try{ const r=await jfetch("/streaming/channels"); document.getElementById("cdc-ch-out").textContent=JSON.stringify(r,null,2);
+      const chs=r.channels||[]; document.getElementById("cdc-ch-table").innerHTML = chs.length ? `<table><thead><tr><th>Channel</th><th>Created By</th><th></th></tr></thead><tbody>${chs.map(c=>`<tr><td><code>${esc(c.name||c.channel||"")}</code></td><td>${esc(c.created_by||"")}</td><td><button class="btn" onclick="document.getElementById(\'cdc-sub-ch\').value=\'${esc(c.name)}\'">Use</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No channels.</span>';
+    }catch(e){ document.getElementById("cdc-ch-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cdc-create").onclick=async()=>{
+    const name=document.getElementById("cdc-name").value.trim();
+    try{ const r=await jfetch("/streaming/channels",{method:"POST",body:{channel_name:name}}); document.getElementById("cdc-ch-out").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("cdc-ch-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cdc-list").onclick=load;
+  document.getElementById("btn-cdc-del").onclick=async()=>{
+    const name=document.getElementById("cdc-del").value.trim()||document.getElementById("cdc-name").value.trim();
+    try{ const r=await jfetch(`/streaming/channels/${encodeURIComponent(name)}`,{method:"DELETE"}); document.getElementById("cdc-ch-out").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("cdc-ch-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cdc-pub").onclick=async()=>{
+    const ch=document.getElementById("cdc-pub-ch").value.trim();
+    let payload={}; try{ payload=JSON.parse(document.getElementById("cdc-payload").value);}catch(e){ payload={}; }
+    try{ const r=await jfetch("/streaming/events/publish",{method:"POST",body:{channel:ch, payload}}); document.getElementById("cdc-pub-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("cdc-pub-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cdc-poll").onclick=async()=>{
+    const ch=document.getElementById("cdc-sub-ch").value.trim();
+    const replay=document.getElementById("cdc-replay").value.trim()||"0";
+    let url=`/streaming/events?replayId=${encodeURIComponent(replay)}'}`;
+    if(ch) url+=`&channel=${encodeURIComponent(ch)}'}`;
+    try{ const r=await jfetch(url); document.getElementById("cdc-sub-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("cdc-sub-out").textContent="Error: "+e.message; }
+  };
+  load();
 }
 async function renderWorkflows(){
   const w= await jfetch("/workflows");
@@ -815,14 +925,165 @@ async function renderCrypto(){
   };
 }
 
+async function renderScheduled(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Scheduled Jobs — Apex Scheduler</h2><p class="muted">POST /jobs/scheduled {name, cron, apex_class} (admin) · GET /jobs/scheduled · GET /jobs/scheduled/{id} · POST /jobs/scheduled/{id}/run · POST /jobs/scheduled/{id}/abort (admin) · DELETE /jobs/scheduled/{id} (admin) · Cron: "* * * * *", "0 * * * *", "every 5m"/"every 30s". Background loop every 60s.</p>
+      <div class="form">
+        <label>Name<input id="sj-name" value="Daily Report" placeholder="Daily Report"></label>
+        <label>Cron<input id="sj-cron" value="0 * * * *" placeholder="* * * * * or 0 * * * * or every 5m"></label>
+        <label>Apex Class<input id="sj-apex" value="DailyReportJob" placeholder="MyApexClass"></label>
+        <div class="row"><button class="btn primary" id="btn-sj-create">POST /jobs/scheduled</button><button class="btn" id="btn-sj-list">GET /jobs/scheduled</button><button class="btn" id="btn-sj-diag">GET /diagnostics</button></div>
+        <pre id="sj-out">—</pre>
+      </div>
+      <div id="sj-table" class="muted">Loading…</div>
+      <h3>Detail / Actions</h3><div class="form"><label>Job ID<input id="sj-id" placeholder="paste job id"></label><div class="row"><button class="btn" id="btn-sj-get">GET job</button><button class="btn primary" id="btn-sj-run">POST run</button><button class="btn warn" id="btn-sj-abort">POST abort (admin)</button><button class="btn danger" id="btn-sj-del">DELETE</button></div><pre id="sj-detail">—</pre></div>
+      <h3>Diagnostics</h3><p class="muted">GET /diagnostics (auth) → {status, version, uptime, memory, api_usage, bulk_jobs, cdc_events}</p><pre id="sj-diag">—</pre>
+    </div>
+  `;
+  const load=async()=>{
+    try{
+      const r=await jfetch("/jobs/scheduled");
+      document.getElementById("sj-out").textContent=JSON.stringify(r,null,2);
+      const jobs=r.jobs||[];
+      document.getElementById("sj-table").innerHTML = jobs.length ? `<table><thead><tr><th>ID</th><th>Name</th><th>Cron</th><th>Apex</th><th>Status</th><th>Next</th><th>Last</th><th></th></tr></thead><tbody>${jobs.map(j=>`<tr><td><code>${esc(j.id.slice(0,8))}</code></td><td>${esc(j.name)}</td><td><code>${esc(j.cron)}</code></td><td>${esc(j.apex_class)}</td><td><span class="badge ${j.status==="Aborted"?"bad":j.status==="Scheduled"?"ok":"warn"}">${esc(j.status)}</span></td><td>${j.next_run? fmtDate(new Date(j.next_run*1000)) : "—"}</td><td>${j.last_run? fmtDate(new Date(j.last_run*1000)) : "—"}</td><td><button class="btn" onclick="document.getElementById('sj-id').value='${j.id}'; document.getElementById('btn-sj-get').click()">View</button> <button class="btn primary" onclick="sjRun('${j.id}')">Run</button> <button class="btn" onclick="sjAbort('${j.id}')">Abort</button> <button class="btn danger" onclick="sjDel('${j.id}')">Del</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No scheduled jobs. Create one above (admin).</span>';
+    }catch(e){ document.getElementById("sj-out").textContent="Error: "+e.message; document.getElementById("sj-table").textContent="—"; }
+  };
+  window.sjRun=async(id)=>{ try{ const r=await jfetch(`/jobs/scheduled/${encodeURIComponent(id)}/run`,{method:"POST",body:{}}); document.getElementById("sj-detail").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("sj-detail").textContent="Error: "+e.message; } };
+  window.sjAbort=async(id)=>{ try{ const r=await jfetch(`/jobs/scheduled/${encodeURIComponent(id)}/abort`,{method:"POST",body:{}}); document.getElementById("sj-detail").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("sj-detail").textContent="Error: "+e.message; } };
+  window.sjDel=async(id)=>{ if(!confirm("Delete "+id.slice(0,8)+"?")) return; try{ await jfetch(`/jobs/scheduled/${encodeURIComponent(id)}`,{method:"DELETE"}); load(); }catch(e){ alert(e.message); } };
+  document.getElementById("btn-sj-create").onclick=async()=>{
+    const name=document.getElementById("sj-name").value.trim();
+    const cron=document.getElementById("sj-cron").value.trim();
+    const apex_class=document.getElementById("sj-apex").value.trim();
+    if(!name||!cron||!apex_class){ document.getElementById("sj-out").textContent="name, cron, apex_class required"; return; }
+    try{ const r=await jfetch("/jobs/scheduled",{method:"POST",body:{name, cron, apex_class}}); document.getElementById("sj-out").textContent=JSON.stringify(r,null,2); document.getElementById("sj-id").value=r.id||""; load(); }catch(e){ document.getElementById("sj-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-sj-list").onclick=load;
+  document.getElementById("btn-sj-get").onclick=async()=>{
+    const id=document.getElementById("sj-id").value.trim(); if(!id){ document.getElementById("sj-detail").textContent="Job ID required"; return; }
+    try{ const r=await jfetch(`/jobs/scheduled/${encodeURIComponent(id)}`); document.getElementById("sj-detail").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("sj-detail").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-sj-run").onclick=async()=>{
+    const id=document.getElementById("sj-id").value.trim(); if(!id){ document.getElementById("sj-detail").textContent="Job ID required"; return; }
+    try{ const r=await jfetch(`/jobs/scheduled/${encodeURIComponent(id)}/run`,{method:"POST",body:{}}); document.getElementById("sj-detail").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("sj-detail").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-sj-abort").onclick=async()=>{
+    const id=document.getElementById("sj-id").value.trim(); if(!id){ document.getElementById("sj-detail").textContent="Job ID required"; return; }
+    try{ const r=await jfetch(`/jobs/scheduled/${encodeURIComponent(id)}/abort`,{method:"POST",body:{}}); document.getElementById("sj-detail").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("sj-detail").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-sj-del").onclick=async()=>{
+    const id=document.getElementById("sj-id").value.trim(); if(!id){ document.getElementById("sj-detail").textContent="Job ID required"; return; }
+    try{ const r=await jfetch(`/jobs/scheduled/${encodeURIComponent(id)}`,{method:"DELETE"}); document.getElementById("sj-detail").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("sj-detail").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-sj-diag").onclick=async()=>{
+    try{ const r=await jfetch("/diagnostics"); document.getElementById("sj-diag").textContent=JSON.stringify(r,null,2); document.getElementById("sj-detail").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("sj-diag").textContent="Error: "+e.message; }
+  };
+  // auto-load diagnostics as well
+  try{ const d=await jfetch("/diagnostics"); document.getElementById("sj-diag").textContent=JSON.stringify(d,null,2); }catch(e){ document.getElementById("sj-diag").textContent="Diagnostics: "+e.message; }
+  load();
+}
+
 async function renderHealth(){
   const h= await jfetch("/health");
   const k= await jfetch("/auth/pq/keys").catch(()=>null);
+  const d= await jfetch("/diagnostics").catch(()=>null);
   const main=document.getElementById("main");
   main.innerHTML=`
     <div class="card"><h2>Health</h2><pre>${esc(JSON.stringify(h,null,2))}</pre></div>
+    <div class="card"><h2>Diagnostics (auth)</h2><p class="muted">GET /diagnostics → {status, version, uptime, memory, api_usage, bulk_jobs, cdc_events}</p><pre>${esc(JSON.stringify(d,null,2))}</pre></div>
     <div class="card"><h2>PQ Keys</h2><pre>${esc(JSON.stringify(k,null,2))}</pre></div>
   `;
+}
+
+async function renderLimits(){
+  let limits=null, org=null, cacheSummary=null;
+  try{ limits= await jfetch("/limits"); }catch(e){ limits={error:e.message}; }
+  try{ org= await jfetch("/limits/org"); }catch(e){ org={error:e.message}; }
+  try{ cacheSummary= await jfetch("/cache"); }catch(e){ cacheSummary={error:e.message}; }
+  const pct = (used,lim)=> lim? Math.min(100, Math.round(used/lim*100)):0;
+  const main=document.getElementById("main");
+  const lim = limits.limits||{};
+  const used = limits.used??limits.per_user?.used??0;
+  const rem = limits.remaining??0;
+  const oUsed = org.org?.used??limits.org_used??0;
+  const oRem = org.org?.remaining??0;
+  main.innerHTML=`
+    <div class="card"><h2>Governor Limits — Salesforce parity</h2><p class="muted">GET /limits (per-user + org) · GET /limits/org · per-transaction limits from _LIMITS. In-memory _API_USAGE per user per day reset via UTC date. 429 when exceeded.</p>
+      <div class="grid2">
+        <div class="card" style="margin:0"><h3>Per-User (you)</h3><p class="muted">${esc(limits.per_user?.sub||"") } · ${esc(limits.per_user?.date||"")}</p>
+          <div style="display:grid;grid-template-columns:6rem 1fr 4rem;gap:.6rem;align-items:center;margin:.6rem 0"><span class="muted">API calls</span><div class="bar"><i style="width:${pct(used,lim.max_api_calls_per_day||100000)}%"></i></div><b>${used} / ${lim.max_api_calls_per_day||100000}</b></div>
+          <p class="muted">Remaining: <b>${rem}</b> · Org remaining: <b>${oRem}</b></p>
+          <div class="row"><button class="btn" id="btn-limits-refresh">Refresh GET /limits</button><button class="btn" id="btn-org-limits">GET /limits/org</button></div>
+          <pre id="limits-out">${esc(JSON.stringify(limits,null,2))}</pre><pre id="limits-org-out" style="margin-top:.6rem">${esc(JSON.stringify(org,null,2))}</pre>
+        </div>
+        <div class="card" style="margin:0"><h3>Org Limits</h3><table><thead><tr><th>Limit</th><th>Value</th></tr></thead><tbody>
+          ${Object.entries(lim).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(String(v))}</td></tr>`).join("")}
+        </tbody></table>
+        <h3 style="margin-top:1rem">Concurrent</h3><p class="muted">Current ${esc(String(limits.concurrent?.current??0))} / limit ${esc(String(lim.max_concurrent_requests||25))}</p>
+        <h3>Cache Partitions</h3><pre>${esc(JSON.stringify(cacheSummary,null,2))}</pre>
+        </div>
+      </div>
+    </div>
+    <div class="card"><h2>Platform Cache — CRUD</h2><p class="muted">POST /cache/{partition}/{key} {value, ttl} · GET /cache/{partition}/{key} · DELETE /cache/{partition}/{key} · GET /cache/{partition} · TTL seconds, auto-expiry. Auth required (PQ-JWT).</p>
+      <div class="grid2">
+        <div class="form">
+          <label>Partition<input id="cache-part" value="default" placeholder="default"></label>
+          <label>Key<input id="cache-key" value="hello" placeholder="myKey"></label>
+          <label>Value (JSON or string)<textarea id="cache-val" placeholder='{"msg":"hello"} or plain string'>{"msg":"hello"}</textarea></label>
+          <label>TTL seconds (empty = no expiry)<input id="cache-ttl" type="number" placeholder="300" value="300"></label>
+          <div class="row"><button class="btn primary" id="btn-cache-put">POST /cache/{partition}/{key}</button><button class="btn" id="btn-cache-get">GET</button><button class="btn danger" id="btn-cache-del">DELETE</button></div>
+          <div class="row"><button class="btn" id="btn-cache-list-part">GET /cache/{partition}</button><button class="btn" id="btn-cache-list-all">GET /cache</button></div>
+          <pre id="cache-out">—</pre>
+        </div>
+        <div class="form">
+          <h3>Examples</h3><p class="muted">Partition mimics Salesforce Platform Cache partition. TTL is optional; expired keys 404.</p>
+          <div class="row"><button class="btn" id="btn-cache-ex-ttl">Put with 2s TTL (expiry demo)</button><button class="btn" id="btn-cache-ex-json">Put JSON object</button></div>
+          <pre id="cache-hint">Try: partition=default key=hello value={"msg":"hello"} ttl=300 → PUT then GET then DELETE</pre>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-limits-refresh").onclick=async()=>{ try{ const r=await jfetch("/limits"); document.getElementById("limits-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("limits-out").textContent="Error: "+e.message; } };
+  document.getElementById("btn-org-limits").onclick=async()=>{ try{ const r=await jfetch("/limits/org"); document.getElementById("limits-org-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("limits-org-out").textContent="Error: "+e.message; } };
+  const parseVal=()=>{
+    const raw=document.getElementById("cache-val").value.trim();
+    if(!raw) return null;
+    try{ return JSON.parse(raw); }catch(e){ return raw; }
+  };
+  document.getElementById("btn-cache-put").onclick=async()=>{
+    const p=document.getElementById("cache-part").value.trim()||"default";
+    const k=document.getElementById("cache-key").value.trim(); if(!k){ document.getElementById("cache-out").textContent="Key required"; return; }
+    const v=parseVal();
+    const ttlRaw=document.getElementById("cache-ttl").value.trim();
+    const ttl=ttlRaw? Number(ttlRaw):null;
+    const body={value:v}; if(ttl) body.ttl=ttl;
+    try{ const r=await jfetch(`/cache/${encodeURIComponent(p)}/${encodeURIComponent(k)}`,{method:"POST", body}); document.getElementById("cache-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("cache-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cache-get").onclick=async()=>{
+    const p=document.getElementById("cache-part").value.trim()||"default";
+    const k=document.getElementById("cache-key").value.trim(); if(!k){ document.getElementById("cache-out").textContent="Key required"; return; }
+    try{ const r=await jfetch(`/cache/${encodeURIComponent(p)}/${encodeURIComponent(k)}`); document.getElementById("cache-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("cache-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cache-del").onclick=async()=>{
+    const p=document.getElementById("cache-part").value.trim()||"default";
+    const k=document.getElementById("cache-key").value.trim(); if(!k){ document.getElementById("cache-out").textContent="Key required"; return; }
+    try{ const r=await jfetch(`/cache/${encodeURIComponent(p)}/${encodeURIComponent(k)}`,{method:"DELETE"}); document.getElementById("cache-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("cache-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cache-list-part").onclick=async()=>{
+    const p=document.getElementById("cache-part").value.trim()||"default";
+    try{ const r=await jfetch(`/cache/${encodeURIComponent(p)}`); document.getElementById("cache-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("cache-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cache-list-all").onclick=async()=>{
+    try{ const r=await jfetch("/cache"); document.getElementById("cache-out").textContent=JSON.stringify(r,null,2);}catch(e){ document.getElementById("cache-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cache-ex-ttl").onclick=()=>{
+    document.getElementById("cache-part").value="demo"; document.getElementById("cache-key").value="shortlived"; document.getElementById("cache-val").value='"expires in 2s"'; document.getElementById("cache-ttl").value="2";
+    document.getElementById("cache-hint").textContent="Now click POST, then GET immediately (200), wait 3s then GET again (404 expired).";
+  };
+  document.getElementById("btn-cache-ex-json").onclick=()=>{
+    document.getElementById("cache-part").value="default"; document.getElementById("cache-key").value="obj1"; document.getElementById("cache-val").value='{"user":"admin","roles":["admin"]}'; document.getElementById("cache-ttl").value="300";
+  };
 }
 
 const FIELD_HINTS = {
@@ -894,6 +1155,14 @@ const FIELD_HINTS = {
    maintenance_assets: [{k:"maintenance_plan_id",req:1},{k:"asset_id",req:1}],
    entitlement_contacts: [{k:"entitlement_id",req:1},{k:"contact_id",req:1}],
    contract_contact_roles: [{k:"contract_id",req:1},{k:"contact_id",req:1}],
+    entitlement_templates: [{k:"name",req:1},{k:"entitlement_type",req:1},{k:"description"},{k:"is_active",type:"checkbox"}],
+    milestones: [{k:"entitlement_template_id",req:1},{k:"name",req:1},{k:"milestone_type",req:1},{k:"time_trigger"},{k:"is_active",type:"checkbox"}],
+    service_level_agreements: [{k:"name",req:1},{k:"status",req:1},{k:"priority",req:1},{k:"start_date"},{k:"end_date"}],
+    asset_relationships: [{k:"asset_id",req:1},{k:"related_asset_id",req:1},{k:"relationship_type",req:1},{k:"description"}],
+    products_consumed: [{k:"work_order_id",req:1},{k:"product_id",req:1},{k:"quantity",type:"number",req:1},{k:"date_consumed"}],
+    queues: [{k:"name",req:1},{k:"queue_type",req:1},{k:"email"},{k:"is_active",type:"checkbox"}],
+    queue_members: [{k:"queue_id",req:1},{k:"member_type",req:1},{k:"member_id",req:1},{k:"is_active",type:"checkbox"}],
+    quick_actions: [{k:"name",req:1},{k:"action_type",req:1},{k:"target_object",req:1},{k:"description"},{k:"is_active",type:"checkbox"}],
     "quantum-keys": [{k:"owner_id",req:1},{k:"key_type",req:1},{k:"xmss_tree_index",type:"number"}],
   "aimcp-bridges": [{k:"user_id",req:1},{k:"backend_id",req:1},{k:"access_token"}],
   tokens: [{k:"sub",req:1},{k:"scopes"},{k:"quantum_proof",type:"checkbox"}],
