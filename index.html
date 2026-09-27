@@ -161,7 +161,7 @@ const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunit
 const NAV = [
   ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
   ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
-  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["dashboards","Dashboards"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["dashboards","Dashboards"],["query","SOQL Query"],["sharing","Sharing"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
  ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
@@ -251,10 +251,12 @@ async function navigate(id){
      else if(id==="crypto") await renderCrypto();
      else if(id==="health") await renderHealth();
       else if(id==="search") await renderSearch();
-       else if(id==="mcp") await renderMCP();
-       else if(id==="plugins") await renderPlugins();
-       else if(id==="salesforce") await renderSalesforce();
-       else if(OBJECTS.includes(id)) await renderList(id);
+        else if(id==="mcp") await renderMCP();
+        else if(id==="plugins") await renderPlugins();
+        else if(id==="salesforce") await renderSalesforce();
+        else if(id==="query") await renderQuery();
+        else if(id==="sharing") await renderSharing();
+        else if(OBJECTS.includes(id)) await renderList(id);
       else main.innerHTML='<div class="card">Unknown view</div>';
   }catch(e){ main.innerHTML=`<div class="card"><h2>Error</h2><pre>${esc(e.message)}</pre></div>`; }
 }
@@ -401,6 +403,24 @@ async function renderMCP(){
   };
 }
 
+async function renderQuery(){
+  const main=document.getElementById("main");
+  main.innerHTML=`<div class="card"><h2>SOQL Query</h2><p class="muted">Salesforce-compatible SOQL via <code>GET /query?q=SELECT ...</code> and <code>/services/data/v60.0/query</code>. Supports SELECT, FROM, WHERE (=, !=, &gt;, &lt;, LIKE, IN), AND/OR, ORDER BY, LIMIT, OFFSET. Try: SELECT Id, Name FROM Account WHERE Name LIKE '%Acme%' ORDER BY Name DESC LIMIT 5</p><div class="form"><label>SOQL<textarea id="soql" rows="3" placeholder="SELECT Id, Name FROM Account WHERE Name LIKE '%Acme%'">SELECT Id, Name FROM Account</textarea></label><div class="row"><button class="btn primary" id="btn-soql">Run SOQL</button><button class="btn" id="btn-soql-acme">Example: Acme LIKE</button></div><pre id="soql-out">—</pre></div></div>`;
+  document.getElementById("btn-soql").onclick=async()=>{
+    const soql=document.getElementById("soql").value.trim();
+    document.getElementById("soql-out").textContent="Running…";
+    try{ const r=await jfetch(`/query?q=${encodeURIComponent(soql)}`); document.getElementById("soql-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("soql-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-soql-acme").onclick=()=>{ document.getElementById("soql").value="SELECT Id, Name FROM Account WHERE Name LIKE '%Acme%' ORDER BY Name DESC LIMIT 5"; document.getElementById("btn-soql").click(); };
+}
+async function renderSharing(){
+  const main=document.getElementById("main");
+  main.innerHTML=`<div class="card"><h2>Sharing — OWD &amp; Rules</h2><p class="muted">Org-Wide Defaults + sharing rules. Private by default. Admin can create/delete rules via <code>/sharing/rules</code>.</p><div class="form"><label>Rule object<input id="shr-obj" value="Account"></label><label>Rule type<input id="shr-type" value="Owner-based share"></label><div class="row"><button class="btn primary" id="btn-shr-create">POST /sharing/rules</button><button class="btn" id="btn-shr-list">Refresh</button></div><pre id="shr-out">—</pre></div></div>`;
+  const load=async()=>{ try{ const s=await jfetch("/sharing/settings"); const r=await jfetch("/sharing/rules"); document.getElementById("shr-out").textContent=JSON.stringify({settings:s, rules:r},null,2);}catch(e){ document.getElementById("shr-out").textContent="Error: "+e.message; }};
+  document.getElementById("btn-shr-create").onclick=async()=>{ const obj=document.getElementById("shr-obj").value.trim(); const type=document.getElementById("shr-type").value.trim(); try{ const j=await jfetch("/sharing/rules",{method:"POST",body:{object:obj,rule:type}}); document.getElementById("shr-out").textContent=JSON.stringify(j,null,2);}catch(e){ document.getElementById("shr-out").textContent="Error: "+e.message; } };
+  document.getElementById("btn-shr-list").onclick=load;
+  load();
+}
 async function renderSearch(){
   const q = document.getElementById("global-q").value.trim();
   const main=document.getElementById("main");
@@ -722,7 +742,7 @@ async function renderList(obj, cursor){
       <p class="muted">GET /${obj}?limit=${limit}&q=&cursor=&sort_by=created_at&sort_order=desc · X-Request-ID echoed · audited</p>
       <div style="overflow:auto;max-height:60vh">
         <table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join("")}<th></th></tr></thead><tbody>
-          ${rows.map(r=>`<tr>${cols.map(c=>`<td>${c==="id"? `<code>${esc((r[c]||"").slice(0,8))}</code>`: esc(r[c]??"")}${c==="created_at"? " · "+fmtDate(r[c]):""}</td>`).join("")}<td><button class="btn" onclick="viewRow('${obj}','${r.id}')">View</button> <button class="btn danger" onclick="delRow('${obj}','${r.id}')">Delete</button></td></tr>`).join("") || `<tr><td colspan="${cols.length+1}" class="muted">No records. Create one.</td></tr>`}
+          ${rows.map(r=>`<tr>${cols.map(c=>`<td>${c==="id"? `<code>${esc((r[c]||"").slice(0,8))}</code>`: esc(r[c]??"")}${c==="created_at"? " · "+fmtDate(r[c]):""}</td>`).join("")}<td><button class="btn" onclick="viewRow('${obj}','${r.id}')">View</button> <button class="btn danger" onclick="delRow('${obj}','${r.id}')">Delete</button>${obj==="flows"?` <button class="btn" onclick="flowRun('${r.id}')">Run</button> <button class="btn" onclick="flowActivate('${r.id}')">Activate</button>`:""}</td></tr>`).join("") || `<tr><td colspan="${cols.length+1}" class="muted">No records. Create one.</td></tr>`}
         </tbody></table>
       </div>
     </div>
@@ -828,6 +848,12 @@ async function viewRow(obj,id){
 async function delRow(obj,id){
   if(!confirm(`Delete ${obj} ${id.slice(0,8)}?`)) return;
   try{ await jfetch(`/${obj.replace(/_/g,'-')}/${id}`, {method:"DELETE"}); renderList(obj); }catch(e){ alert("Delete failed: "+e.message); }
+}
+async function flowRun(id){
+  try{ const r= await jfetch(`/flows/${id}/run`, {method:"POST"}); alert("Flow run "+(r.run_id||"").slice(0,8)+"\n"+JSON.stringify(r,null,2)); renderList("flows"); }catch(e){ alert("Flow run failed: "+e.message); }
+}
+async function flowActivate(id){
+  try{ const r= await jfetch(`/flows/${id}/activate`, {method:"POST"}); alert("Flow activated: "+(r.status||r.id||id).toString().slice(0,40)); renderList("flows"); }catch(e){ alert("Activate failed: "+e.message); }
 }
 async function refreshHealthMini(){
   try{
