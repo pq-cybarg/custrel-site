@@ -176,6 +176,14 @@ async function jfetch(path, opts={}){
   const ct=r.headers.get("content-type")||"";
   let body=null;
   if(ct.includes("application/json")){ try{ body=await r.json(); }catch(e){ body=null; } } else { body=await r.text(); }
+  if(r.status===401 && TOKEN){
+    const msg=(body && (body.detail||body.error))||"PQ-JWT expired or rotated — please sign in again (key persisted now, next restart will keep your token).";
+    TOKEN=""; localStorage.removeItem("custrel_token"); CLAIMS=null;
+    const pill=document.getElementById("token-pill"); if(pill){ pill.textContent="no token"; pill.title="no token"; }
+    const who=document.getElementById("who"); if(who) who.textContent="";
+    showLogin(msg);
+    throw new Error(msg);
+  }
   if(!r.ok) throw new Error((body && (body.detail||body.error||JSON.stringify(body)))|| (r.status+" "+r.statusText));
   return body;
 }
@@ -697,8 +705,9 @@ async function renderList(obj, cursor){
   const cur=cursor||CURSORS[obj]||"";
   const qParam=qraw?`&q=${encodeURIComponent(qraw)}`:"";
   const curParam=cur?`&cursor=${encodeURIComponent(cur)}`:"";
-  const raw = await jfetch(`/${obj}?limit=${limit}${qParam}${curParam}&sort_by=created_at&sort_order=desc`);
-  const rows = Array.isArray(raw) ? raw : (raw[`${obj}`]||raw.accounts||raw.contacts||raw.leads||raw.opportunities||raw.cases||raw.products||raw.pricebooks||raw.campaigns||raw.tasks||raw.events||raw.notes||raw.attachments||raw.quotes||raw.orders||raw.items||[]);
+  const apiObj = obj.replace(/_/g,'-');
+  const raw = await jfetch(`/${apiObj}?limit=${limit}${qParam}${curParam}&sort_by=created_at&sort_order=desc`);
+  const rows = Array.isArray(raw) ? raw : (raw[`${obj}`]||raw[apiObj]||raw.data||raw.accounts||raw.contacts||raw.leads||raw.opportunities||raw.cases||raw.products||raw.pricebooks||raw.campaigns||raw.tasks||raw.events||raw.notes||raw.attachments||raw.quotes||raw.orders||raw.items||[]);
   const total=raw.total??rows.length;
   const next=raw.next_cursor||null;
   const hints = FIELD_HINTS[obj]||[{k:"name",req:1}];
@@ -742,7 +751,7 @@ async function renderList(obj, cursor){
     if(obj==="leads" && !payload.company) payload.company="Acme";
     if(obj==="cases" && !payload.status) payload.status="New";
     try{
-      await jfetch(`/${obj}`, {method:"POST", body: payload});
+      await jfetch(`/${apiObj}`, {method:"POST", body: payload});
       document.getElementById("form-msg").textContent="Created.";
       renderList(obj);
     }catch(e){ document.getElementById("form-msg").textContent="Failed: "+e.message; }
@@ -811,14 +820,14 @@ async function renderList(obj, cursor){
    }
 }
 async function viewRow(obj,id){
-  const r= await jfetch(`/${obj}/${id}`);
+  const r= await jfetch(`/${obj.replace(/_/g,'-')}/${id}`);
   const detail=document.getElementById("detail");
   detail.innerHTML=`<div class="card"><h2>${esc(obj)} — <code>${esc(id.slice(0,8))}</code></h2><pre>${esc(JSON.stringify(r,null,2))}</pre><div class="row"><button class="btn" onclick="document.getElementById('detail').innerHTML=''">Close</button></div></div>`;
   detail.scrollIntoView({behavior:"smooth"});
 }
 async function delRow(obj,id){
   if(!confirm(`Delete ${obj} ${id.slice(0,8)}?`)) return;
-  try{ await jfetch(`/${obj}/${id}`, {method:"DELETE"}); renderList(obj); }catch(e){ alert("Delete failed: "+e.message); }
+  try{ await jfetch(`/${obj.replace(/_/g,'-')}/${id}`, {method:"DELETE"}); renderList(obj); }catch(e){ alert("Delete failed: "+e.message); }
 }
 async function refreshHealthMini(){
   try{

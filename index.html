@@ -156,12 +156,12 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
 
 <script>
 const API = location.origin;
-const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","contracts","assets","entitlements","content_documents","feed_items","reports","dashboards","flows","service_contracts","work_orders","knowledge_articles","invoices","territories","quantum-keys","aimcp-bridges","tokens","users","profiles"];
-const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",contracts:"Contracts",assets:"Assets",entitlements:"Entitlements",content_documents:"Content Documents",feed_items:"Feed Items",reports:"Reports",dashboards:"Dashboards",flows:"Flows",service_contracts:"Service Contracts",work_orders:"Work Orders",knowledge_articles:"Knowledge Articles",invoices:"Invoices",territories:"Territories","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles"};
+const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","contracts","assets","entitlements","content_documents","feed_items","reports","dashboards","flows","service_contracts","work_orders","knowledge_articles","invoices","territories","email_templates","email_messages","service_resources","service_appointments","forecasts","quotas","collaboration_groups","surveys","social_posts","social_personas","live_chat_transcripts","macros","quick_texts","network_members","ideas","topics","locations","associated_locations","service_territories","operating_hours","work_types","work_type_groups","skills","service_resource_skills","return_orders","return_order_line_items","shipments","product_requests","product_request_line_items","time_sheets","time_sheet_entries","shifts","resource_absences","resource_preferences","service_crews","service_crew_members","maintenance_plans","maintenance_assets","entitlement_contacts","contract_contact_roles","quantum-keys","aimcp-bridges","tokens","users","profiles"];
+const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",contracts:"Contracts",assets:"Assets",entitlements:"Entitlements",content_documents:"Content Documents",feed_items:"Feed Items",reports:"Reports",dashboards:"Dashboards",flows:"Flows",service_contracts:"Service Contracts",work_orders:"Work Orders",knowledge_articles:"Knowledge Articles",invoices:"Invoices",territories:"Territories",email_templates:"Email Templates",email_messages:"Email Messages",service_resources:"Service Resources",service_appointments:"Service Appointments",forecasts:"Forecasts",quotas:"Quotas",collaboration_groups:"Collaboration Groups",surveys:"Surveys",social_posts:"Social Posts",social_personas:"Social Personas",live_chat_transcripts:"Live Chat Transcripts",macros:"Macros",quick_texts:"Quick Texts",network_members:"Network Members",ideas:"Ideas",topics:"Topics",locations:"Locations",associated_locations:"Associated Locations",service_territories:"Service Territories",operating_hours:"Operating Hours",work_types:"Work Types",work_type_groups:"Work Type Groups",skills:"Skills",service_resource_skills:"Service Resource Skills",return_orders:"Return Orders",return_order_line_items:"Return Order Line Items",shipments:"Shipments",product_requests:"Product Requests",product_request_line_items:"Product Request Line Items",time_sheets:"Time Sheets",time_sheet_entries:"Time Sheet Entries",shifts:"Shifts",resource_absences:"Resource Absences",resource_preferences:"Resource Preferences",service_crews:"Service Crews",service_crew_members:"Service Crew Members",maintenance_plans:"Maintenance Plans",maintenance_assets:"Maintenance Assets",entitlement_contacts:"Entitlement Contacts",contract_contact_roles:"Contract Contact Roles","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles"};
 const NAV = [
   ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
   ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
-  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["dashboards","Dashboards"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["dashboards","Dashboards"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
  ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
@@ -176,6 +176,14 @@ async function jfetch(path, opts={}){
   const ct=r.headers.get("content-type")||"";
   let body=null;
   if(ct.includes("application/json")){ try{ body=await r.json(); }catch(e){ body=null; } } else { body=await r.text(); }
+  if(r.status===401 && TOKEN){
+    const msg=(body && (body.detail||body.error))||"PQ-JWT expired or rotated — please sign in again (key persisted now, next restart will keep your token).";
+    TOKEN=""; localStorage.removeItem("custrel_token"); CLAIMS=null;
+    const pill=document.getElementById("token-pill"); if(pill){ pill.textContent="no token"; pill.title="no token"; }
+    const who=document.getElementById("who"); if(who) who.textContent="";
+    showLogin(msg);
+    throw new Error(msg);
+  }
   if(!r.ok) throw new Error((body && (body.detail||body.error||JSON.stringify(body)))|| (r.status+" "+r.statusText));
   return body;
 }
@@ -640,6 +648,46 @@ const FIELD_HINTS = {
    knowledge_articles: [{k:"title",req:1},{k:"summary"}],
    invoices: [{k:"account_id",req:1},{k:"status"}],
    territories: [{k:"name",req:1},{k:"description"}],
+  email_templates: [{k:"name",req:1},{k:"subject",req:1},{k:"body"}],
+  email_messages: [{k:"parent_id",req:1},{k:"subject",req:1},{k:"body"}],
+  service_resources: [{k:"name",req:1},{k:"description"}],
+  service_appointments: [{k:"work_order_id",req:1},{k:"status"}],
+  forecasts: [{k:"owner_id",req:1},{k:"period",req:1},{k:"amount",type:"number"}],
+  quotas: [{k:"user_id",req:1},{k:"period",req:1},{k:"amount",type:"number"}],
+  collaboration_groups: [{k:"name",req:1},{k:"description"}],
+   surveys: [{k:"name",req:1},{k:"description"}],
+  social_posts: [{k:"content",req:1},{k:"provider",req:1},{k:"status"}],
+  social_personas: [{k:"name",req:1},{k:"provider",req:1}],
+  live_chat_transcripts: [{k:"chat_key",req:1},{k:"status",req:1},{k:"account_id"}],
+  macros: [{k:"name",req:1},{k:"instructions",req:1}],
+  quick_texts: [{k:"name",req:1},{k:"message",req:1},{k:"channel"}],
+  network_members: [{k:"network_id",req:1},{k:"user_id",req:1}],
+  ideas: [{k:"title",req:1},{k:"body",req:1},{k:"status"}],
+  topics: [{k:"name",req:1},{k:"description"}],
+   locations: [{k:"name",req:1},{k:"location_type"},{k:"address"}],
+   associated_locations: [{k:"parent_record_id",req:1},{k:"location_id",req:1}],
+   service_territories: [{k:"name",req:1},{k:"description"}],
+   operating_hours: [{k:"name",req:1},{k:"timezone"}],
+   work_types: [{k:"name",req:1},{k:"estimated_duration",type:"number"}],
+   work_type_groups: [{k:"name",req:1},{k:"description"}],
+   skills: [{k:"name",req:1},{k:"skill_category"}],
+   service_resource_skills: [{k:"service_resource_id",req:1},{k:"skill_id",req:1}],
+   return_orders: [{k:"account_id",req:1},{k:"status"}],
+   return_order_line_items: [{k:"return_order_id",req:1},{k:"description",req:1}],
+   shipments: [{k:"name",req:1},{k:"account_id"}],
+   product_requests: [{k:"account_id",req:1},{k:"status"}],
+   product_request_line_items: [{k:"parent_product_request_id",req:1},{k:"description",req:1}],
+   time_sheets: [{k:"service_resource_id",req:1},{k:"status"}],
+   time_sheet_entries: [{k:"time_sheet_id",req:1},{k:"hours",type:"number",req:1}],
+   shifts: [{k:"service_territory_id",req:1},{k:"status"}],
+   resource_absences: [{k:"service_resource_id",req:1},{k:"absence_type"}],
+   resource_preferences: [{k:"service_resource_id",req:1},{k:"preference_type"}],
+   service_crews: [{k:"name",req:1},{k:"description"}],
+   service_crew_members: [{k:"service_crew_id",req:1},{k:"service_resource_id",req:1}],
+   maintenance_plans: [{k:"account_id",req:1},{k:"name",req:1}],
+   maintenance_assets: [{k:"maintenance_plan_id",req:1},{k:"asset_id",req:1}],
+   entitlement_contacts: [{k:"entitlement_id",req:1},{k:"contact_id",req:1}],
+   contract_contact_roles: [{k:"contract_id",req:1},{k:"contact_id",req:1}],
     "quantum-keys": [{k:"owner_id",req:1},{k:"key_type",req:1},{k:"xmss_tree_index",type:"number"}],
   "aimcp-bridges": [{k:"user_id",req:1},{k:"backend_id",req:1},{k:"access_token"}],
   tokens: [{k:"sub",req:1},{k:"scopes"},{k:"quantum_proof",type:"checkbox"}],
@@ -657,8 +705,9 @@ async function renderList(obj, cursor){
   const cur=cursor||CURSORS[obj]||"";
   const qParam=qraw?`&q=${encodeURIComponent(qraw)}`:"";
   const curParam=cur?`&cursor=${encodeURIComponent(cur)}`:"";
-  const raw = await jfetch(`/${obj}?limit=${limit}${qParam}${curParam}&sort_by=created_at&sort_order=desc`);
-  const rows = Array.isArray(raw) ? raw : (raw[`${obj}`]||raw.accounts||raw.contacts||raw.leads||raw.opportunities||raw.cases||raw.products||raw.pricebooks||raw.campaigns||raw.tasks||raw.events||raw.notes||raw.attachments||raw.quotes||raw.orders||raw.items||[]);
+  const apiObj = obj.replace(/_/g,'-');
+  const raw = await jfetch(`/${apiObj}?limit=${limit}${qParam}${curParam}&sort_by=created_at&sort_order=desc`);
+  const rows = Array.isArray(raw) ? raw : (raw[`${obj}`]||raw[apiObj]||raw.data||raw.accounts||raw.contacts||raw.leads||raw.opportunities||raw.cases||raw.products||raw.pricebooks||raw.campaigns||raw.tasks||raw.events||raw.notes||raw.attachments||raw.quotes||raw.orders||raw.items||[]);
   const total=raw.total??rows.length;
   const next=raw.next_cursor||null;
   const hints = FIELD_HINTS[obj]||[{k:"name",req:1}];
@@ -702,7 +751,7 @@ async function renderList(obj, cursor){
     if(obj==="leads" && !payload.company) payload.company="Acme";
     if(obj==="cases" && !payload.status) payload.status="New";
     try{
-      await jfetch(`/${obj}`, {method:"POST", body: payload});
+      await jfetch(`/${apiObj}`, {method:"POST", body: payload});
       document.getElementById("form-msg").textContent="Created.";
       renderList(obj);
     }catch(e){ document.getElementById("form-msg").textContent="Failed: "+e.message; }
@@ -771,14 +820,14 @@ async function renderList(obj, cursor){
    }
 }
 async function viewRow(obj,id){
-  const r= await jfetch(`/${obj}/${id}`);
+  const r= await jfetch(`/${obj.replace(/_/g,'-')}/${id}`);
   const detail=document.getElementById("detail");
   detail.innerHTML=`<div class="card"><h2>${esc(obj)} — <code>${esc(id.slice(0,8))}</code></h2><pre>${esc(JSON.stringify(r,null,2))}</pre><div class="row"><button class="btn" onclick="document.getElementById('detail').innerHTML=''">Close</button></div></div>`;
   detail.scrollIntoView({behavior:"smooth"});
 }
 async function delRow(obj,id){
   if(!confirm(`Delete ${obj} ${id.slice(0,8)}?`)) return;
-  try{ await jfetch(`/${obj}/${id}`, {method:"DELETE"}); renderList(obj); }catch(e){ alert("Delete failed: "+e.message); }
+  try{ await jfetch(`/${obj.replace(/_/g,'-')}/${id}`, {method:"DELETE"}); renderList(obj); }catch(e){ alert("Delete failed: "+e.message); }
 }
 async function refreshHealthMini(){
   try{
