@@ -161,7 +161,7 @@ const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunit
 const NAV = [
   ["dashboard","Dashboard"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
   ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
-  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["dashboards","Dashboards"],["query","SOQL Query"],["sharing","Sharing"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["dashboards","Dashboards"],["query","SOQL Query"],["sharing","Sharing"],["validation","Validation"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["bulk2","Bulk 2.0"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["health","Health"],["users","Users"],["profiles","Profiles"]
  ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
@@ -245,8 +245,9 @@ async function navigate(id){
      else if(id==="workflows") await renderWorkflows();
      else if(id==="approvals") await renderApprovals();
      else if(id==="audit") await renderAudit();
-     else if(id==="bulk") await renderBulk();
-     else if(id==="custom") await renderCustom();
+      else if(id==="bulk") await renderBulk();
+      else if(id==="bulk2") await renderBulk2();
+      else if(id==="custom") await renderCustom();
      else if(id==="graphql") await renderGraphQL();
      else if(id==="crypto") await renderCrypto();
      else if(id==="health") await renderHealth();
@@ -255,8 +256,9 @@ async function navigate(id){
         else if(id==="plugins") await renderPlugins();
         else if(id==="salesforce") await renderSalesforce();
         else if(id==="query") await renderQuery();
-        else if(id==="sharing") await renderSharing();
-        else if(OBJECTS.includes(id)) await renderList(id);
+         else if(id==="sharing") await renderSharing();
+         else if(id==="validation") await renderValidation();
+         else if(OBJECTS.includes(id)) await renderList(id);
       else main.innerHTML='<div class="card">Unknown view</div>';
   }catch(e){ main.innerHTML=`<div class="card"><h2>Error</h2><pre>${esc(e.message)}</pre></div>`; }
 }
@@ -328,17 +330,67 @@ async function renderWorkflows(){
   `;
 }
 async function renderApprovals(){
-  const a= await jfetch("/approvals");
+  const [a, procs] = await Promise.all([jfetch("/approvals"), jfetch("/approval-processes").catch(()=>({processes:[]}))]);
   const list=a.approvals||a||[];
-  CACHE.approvals_pending = a.count ?? list.length;
+  const plist=procs.processes||procs.approval_processes||[];
+  CACHE.approvals_pending = list.filter(x=>x.status==="pending").length;
   const main=document.getElementById("main");
   main.innerHTML=`
-    <div class="card"><h2>Approvals</h2><p class="muted">${list.length} pending (Opportunity ≥ $100k)</p>
-      <table><thead><tr><th>ID</th><th>Object</th><th>Status</th><th>Requested by</th><th>Action</th></tr></thead><tbody>
-        ${list.map(r=>`<tr><td><code>${esc(r.id).slice(0,8)}</code></td><td>${esc(r.object||"Opportunity")}</td><td><span class="badge warn">${esc(r.status)}</span></td><td>${esc(r.requested_by||"")}</td><td><button class="btn primary" onclick="decide('${esc(r.id)}','approve')">Approve</button> <button class="btn danger" onclick="decide('${esc(r.id)}','reject')">Reject</button></td></tr>`).join("") || `<tr><td colspan="5" class="muted">No pending approvals.</td></tr>`}
+    <div class="card"><h2>Approvals — Hardened Multi-Step</h2><p class="muted">${list.length} total, ${CACHE.approvals_pending} pending · ${plist.length} process(es) · Auto-trigger on create/update via entry_criteria · Manual submit via POST /records/{'{id}'}/submit-for-approval</p>
+      <table><thead><tr><th>ID</th><th>Object</th><th>Record</th><th>Status</th><th>Step</th><th>Locked</th><th>Requested by</th><th>Action</th></tr></thead><tbody>
+        ${list.map(r=>{
+          const step = r.current_step ? `${r.current_step}/${(r.steps||[]).length}` : "1/1";
+          const locked = r.is_locked ? '<span class="badge bad">locked</span>' : '<span class="badge ok">unlocked</span>';
+          const stBadge = r.status==="pending" ? "warn" : r.status==="approved" ? "ok" : r.status==="rejected" ? "bad" : "warn";
+          return `<tr><td><code>${esc(r.id).slice(0,8)}</code></td><td>${esc(r.object||r.object_type||"Opportunity")}</td><td><code>${esc((r.record_id||"").slice(0,8))}</code></td><td><span class="badge ${stBadge}">${esc(r.status)}</span></td><td>${esc(step)}</td><td>${locked}</td><td>${esc(r.requested_by||"")}</td><td>
+            ${r.status==="pending" ? `<button class="btn primary" onclick="decide('${esc(r.id)}','approve')">Approve</button> <button class="btn danger" onclick="decide('${esc(r.id)}','reject')">Reject</button> <button class="btn" onclick="decide('${esc(r.id)}','recall')">Recall</button>` : ""}
+            ${r.status==="approved"||r.status==="rejected"||r.status==="recalled" ? `<button class="btn" onclick="decide('${esc(r.id)}','unlock')">Unlock</button>` : ""}
+            ${r.is_locked && r.status==="rejected" ? `<button class="btn" onclick="decide('${esc(r.id)}','unlock')">Unlock</button>` : ""}
+          </td></tr>`;
+        }).join("") || `<tr><td colspan="8" class="muted">No approvals. Create an Opportunity ≥ $100k or configure a process below.</td></tr>`}
       </tbody></table>
     </div>
+    <div class="card"><h2>Approval Processes</h2><p class="muted">GET /approval-processes · POST /approval-processes (admin) {object_type, entry_criteria:{field,operator,value}, approvers:[roles], steps:[{name, approver_roles}]} · Auto-trigger on create/update if record matches entry_criteria</p>
+      <div class="form">
+        <label>Object type<input id="ap-obj" value="Opportunity" placeholder="Opportunity"></label>
+        <label>Process name<input id="ap-name" value="High-Value Opportunity" placeholder="High-Value"></label>
+        <label>Entry criteria — field<input id="ap-field" value="amount" placeholder="field api name"></label>
+        <label>Operator<select id="ap-op"><option value=">=">&gt;=</option><option value="=">=</option><option value="!=">!=</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="<=">&lt;=</option><option value="LIKE">LIKE</option></select></label>
+        <label>Value<input id="ap-val" value="100000" placeholder="100000 or %pattern%"></label>
+        <label>Approvers (comma roles)<input id="ap-approvers" value="admin,manager" placeholder="admin,manager"></label>
+        <label>Steps JSON (optional — multi-step)<textarea id="ap-steps" placeholder='[{"name":"Manager Review","approver_roles":["manager"]}, {"name":"Finance","approver_roles":["admin"]}]'></textarea></label>
+        <div class="row"><button class="btn primary" id="btn-ap-create">POST /approval-processes</button><button class="btn" id="btn-ap-list">Refresh</button></div>
+        <pre id="ap-out">—</pre>
+      </div>
+      <div id="ap-table" class="muted" style="margin-top:.6rem">Loading…</div>
+      <h3>Manual Submit</h3><p class="muted">POST /records/{'{record_id}'}/submit-for-approval — finds record by id across objects</p>
+      <div class="form"><label>Record ID<input id="ap-rec" placeholder="paste record id"></label><div class="row"><button class="btn" id="btn-ap-submit">Submit for Approval</button><span id="ap-submit-msg" class="muted"></span></div></div>
+    </div>
   `;
+  const apTable = document.getElementById("ap-table");
+  apTable.innerHTML = plist.length ? `<table><thead><tr><th>ID</th><th>Object</th><th>Name</th><th>Criteria</th><th>Approvers</th><th>Steps</th><th>Active</th><th></th></tr></thead><tbody>${plist.map(p=>`<tr><td><code>${esc(p.id.slice(0,8))}</code></td><td>${esc(p.object_type)}</td><td>${esc(p.name||"")}</td><td>${esc(p.entry_criteria ? p.entry_criteria.field+" "+p.entry_criteria.operator+" "+p.entry_criteria.value : "manual")}</td><td>${esc((p.approvers||[]).join(","))}</td><td>${(p.steps||[]).length}</td><td>${p.is_active?"yes":"no"}</td><td><button class="btn danger" onclick="delAp('${p.id}')">Delete</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No processes — create one above to enable auto-trigger.</span>';
+  window.delAp = async(id)=>{ try{ await jfetch(`/approval-processes/${id}`,{method:"DELETE"}); renderApprovals(); }catch(e){ alert(e.message); } };
+  document.getElementById("btn-ap-create").onclick = async()=>{
+    const field=document.getElementById("ap-field").value.trim();
+    const op=document.getElementById("ap-op").value;
+    const valRaw=document.getElementById("ap-val").value.trim();
+    const obj=document.getElementById("ap-obj").value.trim();
+    const name=document.getElementById("ap-name").value.trim();
+    const approvers=document.getElementById("ap-approvers").value.split(",").map(s=>s.trim()).filter(Boolean);
+    let val = valRaw;
+    const num=Number(valRaw); if(valRaw!=="" && !isNaN(num) && valRaw.match(/^-?\d+(\.\d+)?$/)) val=num;
+    let steps=null;
+    const stepsRaw=document.getElementById("ap-steps").value.trim();
+    if(stepsRaw){ try{ steps=JSON.parse(stepsRaw); }catch(e){ document.getElementById("ap-out").textContent="Invalid steps JSON: "+e.message; return; } }
+    const body={object_type:obj, name, entry_criteria:{field, operator:op, value:val}, approvers, steps};
+    try{ const r=await jfetch("/approval-processes",{method:"POST", body}); document.getElementById("ap-out").textContent=JSON.stringify(r,null,2); renderApprovals(); }catch(e){ document.getElementById("ap-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-ap-list").onclick = ()=> renderApprovals();
+  document.getElementById("btn-ap-submit").onclick = async()=>{
+    const rid=document.getElementById("ap-rec").value.trim();
+    if(!rid){ document.getElementById("ap-submit-msg").textContent="Record ID required"; return; }
+    try{ const r=await jfetch(`/records/${encodeURIComponent(rid)}/submit-for-approval`,{method:"POST", body:{}}); document.getElementById("ap-submit-msg").textContent="Submitted "+r.id.slice(0,8)+" pending"; renderApprovals(); }catch(e){ document.getElementById("ap-submit-msg").textContent="Failed: "+e.message; }
+  };
 }
 async function decide(id, decision){
   await jfetch(`/approvals/${id}/decision`, {method:"POST", body:{decision}});
@@ -421,6 +473,60 @@ async function renderSharing(){
   document.getElementById("btn-shr-list").onclick=load;
   load();
 }
+async function renderValidation(){
+  const main=document.getElementById("main");
+  main.innerHTML=`<div class="card"><h2>Validation — Rules Engine</h2><p class="muted">Global <code>_VALIDATION_RULES</code> · <code>GET /validation/rules</code> · <code>POST /validation/rules</code> (admin) {object_type, field, operator (= != &gt; &lt; LIKE), value, error_message} · Enforced 422 on every <code>POST /{object}</code> and <code>PUT /{object}/{id}</code> before insert.</p>
+    <div class="grid2">
+      <div class="form">
+        <label>Object type<input id="val-obj" value="Account" placeholder="Account"></label>
+        <label>Field<input id="val-field" value="industry" placeholder="field api name"></label>
+        <label>Operator<select id="val-op"><option value="=">=</option><option value="!=">!=</option><option value=">">&gt;</option><option value="<">&lt;</option><option value=">=">&gt;=</option><option value="<=">&lt;=</option><option value="LIKE">LIKE</option></select></label>
+        <label>Value<input id="val-val" value="Technology" placeholder="expected value or LIKE %pattern%"></label>
+        <label>Error message<input id="val-err" value="Industry must be Technology" placeholder="error_message for 422"></label>
+        <div class="row"><button class="btn primary" id="btn-val-create">POST /validation/rules</button><button class="btn" id="btn-val-list">Refresh</button></div>
+        <pre id="val-out">—</pre>
+      </div>
+      <div class="form">
+        <h3>Duplicate check</h3><p class="muted"><code>POST /duplicates/check {object_type, field, value}</code> → {isDuplicate, matches}</p>
+        <label>Object<input id="dup-obj" value="Contact"></label>
+        <label>Field<input id="dup-field" value="email"></label>
+        <label>Value<input id="dup-val" value="alice@example.com"></label>
+        <div class="row"><button class="btn" id="btn-dup-check">Check duplicates</button></div>
+        <pre id="dup-out">—</pre>
+        <h3>Try validation</h3><p class="muted">Create a record that violates the rule to see 422.</p>
+        <div class="row"><button class="btn" id="btn-val-try">Create Account (industry=Finance) — should 422 if rule is Technology</button></div>
+        <pre id="val-try-out">—</pre>
+      </div>
+    </div></div>
+    <div class="card"><h3>Rules</h3><div id="val-rules" class="muted">Loading…</div></div>`;
+  const load=async()=>{
+    try{
+      const r=await jfetch("/validation/rules");
+      document.getElementById("val-out").textContent=JSON.stringify(r,null,2);
+      const rules=r.rules||[];
+      document.getElementById("val-rules").innerHTML = rules.length ? `<table><thead><tr><th>ID</th><th>Object</th><th>Field</th><th>Op</th><th>Value</th><th>Error</th><th></th></tr></thead><tbody>${rules.map(x=>`<tr><td><code>${esc(x.id.slice(0,8))}</code></td><td>${esc(x.object_type)}</td><td>${esc(x.field)}</td><td>${esc(x.operator)}</td><td>${esc(String(x.value))}</td><td>${esc(x.error_message)}</td><td><button class="btn danger" onclick="delVal('${x.id}')">Delete</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No validation rules yet. Add one above.</span>';
+    }catch(e){ document.getElementById("val-out").textContent="Error: "+e.message; document.getElementById("val-rules").textContent="—"; }
+  };
+  window.delVal=async(id)=>{ try{ await jfetch(`/validation/rules/${id}`,{method:"DELETE"}); load(); }catch(e){ alert(e.message); } };
+  document.getElementById("btn-val-create").onclick=async()=>{
+    const body={object_type:document.getElementById("val-obj").value.trim(), field:document.getElementById("val-field").value.trim(), operator:document.getElementById("val-op").value, value:document.getElementById("val-val").value, error_message:document.getElementById("val-err").value.trim()};
+    if(!body.object_type||!body.field||!body.error_message){ document.getElementById("val-out").textContent="object_type, field, error_message required"; return; }
+    // try coerce numeric value if possible
+    const raw=document.getElementById("val-val").value.trim();
+    const num=Number(raw); if(raw!=="" && !isNaN(num) && raw.match(/^-?\d+(\.\d+)?$/)) body.value=num;
+    try{ const r=await jfetch("/validation/rules",{method:"POST", body}); document.getElementById("val-out").textContent=JSON.stringify(r,null,2); load(); }catch(e){ document.getElementById("val-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-val-list").onclick=load;
+  document.getElementById("btn-dup-check").onclick=async()=>{
+    const body={object_type:document.getElementById("dup-obj").value.trim(), field:document.getElementById("dup-field").value.trim(), value:document.getElementById("dup-val").value.trim()};
+    try{ const r=await jfetch("/duplicates/check",{method:"POST", body}); document.getElementById("dup-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("dup-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-val-try").onclick=async()=>{
+    try{ const r=await jfetch("/accounts/",{method:"POST", body:{name:"Val Test "+Date.now(), industry:"Finance"}}); document.getElementById("val-try-out").textContent="Created (no block): "+JSON.stringify(r,null,2); }catch(e){ document.getElementById("val-try-out").textContent="Failed (expected 422 if rule active): "+e.message; }
+    load();
+  };
+  load();
+}
 async function renderSearch(){
   const q = document.getElementById("global-q").value.trim();
   const main=document.getElementById("main");
@@ -477,6 +583,86 @@ async function renderBulk(){
       const r= await jfetch(`/bulk/${t}/import`, {method:"POST", body});
       document.getElementById("bulk-msg").textContent = `Imported ${r.imported??r.count??"?"} record(s).`;
     }catch(e){ document.getElementById("bulk-msg").textContent="Import failed: "+e.message; }
+  };
+}
+
+async function renderBulk2(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Bulk 2.0 — Salesforce-compatible</h2><p class="muted">POST /jobs/ingest {object_type, operation insert|update|upsert, contentType CSV|JSON} → Draft. PUT /jobs/ingest/{jobId}/batches (CSV/JSON) → Open. PATCH /jobs/ingest/{jobId} {state: Closed|Aborted} → Closed. GET /jobs/ingest/{jobId} & /results.</p>
+      <div class="grid2">
+        <div class="form">
+          <label>Object<select id="b2-obj">${OBJECTS.map(o=>`<option value="${o}">${o}</option>`).join("")}</select></label>
+          <label>Operation<select id="b2-op"><option value="insert">insert</option><option value="update">update</option><option value="upsert">upsert</option></select></label>
+          <label>Content Type<select id="b2-ct"><option value="CSV">CSV</option><option value="JSON">JSON</option></select></label>
+          <div class="row"><button class="btn primary" id="b2-create">POST /jobs/ingest</button><span id="b2-job" class="muted"></span></div>
+          <label>Job ID<input id="b2-jid" placeholder="job id"></label>
+          <div class="row"><button class="btn" id="b2-get">GET job</button><button class="btn" id="b2-close">PATCH close</button><button class="btn danger" id="b2-abort">PATCH abort</button><button class="btn" id="b2-results">GET results</button></div>
+          <pre id="b2-out" style="min-height:8rem">—</pre>
+        </div>
+        <div class="form">
+          <label>Batch data (CSV with header or JSON array)<textarea id="b2-data" placeholder='name,industry\nAcme,Technology\nor [{"name":"Acme"}]'></textarea></label>
+          <div class="row"><button class="btn primary" id="b2-put">PUT batches</button><span id="b2-put-msg" class="muted"></span></div>
+          <h3>Metadata</h3><p class="muted">GET /metadata/describe & /metadata/objects/{type} & POST /metadata/custom-objects</p>
+          <div class="row"><button class="btn" id="b2-meta">GET /metadata/describe</button><button class="btn" id="b2-meta-obj">GET object</button></div>
+          <label>Meta object type<input id="b2-meta-type" value="Account"></label>
+          <pre id="b2-meta-out">—</pre>
+          <h3>Create via Metadata</h3><label>Name<input id="b2-meta-name" value="Invoice__c"></label><label>Fields JSON<input id="b2-meta-fields" value='[{"name":"amount","type":"currency"}]'></label><div class="row"><button class="btn primary" id="b2-meta-create">POST /metadata/custom-objects</button></div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById("b2-create").onclick=async()=>{
+    const obj=document.getElementById("b2-obj").value;
+    const op=document.getElementById("b2-op").value;
+    const ct=document.getElementById("b2-ct").value;
+    try{ const r=await jfetch("/jobs/ingest",{method:"POST",body:{object_type:obj, operation:op, contentType:ct}}); document.getElementById("b2-out").textContent=JSON.stringify(r,null,2); document.getElementById("b2-jid").value=r.id||""; document.getElementById("b2-job").textContent="Job "+(r.id||"").slice(0,8)+" "+r.state; }catch(e){ document.getElementById("b2-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("b2-get").onclick=async()=>{
+    const jid=document.getElementById("b2-jid").value.trim(); if(!jid) return;
+    try{ const r=await jfetch("/jobs/ingest/"+encodeURIComponent(jid)); document.getElementById("b2-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("b2-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("b2-close").onclick=async()=>{
+    const jid=document.getElementById("b2-jid").value.trim(); if(!jid) return;
+    try{ const r=await jfetch("/jobs/ingest/"+encodeURIComponent(jid),{method:"PATCH",body:{state:"Closed"}}); document.getElementById("b2-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("b2-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("b2-abort").onclick=async()=>{
+    const jid=document.getElementById("b2-jid").value.trim(); if(!jid) return;
+    try{ const r=await jfetch("/jobs/ingest/"+encodeURIComponent(jid),{method:"PATCH",body:{state:"Aborted"}}); document.getElementById("b2-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("b2-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("b2-results").onclick=async()=>{
+    const jid=document.getElementById("b2-jid").value.trim(); if(!jid) return;
+    try{ const r=await jfetch("/jobs/ingest/"+encodeURIComponent(jid)+"/results"); document.getElementById("b2-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("b2-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("b2-put").onclick=async()=>{
+    const jid=document.getElementById("b2-jid").value.trim(); if(!jid){ document.getElementById("b2-put-msg").textContent="Create job first"; return; }
+    const data=document.getElementById("b2-data").value.trim(); if(!data){ document.getElementById("b2-put-msg").textContent="Batch data required"; return; }
+    const isJson = data.startsWith("[") || data.startsWith("{");
+    const headers={};
+    let body=data;
+    if(isJson){
+      try{ JSON.parse(data); headers["Content-Type"]="application/json"; }catch(e){ headers["Content-Type"]="text/csv"; }
+    } else {
+      headers["Content-Type"]="text/csv";
+    }
+    try{
+      const r=await fetch(API+"/jobs/ingest/"+encodeURIComponent(jid)+"/batches",{method:"PUT", headers:{...hdr(),...headers}, body});
+      const ct=r.headers.get("content-type")||""; let j=null; if(ct.includes("application/json")) j=await r.json(); else j=await r.text();
+      if(!r.ok) throw new Error((j&&j.detail)||j);
+      document.getElementById("b2-out").textContent=JSON.stringify(j,null,2);
+      document.getElementById("b2-put-msg").textContent="Batch OK "+(j.successful||0)+" ok "+(j.failed||0)+" fail";
+    }catch(e){ document.getElementById("b2-put-msg").textContent="Error: "+e.message; }
+  };
+  document.getElementById("b2-meta").onclick=async()=>{
+    try{ const r=await jfetch("/metadata/describe"); document.getElementById("b2-meta-out").textContent=JSON.stringify(r,null,2).slice(0,3000); }catch(e){ document.getElementById("b2-meta-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("b2-meta-obj").onclick=async()=>{
+    const t=document.getElementById("b2-meta-type").value.trim()||"Account";
+    try{ const r=await jfetch("/metadata/objects/"+encodeURIComponent(t)); document.getElementById("b2-meta-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("b2-meta-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("b2-meta-create").onclick=async()=>{
+    const name=document.getElementById("b2-meta-name").value.trim(); let fields=[]; try{ fields=JSON.parse(document.getElementById("b2-meta-fields").value); }catch(e){}
+    try{ const r=await jfetch("/metadata/custom-objects",{method:"POST",body:{name, label:name, fields}}); document.getElementById("b2-meta-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("b2-meta-out").textContent="Error: "+e.message; }
   };
 }
 
