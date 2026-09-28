@@ -59,6 +59,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
 .pill{border:1px solid var(--line);border-radius:999px;padding:.2rem .5rem;font-size:.72rem;background:#fff}
 @media(max-width:900px){.app{grid-template-columns:1fr}.sbar{height:auto;position:static}.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div id="login" class="login">
@@ -156,12 +157,12 @@ pre{white-space:pre-wrap;word-break:break-word;background:#f7fafb;border:1px sol
 
 <script>
 const API = location.origin;
-const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","contracts","assets","entitlements","content_documents","feed_items","reports","dashboards","flows","service_contracts","work_orders","knowledge_articles","invoices","territories","email_templates","email_messages","service_resources","service_appointments","forecasts","quotas","collaboration_groups","surveys","social_posts","social_personas","live_chat_transcripts","macros","quick_texts","network_members","ideas","topics","locations","associated_locations","service_territories","operating_hours","work_types","work_type_groups","skills","service_resource_skills","return_orders","return_order_line_items","shipments","product_requests","product_request_line_items","time_sheets","time_sheet_entries","shifts","resource_absences","resource_preferences","service_crews","service_crew_members","maintenance_plans","maintenance_assets","entitlement_contacts","contract_contact_roles","entitlement_templates","milestones","service_level_agreements","asset_relationships","products_consumed","queues","queue_members","quick_actions","quantum-keys","aimcp-bridges","tokens","users","profiles"];
-const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",contracts:"Contracts",assets:"Assets",entitlements:"Entitlements",content_documents:"Content Documents",feed_items:"Feed Items",reports:"Reports",dashboards:"Dashboards",flows:"Flows",service_contracts:"Service Contracts",work_orders:"Work Orders",knowledge_articles:"Knowledge Articles",invoices:"Invoices",territories:"Territories",email_templates:"Email Templates",email_messages:"Email Messages",service_resources:"Service Resources",service_appointments:"Service Appointments",forecasts:"Forecasts",quotas:"Quotas",collaboration_groups:"Collaboration Groups",surveys:"Surveys",social_posts:"Social Posts",social_personas:"Social Personas",live_chat_transcripts:"Live Chat Transcripts",macros:"Macros",quick_texts:"Quick Texts",network_members:"Network Members",ideas:"Ideas",topics:"Topics",locations:"Locations",associated_locations:"Associated Locations",service_territories:"Service Territories",operating_hours:"Operating Hours",work_types:"Work Types",work_type_groups:"Work Type Groups",skills:"Skills",service_resource_skills:"Service Resource Skills",return_orders:"Return Orders",return_order_line_items:"Return Order Line Items",shipments:"Shipments",product_requests:"Product Requests",product_request_line_items:"Product Request Line Items",time_sheets:"Time Sheets",time_sheet_entries:"Time Sheet Entries",shifts:"Shifts",resource_absences:"Resource Absences",resource_preferences:"Resource Preferences",service_crews:"Service Crews",service_crew_members:"Service Crew Members",maintenance_plans:"Maintenance Plans",maintenance_assets:"Maintenance Assets",entitlement_contacts:"Entitlement Contacts",contract_contact_roles:"Contract Contact Roles",entitlement_templates:"Entitlement Templates",milestones:"Milestones",service_level_agreements:"Service Level Agreements",asset_relationships:"Asset Relationships",products_consumed:"Products Consumed",queues:"Queues",queue_members:"Queue Members",quick_actions:"Quick Actions","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles"};
+const OBJECTS = ["accounts","contacts","leads","opportunities","cases","products","pricebooks","campaigns","tasks","events","notes","attachments","quotes","orders","payments","contracts","assets","entitlements","content_documents","feed_items","reports","dashboards","flows","flow-builder","service_contracts","work_orders","knowledge_articles","invoices","territories","email_templates","email_messages","service_resources","service_appointments","forecasts","quotas","collaboration_groups","surveys","social_posts","social_personas","live_chat_transcripts","macros","quick_texts","network_members","ideas","topics","locations","associated_locations","service_territories","operating_hours","work_types","work_type_groups","skills","service_resource_skills","return_orders","return_order_line_items","shipments","product_requests","product_request_line_items","time_sheets","time_sheet_entries","shifts","resource_absences","resource_preferences","service_crews","service_crew_members","maintenance_plans","maintenance_assets","entitlement_contacts","contract_contact_roles","entitlement_templates","milestones","service_level_agreements","asset_relationships","products_consumed","queues","queue_members","quick_actions","quantum-keys","aimcp-bridges","tokens","users","profiles","report-builders","dashboard-builders","custom-metadata","apex"];
+const LABELS = {accounts:"Accounts",contacts:"Contacts",leads:"Leads",opportunities:"Opportunities",cases:"Cases",products:"Products",pricebooks:"PriceBooks",campaigns:"Campaigns",tasks:"Tasks",events:"Events",notes:"Notes",attachments:"Attachments",quotes:"Quotes",orders:"Orders",payments:"Payments",contracts:"Contracts",assets:"Assets",entitlements:"Entitlements",content_documents:"Content Documents",feed_items:"Feed Items",reports:"Reports",dashboards:"Dashboards",flows:"Flows","flow-builder":"Flow Builder",service_contracts:"Service Contracts",work_orders:"Work Orders",knowledge_articles:"Knowledge Articles",invoices:"Invoices",territories:"Territories",email_templates:"Email Templates",email_messages:"Email Messages",service_resources:"Service Resources",service_appointments:"Service Appointments",forecasts:"Forecasts",quotas:"Quotas",collaboration_groups:"Collaboration Groups",surveys:"Surveys",social_posts:"Social Posts",social_personas:"Social Personas",live_chat_transcripts:"Live Chat Transcripts",macros:"Macros",quick_texts:"Quick Texts",network_members:"Network Members",ideas:"Ideas",topics:"Topics",locations:"Locations",associated_locations:"Associated Locations",service_territories:"Service Territories",operating_hours:"Operating Hours",work_types:"Work Types",work_type_groups:"Work Type Groups",skills:"Skills",service_resource_skills:"Service Resource Skills",return_orders:"Return Orders",return_order_line_items:"Return Order Line Items",shipments:"Shipments",product_requests:"Product Requests",product_request_line_items:"Product Request Line Items",time_sheets:"Time Sheets",time_sheet_entries:"Time Sheet Entries",shifts:"Shifts",resource_absences:"Resource Absences",resource_preferences:"Resource Preferences",service_crews:"Service Crews",service_crew_members:"Service Crew Members",maintenance_plans:"Maintenance Plans",maintenance_assets:"Maintenance Assets",entitlement_contacts:"Entitlement Contacts",contract_contact_roles:"Contract Contact Roles",entitlement_templates:"Entitlement Templates",milestones:"Milestones",service_level_agreements:"Service Level Agreements",asset_relationships:"Asset Relationships",products_consumed:"Products Consumed",queues:"Queues",queue_members:"Queue Members",quick_actions:"Quick Actions","quantum-keys":"Quantum Keys","aimcp-bridges":"AIMCP Bridges",tokens:"Tokens",users:"Users",profiles:"Profiles","report-builders":"Report Builders","dashboard-builders":"Dashboard Builders",custom-metadata:"Custom Metadata",apex:"Apex & Triggers"};
 const NAV = [
   ["dashboard","Dashboard"],["limits","Limits"],["accounts","Accounts"],["contacts","Contacts"],["leads","Leads"],["opportunities","Opportunities"],["cases","Cases"],
   ["products","Products"],["pricebooks","PriceBooks"],["campaigns","Campaigns"],["tasks","Tasks"],["events","Events"],["notes","Notes"],
-  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["reports-run","Reports Run"],["cdc","CDC Streaming"],["dashboards","Dashboards"],["query","SOQL Query"],["sharing","Sharing"],["validation","Validation"],["flows","Flows"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["entitlement_templates","Entitlement Templates"],["milestones","Milestones"],["service_level_agreements","Service Level Agreements"],["asset_relationships","Asset Relationships"],["products_consumed","Products Consumed"],["queues","Queues"],["queue_members","Queue Members"],["quick_actions","Quick Actions"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["search","Search"],["workflows","Workflows"],["approvals","Approvals"],["audit","Audit Trail"],["bulk","Bulk Ops"],["bulk2","Bulk 2.0"],["custom","Custom Objects"],["plugins","Plugins"],["salesforce","Salesforce"],["mcp","MCP"],["graphql","GraphQL"],["crypto","Crypto"],["scheduled","Scheduled Jobs"],["health","Health"],["users","Users"],["profiles","Profiles"]
+  ["attachments","Attachments"],["quotes","Quotes"],["orders","Orders"],["payments","Payments"],["contracts","Contracts"],["assets","Assets"],["entitlements","Entitlements"],["content_documents","Content Documents"],["feed_items","Feed Items"],  ["reports","Reports"],["reports-run","Reports Run"],["report-builder","Report Builder"],["cdc","CDC Streaming"],["dashboards","Dashboards"],["dashboard-builder","Dashboard Builder"],["query","SOQL Query"],["sharing","Sharing"],["validation","Validation"],["flows","Flows"],["flow-builder","Flow Builder"],["service_contracts","Service Contracts"],["work_orders","Work Orders"],["knowledge_articles","Knowledge Articles"],["invoices","Invoices"],["territories","Territories"],["email_templates","Email Templates"],["email_messages","Email Messages"],["service_resources","Service Resources"],["service_appointments","Service Appointments"],["forecasts","Forecasts"],["quotas","Quotas"],["collaboration_groups","Collaboration Groups"],["surveys","Surveys"],["social_posts","Social Posts"],["social_personas","Social Personas"],["live_chat_transcripts","Live Chat Transcripts"],["macros","Macros"],["quick_texts","Quick Texts"],["network_members","Network Members"],["ideas","Ideas"],["topics","Topics"],["locations","Locations"],["associated_locations","Associated Locations"],["service_territories","Service Territories"],["operating_hours","Operating Hours"],["work_types","Work Types"],["work_type_groups","Work Type Groups"],["skills","Skills"],["service_resource_skills","Service Resource Skills"],["return_orders","Return Orders"],["return_order_line_items","Return Order Line Items"],["shipments","Shipments"],["product_requests","Product Requests"],["product_request_line_items","Product Request Line Items"],["time_sheets","Time Sheets"],["time_sheet_entries","Time Sheet Entries"],["shifts","Shifts"],["resource_absences","Resource Absences"],["resource_preferences","Resource Preferences"],["service_crews","Service Crews"],["service_crew_members","Service Crew Members"],["maintenance_plans","Maintenance Plans"],["maintenance_assets","Maintenance Assets"],["entitlement_contacts","Entitlement Contacts"],["contract_contact_roles","Contract Contact Roles"],["entitlement_templates","Entitlement Templates"],["milestones","Milestones"],["service_level_agreements","Service Level Agreements"],["asset_relationships","Asset Relationships"],["products_consumed","Products Consumed"],["queues","Queues"],["queue_members","Queue Members"],["quick_actions","Quick Actions"],["quantum-keys","Quantum Keys"],["aimcp-bridges","AIMCP Bridges"],["tokens","Tokens"],["users","Users"],["profiles","Profiles"],["report-builders","Report Builders"],["dashboard-builders","Dashboard Builders"],["platform-events","Platform Events"],["external-services","External Services"],["custom-metadata","Custom Metadata"],["apex","Apex & Triggers"]
  ];
 let TOKEN = localStorage.getItem("custrel_token")||"";
 let CLAIMS = null;
@@ -262,7 +263,14 @@ async function navigate(id){
         else if(id==="query") await renderQuery();
          else if(id==="sharing") await renderSharing();
          else if(id==="validation") await renderValidation();
-         else if(OBJECTS.includes(id)) await renderList(id);
+         else if(id==="flow-builder") await renderFlowBuilder();
+         else if(id==="report-builder") await renderReportBuilder();
+else if(id==="dashboard-builder") await renderDashboardBuilder();
+          else if(id==="platform-events") await renderPlatformEvents();
+          else if(id==="external-services") await renderExternalServices();
+          else if(id==="custom-metadata") await renderCustomMetadata();
+          else if(id==="apex") await renderApex();
+          else if(OBJECTS.includes(id)) await renderList(id);
       else main.innerHTML='<div class="card">Unknown view</div>';
   }catch(e){ main.innerHTML=`<div class="card"><h2>Error</h2><pre>${esc(e.message)}</pre></div>`; }
 }
@@ -372,6 +380,313 @@ async function renderReportsRun(){
   };
   load();
 }
+
+async function renderReportBuilder(){
+  const main=document.getElementById("main");
+  let types = [];
+  try{ const r=await jfetch("/reports/types"); types=r.types||[];}catch(e){ types=["Accounts","Opportunities","Cases","Contacts","Leads"]; }
+  main.innerHTML=`
+    <div class="card"><h2>Visual Report Builder</h2><p class="muted">POST /report-builders · GET /report-builders · GET /report-builders/{id} · PUT · DELETE · POST /report-builders/{id}/run</p>
+      <div class="form" id="rb-form">
+        <h3>Create / Edit Report Builder</h3>
+        <label>Name<input id="rb-name" placeholder="My Visual Report"></label>
+        <label>API Name<input id="rb-api-name" placeholder="my_visual_report"></label>
+        <label>Report Type<select id="rb-type">${types.map(x=>`<option value="${x}">${x}</option>`).join("")}</select></label>
+        <label>Group By<input id="rb-group" placeholder="industry"></label>
+        <label>Aggregates JSON<textarea id="rb-aggs" placeholder='[{"field":"amount","function":"sum"},{"field":"amount","function":"avg"}]'>[{"function":"count"}]</textarea></label>
+        <label>Filters JSON (optional)<textarea id="rb-filters" placeholder='[{"field":"industry","operator":"=","value":"Technology"}]'></textarea></label>
+        <label>Chart Config JSON<textarea id="rb-chart" placeholder='{"type":"bar","x_axis":"Industry","y_axis":"Amount","colors":["#4e73df","#1cc88a"]}'>{"type":"bar"}</textarea></label>
+        <label>Description<textarea id="rb-desc" placeholder="Optional description"></textarea></label>
+        <div class="row"><button class="btn primary" id="btn-rb-create">Create</button><button class="btn" id="btn-rb-list">Refresh List</button><button class="btn" id="btn-rb-clear">Clear Form</button></div>
+        <pre id="rb-out">—</pre>
+      </div>
+      <div id="rb-list" class="muted">Loading...</div>
+      <hr style="margin:1.5rem 0">
+      <h3>Run Report Builder</h3>
+      <div class="form"><label>Report Builder ID<input id="rb-run-id" placeholder="paste id"></label><div class="row"><button class="btn primary" id="btn-rb-run">Run & Preview Chart</button></div><pre id="rb-run-out">—</pre></div>
+      <div id="rb-chart-container" style="max-width:700px;margin:1rem auto;">
+        <canvas id="rb-chart-canvas" style="max-height:400px;"></canvas>
+      </div>
+    </div>
+  `;
+  const load=async()=>{
+    try{
+      const data=await jfetch("/report-builders");
+      const rows=(data.data||data.report_builders||data||[]);
+      const list=Array.isArray(rows)? rows : Object.values(rows);
+      document.getElementById("rb-list").innerHTML = list.length ? `<table><thead><tr><th>ID</th><th>Name</th><th>API Name</th><th>Type</th><th>Group By</th><th>Chart</th><th></th></tr></thead><tbody>${list.map(r=>`<tr><td><code>${esc((r.id||"").slice(0,8))}</code></td><td>${esc(r.name||"")}</td><td>${esc(r.api_name||"")}</td><td>${esc(r.report_type||"")}</td><td>${esc(r.group_by||"")}</td><td>${esc(r.chart_config?.type||"bar")}</td><td><button class="btn primary" onclick="runReportBuilder(\'${r.id}\')">Run</button> <button class="btn" onclick="editReportBuilder(\'${r.id}\')">Edit</button> <button class="btn danger" onclick="delReportBuilder(\'${r.id}\')">Del</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No report builders.</span>';
+    }catch(e){ document.getElementById("rb-list").textContent="Error: "+e.message; }
+  };
+  window.editReportBuilder=async(id)=>{
+    try{
+      const r=await jfetch(`/report-builders/${encodeURIComponent(id)}`);
+      document.getElementById("rb-name").value=r.name||"";
+      document.getElementById("rb-api-name").value=r.api_name||"";
+      document.getElementById("rb-type").value=r.report_type||"";
+      document.getElementById("rb-group").value=r.group_by||"";
+      document.getElementById("rb-aggs").value=JSON.stringify(r.aggregates||[{"function":"count"}],null,2);
+      document.getElementById("rb-filters").value=JSON.stringify(r.filters||[],null,2);
+      document.getElementById("rb-chart").value=JSON.stringify(r.chart_config||{"type":"bar"},null,2);
+      document.getElementById("rb-desc").value=r.description||"";
+      document.getElementById("rb-form").dataset.editing=id;
+      document.getElementById("rb-form").scrollIntoView({behavior:"smooth"});
+    }catch(e){ alert("Error: "+e.message); }
+  };
+  window.delReportBuilder=async(id)=>{
+    if(!confirm("Delete "+id.slice(0,8)+"?")) return;
+    try{ await jfetch(`/report-builders/${encodeURIComponent(id)}`,{method:"DELETE"}); load(); }catch(e){ alert(e.message); }
+  };
+  window.runReportBuilder=async(id)=>{
+    document.getElementById("rb-run-id").value=id;
+    try{
+      const r=await jfetch(`/report-builders/${encodeURIComponent(id)}/run`,{method:"POST",body:{}});
+      document.getElementById("rb-run-out").textContent=JSON.stringify(r,null,2);
+      renderChartFromResult(r, "rb-chart-canvas");
+    }catch(e){ document.getElementById("rb-run-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-rb-create").onclick=async()=>{
+    const isEdit=document.getElementById("rb-form").dataset.editing;
+    const name=document.getElementById("rb-name").value.trim();
+    const api_name=document.getElementById("rb-api-name").value.trim();
+    const report_type=document.getElementById("rb-type").value.trim();
+    const group_by=document.getElementById("rb-group").value.trim()||null;
+    let aggs=null; let filters=null; let chart_config=null;
+    try{ aggs=JSON.parse(document.getElementById("rb-aggs").value); }catch(e){ document.getElementById("rb-out").textContent="Invalid aggregates JSON"; return; }
+    const fraw=document.getElementById("rb-filters").value.trim();
+    if(fraw){ try{ filters=JSON.parse(fraw);}catch(e){ document.getElementById("rb-out").textContent="Invalid filters JSON"; return; } }
+    const craw=document.getElementById("rb-chart").value.trim();
+    if(craw){ try{ chart_config=JSON.parse(craw);}catch(e){ document.getElementById("rb-out").textContent="Invalid chart config JSON"; return; } }
+    const desc=document.getElementById("rb-desc").value.trim()||null;
+    const body={name, api_name, report_type, group_by, aggregates:aggs, filters, chart_config, description:desc};
+    const url=isEdit?`/report-builders/${encodeURIComponent(isEdit)}` : "/report-builders";
+    const method=isEdit?"PUT":"POST";
+    try{
+      const r=await jfetch(url,{method,body});
+      document.getElementById("rb-out").textContent=JSON.stringify(r,null,2);
+      delete document.getElementById("rb-form").dataset.editing;
+      document.getElementById("rb-name").value=""; document.getElementById("rb-api-name").value=""; document.getElementById("rb-group").value=""; document.getElementById("rb-aggs").value='[{"function":"count"}]'; document.getElementById("rb-filters").value=""; document.getElementById("rb-chart").value='{"type":"bar"}'; document.getElementById("rb-desc").value="";
+      load();
+    }catch(e){ document.getElementById("rb-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-rb-list").onclick=load;
+  document.getElementById("btn-rb-clear").onclick=()=>{
+    delete document.getElementById("rb-form").dataset.editing;
+    document.getElementById("rb-name").value=""; document.getElementById("rb-api-name").value=""; document.getElementById("rb-group").value=""; document.getElementById("rb-aggs").value='[{"function":"count"}]'; document.getElementById("rb-filters").value=""; document.getElementById("rb-chart").value='{"type":"bar"}'; document.getElementById("rb-desc").value="";
+  };
+  document.getElementById("btn-rb-run").onclick=async()=>{
+    const id=document.getElementById("rb-run-id").value.trim();
+    if(!id){ document.getElementById("rb-run-out").textContent="Report Builder ID required"; return; }
+    try{
+      const r=await jfetch(`/report-builders/${encodeURIComponent(id)}/run`,{method:"POST",body:{}});
+      document.getElementById("rb-run-out").textContent=JSON.stringify(r,null,2);
+      renderChartFromResult(r, "rb-chart-canvas");
+    }catch(e){ document.getElementById("rb-run-out").textContent="Error: "+e.message; }
+  };
+  load();
+}
+
+async function renderDashboardBuilder(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Visual Dashboard Builder</h2><p class="muted">POST /dashboard-builders · GET /dashboard-builders · GET /dashboard-builders/{id} · PUT · DELETE · POST /dashboard-builders/{id}/refresh</p>
+      <div class="form" id="db-form">
+        <h3>Create / Edit Dashboard Builder</h3>
+        <label>Name<input id="db-name" placeholder="My Dashboard"></label>
+        <label>API Name<input id="db-api-name" placeholder="my_dashboard"></label>
+        <label>Layout<select id="db-layout"><option value="grid">Grid</option><option value="flex">Flex</option></select></label>
+        <label>Description<textarea id="db-desc" placeholder="Optional description"></textarea></label>
+        <div class="row"><button class="btn primary" id="btn-db-create">Create</button><button class="btn" id="btn-db-list">Refresh List</button><button class="btn" id="btn-db-clear">Clear Form</button></div>
+        <pre id="db-out">—</pre>
+      </div>
+      <div id="db-list" class="muted">Loading...</div>
+      <hr style="margin:1.5rem 0">
+      <h3>Dashboard Preview & Refresh</h3>
+      <div class="form"><label>Dashboard Builder ID<input id="db-run-id" placeholder="paste id"></label><div class="row"><button class="btn primary" id="btn-db-refresh">Refresh All Components</button></div><pre id="db-refresh-out">—</pre></div>
+      <div id="db-preview" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:1rem;margin-top:1rem;"></div>
+    </div>
+  `;
+  const load=async()=>{
+    try{
+      const data=await jfetch("/dashboard-builders");
+      const rows=(data.data||data.dashboard_builders||data||[]);
+      const list=Array.isArray(rows)? rows : Object.values(rows);
+      document.getElementById("db-list").innerHTML = list.length ? `<table><thead><tr><th>ID</th><th>Name</th><th>API Name</th><th>Layout</th><th>Components</th><th></th></tr></thead><tbody>${list.map(r=>`<tr><td><code>${esc((r.id||"").slice(0,8))}</code></td><td>${esc(r.name||"")}</td><td>${esc(r.api_name||"")}</td><td>${esc(r.layout||"grid")}</td><td>${(r.components||[]).length}</td><td><button class="btn primary" onclick="refreshDashboardBuilder(\'${r.id}\')">Refresh</button> <button class="btn" onclick="editDashboardBuilder(\'${r.id}\')">Edit</button> <button class="btn danger" onclick="delDashboardBuilder(\'${r.id}\')">Del</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No dashboard builders.</span>';
+    }catch(e){ document.getElementById("db-list").textContent="Error: "+e.message; }
+  };
+  window.editDashboardBuilder=async(id)=>{
+    try{
+      const r=await jfetch(`/dashboard-builders/${encodeURIComponent(id)}`);
+      document.getElementById("db-name").value=r.name||"";
+      document.getElementById("db-api-name").value=r.api_name||"";
+      document.getElementById("db-layout").value=r.layout||"grid";
+      document.getElementById("db-desc").value=r.description||"";
+      // render component editor
+      renderComponentEditor(r);
+      document.getElementById("db-form").dataset.editing=id;
+      document.getElementById("db-form").scrollIntoView({behavior:"smooth"});
+    }catch(e){ alert("Error: "+e.message); }
+  };
+  window.delDashboardBuilder=async(id)=>{
+    if(!confirm("Delete "+id.slice(0,8)+"?")) return;
+    try{ await jfetch(`/dashboard-builders/${encodeURIComponent(id)}`,{method:"DELETE"}); load(); }catch(e){ alert(e.message); }
+  };
+  window.refreshDashboardBuilder=async(id)=>{
+    document.getElementById("db-run-id").value=id;
+    try{
+      const r=await jfetch(`/dashboard-builders/${encodeURIComponent(id)}/refresh`,{method:"POST",body:{}});
+      document.getElementById("db-refresh-out").textContent=JSON.stringify(r,null,2);
+      renderDashboardPreview(r.results, "db-preview");
+    }catch(e){ document.getElementById("db-refresh-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-db-create").onclick=async()=>{
+    const isEdit=document.getElementById("db-form").dataset.editing;
+    const name=document.getElementById("db-name").value.trim();
+    const api_name=document.getElementById("db-api-name").value.trim();
+    const layout=document.getElementById("db-layout").value;
+    const desc=document.getElementById("db-desc").value.trim()||null;
+    // get components from component editor
+    const components = getComponentsFromEditor();
+    const body={name, api_name, components, layout, description:desc};
+    const url=isEdit?`/dashboard-builders/${encodeURIComponent(isEdit)}` : "/dashboard-builders";
+    const method=isEdit?"PUT":"POST";
+    try{
+      const r=await jfetch(url,{method,body});
+      document.getElementById("db-out").textContent=JSON.stringify(r,null,2);
+      delete document.getElementById("db-form").dataset.editing;
+      document.getElementById("db-name").value=""; document.getElementById("db-api-name").value=""; document.getElementById("db-desc").value="";
+      clearComponentEditor();
+      load();
+    }catch(e){ document.getElementById("db-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-db-list").onclick=load;
+  document.getElementById("btn-db-clear").onclick=()=>{
+    delete document.getElementById("db-form").dataset.editing;
+    document.getElementById("db-name").value=""; document.getElementById("db-api-name").value=""; document.getElementById("db-desc").value="";
+    clearComponentEditor();
+  };
+  document.getElementById("btn-db-refresh").onclick=async()=>{
+    const id=document.getElementById("db-run-id").value.trim();
+    if(!id){ document.getElementById("db-refresh-out").textContent="Dashboard Builder ID required"; return; }
+    try{
+      const r=await jfetch(`/dashboard-builders/${encodeURIComponent(id)}/refresh`,{method:"POST",body:{}});
+      document.getElementById("db-refresh-out").textContent=JSON.stringify(r,null,2);
+      renderDashboardPreview(r.results, "db-preview");
+    }catch(e){ document.getElementById("db-refresh-out").textContent="Error: "+e.message; }
+  };
+  load();
+}
+
+function renderComponentEditor(dashboardRec){
+  const container=document.getElementById("db-form");
+  const existing=dashboardRec.components||[];
+  let html=`
+    <hr style="margin:1rem 0"><h3>Components</h3>
+    <div id="db-components-editor">
+      ${existing.map((c,i)=>componentEditorRow(c,i)).join("")}
+    </div>
+    <div class="row"><button class="btn" id="btn-db-add-comp">+ Add Component</button></div>
+  `;
+  // remove existing component editor if any
+  let old=document.getElementById("db-components-editor");
+  if(old) old.remove();
+  container.insertAdjacentHTML("beforeend", html);
+  document.getElementById("btn-db-add-comp").onclick=()=>{
+    const idx=Date.now();
+    const editor=document.getElementById("db-components-editor");
+    editor.insertAdjacentHTML("beforeend", componentEditorRow({}, idx));
+  };
+}
+
+function componentEditorRow(comp, idx){
+  return `
+    <div class="card" style="margin:.5rem 0;padding:.8rem;position:relative;" data-comp-idx="${idx}">
+      <button class="btn danger" style="position:absolute;top:.5rem;right:.5rem;padding:.2rem .5rem;font-size:.75rem;" onclick="this.closest('[data-comp-idx]').remove()">×</button>
+      <div class="row" style="gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem;">
+        <select class="comp-report-id" style="flex:1;min-width:180px;">
+          <option value="">Select Report Builder</option>
+        </select>
+        <select class="comp-chart-type" style="min-width:140px;">
+          <option value="bar">Bar</option><option value="line">Line</option><option value="area">Area</option>
+          <option value="pie">Pie</option><option value="doughnut">Doughnut</option><option value="scatter">Scatter</option>
+          <option value="funnel">Funnel</option><option value="gauge">Gauge</option><option value="table">Table</option>
+        </select>
+        <input class="comp-x" type="number" placeholder="X (grid col)" style="width:80px;" value="${comp.position?.x||0}">
+        <input class="comp-y" type="number" placeholder="Y (grid row)" style="width:80px;" value="${comp.position?.y||0}">
+        <input class="comp-w" type="number" placeholder="Width" style="width:80px;" value="${comp.size?.w||4}">
+        <input class="comp-h" type="number" placeholder="Height" style="width:80px;" value="${comp.size?.h||3}">
+        <input class="comp-refresh" type="number" placeholder="Refresh (s)" style="width:100px;" value="${comp.refresh_interval||30}">
+      </div>
+      <div class="row" style="gap:.5rem;flex-wrap:wrap;">
+        <label style="font-size:.75rem;">Filter Mappings JSON<textarea class="comp-filter-map" placeholder='{"industry":"industry"}' style="min-height:2.5rem;font-size:.75rem;">${JSON.stringify(comp.filter_mappings||{})}</textarea></label>
+      </div>
+    </div>
+  `;
+}
+
+function getComponentsFromEditor(){
+  const rows=document.querySelectorAll("#db-components-editor [data-comp-idx]");
+  const comps=[];
+  rows.forEach(row=>{
+    const report_id=row.querySelector(".comp-report-id")?.value;
+    if(!report_id) return;
+    comps.push({
+      report_id,
+      chart_type: row.querySelector(".comp-chart-type")?.value || "bar",
+      position: {x: parseInt(row.querySelector(".comp-x")?.value)||0, y: parseInt(row.querySelector(".comp-y")?.value)||0},
+      size: {w: parseInt(row.querySelector(".comp-w")?.value)||4, h: parseInt(row.querySelector(".comp-h")?.value)||3},
+      refresh_interval: parseInt(row.querySelector(".comp-refresh")?.value)||30,
+      filter_mappings: (()=>{ try{ return JSON.parse(row.querySelector(".comp-filter-map")?.value||"{}"); }catch(e){ return {}; } })()
+    });
+  });
+  return comps;
+}
+
+function clearComponentEditor(){
+  const editor=document.getElementById("db-components-editor");
+  if(editor) editor.innerHTML="";
+}
+
+async function renderDashboardPreview(results, containerId){
+  const container=document.getElementById(containerId);
+  if(!results || !results.length){
+    container.innerHTML='<div class="muted" style="grid-column:1/-1;text-align:center;padding:2rem;">No components to preview</div>';
+    return;
+  }
+  container.innerHTML = results.map((r,i)=>`<div class="card" style="position:relative;" data-idx="${i}"><h4>${esc(r.report_name||"Component")}</h4><canvas id="db-chart-${i}" style="max-height:250px;"></canvas><pre class="muted" style="font-size:.7rem;max-height:150px;overflow:auto;">${esc(JSON.stringify(r.chart_data?.chartjs_config||{},null,2))}</pre></div>`).join("");
+  results.forEach((r,i)=>{
+    if(r.chart_data?.chartjs_config){
+      try{ new Chart(document.getElementById(`db-chart-${i}`), r.chart_data.chartjs_config); }catch(e){ console.warn("Chart render error", e); }
+    }
+  });
+}
+
+function renderChartFromResult(result, canvasId){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas) return;
+  const ctx=canvas.getContext("2d");
+  if(window._rbChartInstance) window._rbChartInstance.destroy();
+  if(result.chart_data?.chartjs_config){
+    window._rbChartInstance = new Chart(ctx, result.chart_data.chartjs_config);
+  }
+}
+
+async function populateReportBuilderDropdowns(){
+  try{
+    const data=await jfetch("/report-builders");
+    const rows=(data.data||data.report_builders||data||[]);
+    const list=Array.isArray(rows)? rows : Object.values(rows);
+    const options = list.map(r=>`<option value="${r.id}">${esc(r.name)} (${r.id.slice(0,8)})</option>`).join("");
+    document.querySelectorAll(".comp-report-id").forEach(sel=>{
+      const current=sel.value;
+      sel.innerHTML = '<option value="">Select Report Builder</option>' + options;
+      if(current) sel.value=current;
+    });
+  }catch(e){ console.warn("Failed to load report builders", e); }
+}
+
+// Populate dropdowns when component editor is shown
+setInterval(populateReportBuilderDropdowns, 30000);
+
 async function renderCDC(){
   const main=document.getElementById("main");
   main.innerHTML=`
@@ -637,6 +952,452 @@ async function renderValidation(){
   };
   load();
 }
+async function renderFlowBuilder(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card">
+      <h2>Visual Flow Builder</h2>
+      <p class="muted">Lightning Flow Designer — drag elements from palette, connect them, save to backend via <code>PUT /flow-definitions/{id}</code>, activate via <code>POST /flow-definitions/{id}/activate</code>, run via <code>POST /flow-definitions/{id}/run</code></p>
+    </div>
+    <div style="display:grid;grid-template-columns:18rem 1fr 16rem;gap:1rem;height:calc(100vh - 160px);min-height:600px">
+      <!-- Palette -->
+      <div class="card" style="height:100%;overflow:auto;padding:.8rem">
+        <h3 style="margin-top:0">Elements</h3>
+        <div id="palette"></div>
+      </div>
+      <!-- Canvas -->
+      <div class="card" style="position:relative;height:100%;overflow:hidden">
+        <div style="display:flex;gap:.5rem;margin-bottom:.5rem">
+          <button class="btn primary" id="fb-save">Save</button>
+          <button class="btn" id="fb-activate">Activate</button>
+          <button class="btn" id="fb-run">Run</button>
+          <button class="btn" id="fb-version">New Version</button>
+          <button class="btn" id="fb-list">List</button>
+          <select id="fb-flow-select" style="flex:1"></select>
+        </div>
+        <div id="canvas" style="width:100%;height:calc(100% - 3rem);border:1px dashed var(--line);border-radius:.4rem;position:relative;background:#fafbfc"></div>
+      </div>
+      <!-- Properties -->
+      <div class="card" style="height:100%;overflow:auto;padding:.8rem">
+        <h3 style="margin-top:0">Properties</h3>
+        <div id="fb-props"><p class="muted">Select an element to edit properties</p></div>
+      </div>
+    </div>
+  `;
+
+  // Element types for palette
+  const ELEMENT_TYPES = [
+    {type:"Start", label:"Start", icon:"▶", desc:"Flow entry point"},
+    {type:"Screen", label:"Screen", icon:"🖥", desc:"User input form"},
+    {type:"Action", label:"Action", icon:"⚡", desc:"Invocable action (Create Records, etc.)"},
+    {type:"Decision", label:"Decision", icon:"◆", desc:"Conditional branching"},
+    {type:"Loop", label:"Loop", icon:"↻", desc:"Iterate over collection"},
+    {type:"Assignment", label:"Assignment", icon:"=", desc:"Set variable values"},
+    {type:"Collection", label:"Collection", icon:"📦", desc:"Query/filter records"},
+    {type:"Subflow", label:"Subflow", icon:"⤴", desc:"Call another flow"},
+    {type:"Pause", label:"Pause", icon:"⏸", desc:"Wait for external event"},
+    {type:"Wait", label:"Wait", icon:"⏳", desc:"Time-based wait"},
+    {type:"Fault", label:"Fault", icon:"⚠", desc:"Error handling"},
+    {type:"End", label:"End", icon:"■", desc:"Flow termination"}
+  ];
+
+  // Palette rendering
+  const palette = document.getElementById("palette");
+  palette.innerHTML = ELEMENT_TYPES.map(et => `
+    <div class="palette-item" draggable="true" data-type="${et.type}" style="padding:.5rem;margin:.3rem 0;background:var(--card);border:1px solid var(--line);border-radius:.4rem;cursor:grab">
+      <div style="font-weight:600">${et.icon} ${et.label}</div>
+      <div class="muted" style="font-size:.75rem">${et.desc}</div>
+    </div>
+  `).join("");
+
+  // State
+  let elements = [];
+  let connections = [];
+  let variables = [];
+  let selectedElementId = null;
+  let connectionMode = false;
+  let connectionSource = null;
+  let flowId = null;
+  let scale = 1;
+  let panX = 0, panY = 0;
+  let isPanning = false;
+  let panStartX = 0, panStartY = 0;
+
+  const canvas = document.getElementById("canvas");
+  const flowSelect = document.getElementById("fb-flow-select");
+
+  // Load flow definitions for dropdown
+  async function loadFlowList(){
+    try{
+      const res = await jfetch("/flow-definitions?limit=100");
+      const flows = res.data || res || [];
+      flowSelect.innerHTML = '<option value="">— New Flow —</option>' + flows.map(f => `<option value="${f.id}">${esc(f.name)} (${esc(f.api_name)}) — ${esc(f.status)} v${f.version}</option>`).join("");
+    }catch(e){ console.error(e); }
+  }
+  await loadFlowList();
+
+  // Canvas interaction
+  function renderCanvas(){
+    canvas.innerHTML = `
+      <svg id="connections-svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></svg>
+      <div id="elements-layer" style="position:absolute;top:0;left:0;width:100%;height:100%;transform-origin:0 0;transform:translate(${panX}px, ${panY}px) scale(${scale})"></div>
+    `;
+    const elLayer = document.getElementById("elements-layer");
+    const svg = document.getElementById("connections-svg");
+
+    // Draw connections
+    for(const conn of connections){
+      const src = elements.find(e => e.id === conn.source_id);
+      const tgt = elements.find(e => e.id === conn.target_id);
+      if(!src || !tgt) continue;
+      const sx = src.x + 80, sy = src.y + 30;
+      const tx = tgt.x, ty = tgt.y + 30;
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const cx = (sx + tx) / 2;
+      path.setAttribute("d", `M${sx},${sy} C${cx},${sy} ${cx},${ty} ${tx},${ty}`);
+      path.setAttribute("stroke", "#0e7a6e");
+      path.setAttribute("stroke-width", "2");
+      path.setAttribute("fill", "none");
+      path.setAttribute("marker-end", "url(#arrowhead)");
+      svg.appendChild(path);
+      if(conn.label){
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", cx);
+        text.setAttribute("y", (sy + ty) / 2);
+        text.setAttribute("font-size", "11");
+        text.setAttribute("fill", "#0e7a6e");
+        text.setAttribute("text-anchor", "middle");
+        text.textContent = conn.label;
+        svg.appendChild(text);
+      }
+    }
+    // Add arrowhead marker
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
+    marker.setAttribute("id", "arrowhead");
+    marker.setAttribute("markerWidth", "10");
+    marker.setAttribute("markerHeight", "7");
+    marker.setAttribute("refX", "9");
+    marker.setAttribute("refY", "3.5");
+    marker.setAttribute("orient", "auto");
+    const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    polygon.setAttribute("points", "0 0, 10 3.5, 0 7");
+    polygon.setAttribute("fill", "#0e7a6e");
+    marker.appendChild(polygon);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+
+    // Draw elements
+    for(const el of elements){
+      const div = document.createElement("div");
+      div.className = "flow-element" + (el.id === selectedElementId ? " selected" : "");
+      div.style.cssText = `position:absolute;left:${el.x}px;top:${el.y}px;min-width:160px;padding:.5rem;background:#fff;border:1px solid ${el.id === selectedElementId ? "#0e7a6e" : "var(--line)"};border-radius:.4rem;box-shadow:0 2px 8px rgba(0,0,0,.08);cursor:move;z-index:10`;
+      div.dataset.id = el.id;
+      div.innerHTML = `
+        <div style="display:flex;align-items:center;gap:.3rem;font-weight:600;font-size:.85rem">
+          <span>${getIcon(el.type)}</span>
+          <span>${esc(el.label)}</span>
+        </div>
+        <div class="muted" style="font-size:.7rem;margin-top:.2rem">${esc(el.api_name)}</div>
+        ${connectionMode ? `<button class="btn conn-btn" data-id="${el.id}" style="margin-top:.3rem;padding:.15rem .4rem;font-size:.7rem">${el.id === connectionSource ? "Cancel" : "Connect"}</button>` : ""}
+      `;
+      // Drag to move
+      div.onmousedown = (e) => {
+        if(e.target.classList.contains("conn-btn")) return;
+        e.preventDefault();
+        selectedElementId = el.id;
+        renderProps(el);
+        renderCanvas();
+        const startX = e.clientX - el.x;
+        const startY = e.clientY - el.y;
+        function move(ev){
+          el.x = ev.clientX - startX;
+          el.y = ev.clientY - startY;
+          renderCanvas();
+        }
+        function up(){
+          document.removeEventListener("mousemove", move);
+          document.removeEventListener("mouseup", up);
+        }
+        document.addEventListener("mousemove", move);
+        document.addEventListener("mouseup", up);
+      };
+      // Click for connection mode
+      div.onclick = (e) => {
+        e.stopPropagation();
+        if(connectionMode){
+          const btn = e.target.closest(".conn-btn");
+          if(btn){
+            const targetId = btn.dataset.id;
+            if(connectionSource && targetId !== connectionSource){
+              const label = prompt("Connection label (for Decision outcomes):") || "";
+              connections.push({source_id: connectionSource, target_id: targetId, label});
+            }
+            connectionMode = false;
+            connectionSource = null;
+            renderCanvas();
+          }
+        }
+      };
+      elLayer.appendChild(div);
+    }
+
+    // Canvas click to deselect
+    canvas.onclick = () => {
+      selectedElementId = null;
+      renderProps(null);
+      renderCanvas();
+    };
+  }
+
+  function getIcon(type){
+    const icons = {Start:"▶",Screen:"🖥",Action:"⚡",Decision:"◆",Loop:"↻",Assignment:"=",Collection:"📦",Subflow:"⤴",Pause:"⏸",Wait:"⏳",Fault:"⚠",End:"■"};
+    return icons[type] || "●";
+  }
+
+  // Palette drag-drop
+  palette.querySelectorAll(".palette-item").forEach(item => {
+    item.ondragstart = (e) => {
+      e.dataTransfer.setData("element-type", item.dataset.type);
+    };
+  });
+  canvas.ondragover = (e) => e.preventDefault();
+  canvas.ondrop = (e) => {
+    e.preventDefault();
+    const type = e.dataTransfer.getData("element-type");
+    if(!type) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left - panX) / scale;
+    const y = (e.clientY - rect.top - panY) / scale;
+    const id = "el_" + Date.now() + "_" + Math.random().toString(36).slice(2,6);
+    const label = type + " " + (elements.filter(e => e.type === type).length + 1);
+    elements.push({id, type, label, api_name: label.toLowerCase().replace(/\s+/g,"_"), x, y, properties: getDefaultProperties(type)});
+    renderCanvas();
+  };
+
+  function getDefaultProperties(type){
+    switch(type){
+      case "Screen": return {fields: []};
+      case "Action": return {action_name: "Create Records", object: "Account", records: [{}]};
+      case "Decision": return {condition: {}, outcomes: [{label: "Default", is_default: true}]};
+      case "Loop": return {collection_variable: "", iteration_variable: "item", elements: []};
+      case "Assignment": return {assignments: []};
+      case "Collection": return {object: "Account", filter: {}, result_variable: "records"};
+      case "Subflow": return {flow_definition_id: ""};
+      case "Pause": return {pause_config: {}};
+      case "Wait": return {wait_config: {}};
+      case "Fault": return {error_message: "Flow error"};
+      default: return {};
+    }
+  }
+
+  // Properties panel
+  function renderProps(el){
+    const propsDiv = document.getElementById("fb-props");
+    if(!el){
+      propsDiv.innerHTML = '<p class="muted">Select an element to edit properties</p>';
+      return;
+    }
+    let html = `
+      <div class="form">
+        <label>Label<input id="prop-label" value="${esc(el.label)}"></label>
+        <label>API Name<input id="prop-api" value="${esc(el.api_name)}"></label>
+    `;
+    if(el.type === "Screen"){
+      html += `
+        <label>Fields (JSON array)<textarea id="prop-fields" rows="4">${JSON.stringify(el.properties.fields || [], null, 2)}</textarea></label>
+      `;
+    }else if(el.type === "Action"){
+      html += `
+        <label>Action Name<input id="prop-action" value="${esc(el.properties.action_name || "Create Records")}"></label>
+        <label>Object<input id="prop-object" value="${esc(el.properties.object || "Account")}"></label>
+        <label>Records (JSON)<textarea id="prop-records" rows="3">${JSON.stringify(el.properties.records || [{}], null, 2)}</textarea></label>
+      `;
+    }else if(el.type === "Decision"){
+      html += `
+        <label>Outcomes (JSON)<textarea id="prop-outcomes" rows="4">${JSON.stringify(el.properties.outcomes || [{label: "Default", is_default: true}], null, 2)}</textarea></label>
+      `;
+    }else if(el.type === "Loop"){
+      html += `
+        <label>Collection Variable<input id="prop-collection" value="${esc(el.properties.collection_variable || "")}"></label>
+        <label>Iteration Variable<input id="prop-iteration" value="${esc(el.properties.iteration_variable || "item")}"></label>
+      `;
+    }else if(el.type === "Assignment"){
+      html += `
+        <label>Assignments (JSON)<textarea id="prop-assignments" rows="4">${JSON.stringify(el.properties.assignments || [], null, 2)}</textarea></label>
+      `;
+    }else if(el.type === "Collection"){
+      html += `
+        <label>Object<input id="prop-col-obj" value="${esc(el.properties.object || "Account")}"></label>
+        <label>Filter (JSON)<textarea id="prop-filter" rows="3">${JSON.stringify(el.properties.filter || {}, null, 2)}</textarea></label>
+        <label>Result Variable<input id="prop-result" value="${esc(el.properties.result_variable || "records")}"></label>
+      `;
+    }else if(el.type === "Subflow"){
+      html += `
+        <label>Flow Definition ID<input id="prop-subflow" value="${esc(el.properties.flow_definition_id || "")}"></label>
+      `;
+    }else if(el.type === "Pause"){
+      html += `
+        <label>Pause Config (JSON)<textarea id="prop-pause" rows="3">${JSON.stringify(el.properties.pause_config || {}, null, 2)}</textarea></label>
+      `;
+    }else if(el.type === "Wait"){
+      html += `
+        <label>Wait Config (JSON)<textarea id="prop-wait" rows="3">${JSON.stringify(el.properties.wait_config || {}, null, 2)}</textarea></label>
+      `;
+    }else if(el.type === "Fault"){
+      html += `
+        <label>Error Message<input id="prop-error" value="${esc(el.properties.error_message || "Flow error")}"></label>
+      `;
+    }
+    html += `
+        <div class="row" style="margin-top:.5rem">
+          <button class="btn danger" id="prop-delete">Delete Element</button>
+        </div>
+      </div>
+    `;
+    propsDiv.innerHTML = html;
+    document.getElementById("prop-label").oninput = (e) => { el.label = e.target.value; renderCanvas(); };
+    document.getElementById("prop-api").oninput = (e) => { el.api_name = e.target.value; renderCanvas(); };
+    if(el.type === "Screen"){
+      document.getElementById("prop-fields").oninput = (e) => { try{ el.properties.fields = JSON.parse(e.target.value); }catch(e){} };
+    }else if(el.type === "Action"){
+      document.getElementById("prop-action").oninput = (e) => { el.properties.action_name = e.target.value; };
+      document.getElementById("prop-object").oninput = (e) => { el.properties.object = e.target.value; };
+      document.getElementById("prop-records").oninput = (e) => { try{ el.properties.records = JSON.parse(e.target.value); }catch(e){} };
+    }else if(el.type === "Decision"){
+      document.getElementById("prop-outcomes").oninput = (e) => { try{ el.properties.outcomes = JSON.parse(e.target.value); }catch(e){} };
+    }else if(el.type === "Loop"){
+      document.getElementById("prop-collection").oninput = (e) => { el.properties.collection_variable = e.target.value; };
+      document.getElementById("prop-iteration").oninput = (e) => { el.properties.iteration_variable = e.target.value; };
+    }else if(el.type === "Assignment"){
+      document.getElementById("prop-assignments").oninput = (e) => { try{ el.properties.assignments = JSON.parse(e.target.value); }catch(e){} };
+    }else if(el.type === "Collection"){
+      document.getElementById("prop-col-obj").oninput = (e) => { el.properties.object = e.target.value; };
+      document.getElementById("prop-filter").oninput = (e) => { try{ el.properties.filter = JSON.parse(e.target.value); }catch(e){} };
+      document.getElementById("prop-result").oninput = (e) => { el.properties.result_variable = e.target.value; };
+    }else if(el.type === "Subflow"){
+      document.getElementById("prop-subflow").oninput = (e) => { el.properties.flow_definition_id = e.target.value; };
+    }else if(el.type === "Pause"){
+      document.getElementById("prop-pause").oninput = (e) => { try{ el.properties.pause_config = JSON.parse(e.target.value); }catch(e){} };
+    }else if(el.type === "Wait"){
+      document.getElementById("prop-wait").oninput = (e) => { try{ el.properties.wait_config = JSON.parse(e.target.value); }catch(e){} };
+    }else if(el.type === "Fault"){
+      document.getElementById("prop-error").oninput = (e) => { el.properties.error_message = e.target.value; };
+    }
+    const delBtn = document.getElementById("prop-delete");
+    if(delBtn) delBtn.onclick = () => { elements = elements.filter(e => e.id !== el.id); connections = connections.filter(c => c.source_id !== el.id && c.target_id !== el.id); selectedElementId = null; renderCanvas(); renderProps(null); };
+  }
+
+  // Toolbar buttons
+  document.getElementById("fb-save").onclick = async () => {
+    if(!flowId){
+      // Create new
+      const name = prompt("Flow name:") || "Untitled Flow";
+      const api_name = prompt("API name:") || name.toLowerCase().replace(/\s+/g,"_");
+      const flow_type = prompt("Flow type (ScreenFlow/AutolaunchedFlow/RecordTriggeredFlow/ScheduledFlow):") || "ScreenFlow";
+      try{
+        const res = await jfetch("/flow-definitions", {method:"POST", body:{name, api_name, flow_type, elements, connections, variables}});
+        flowId = res.id;
+        alert("Created: " + flowId.slice(0,8));
+        await loadFlowList();
+        flowSelect.value = flowId;
+      }catch(e){ alert("Save failed: " + e.message); }
+    }else{
+      try{
+        await jfetch(`/flow-definitions/${flowId}`, {method:"PUT", body:{elements, connections, variables}});
+        alert("Saved");
+      }catch(e){ alert("Save failed: " + e.message); }
+    }
+  };
+
+  document.getElementById("fb-activate").onclick = async () => {
+    if(!flowId){ alert("Save first"); return; }
+    try{
+      await jfetch(`/flow-definitions/${flowId}/activate`, {method:"POST"});
+      alert("Activated");
+      await loadFlowList();
+    }catch(e){ alert("Activate failed: " + e.message); }
+  };
+
+  document.getElementById("fb-run").onclick = async () => {
+    if(!flowId){ alert("Save first"); return; }
+    const inputs = prompt("Input variables (JSON):") || "{}";
+    let parsed;
+    try{ parsed = JSON.parse(inputs); }catch(e){ alert("Invalid JSON"); return; }
+    try{
+      const res = await jfetch(`/flow-definitions/${flowId}/run`, {method:"POST", body:parsed});
+      alert("Run result:\n" + JSON.stringify(res, null, 2));
+    }catch(e){ alert("Run failed: " + e.message); }
+  };
+
+  document.getElementById("fb-version").onclick = async () => {
+    if(!flowId){ alert("Save first"); return; }
+    try{
+      const res = await jfetch(`/flow-definitions/${flowId}/versions`, {method:"POST"});
+      alert("New version created: " + res.id.slice(0,8));
+      await loadFlowList();
+    }catch(e){ alert("Version failed: " + e.message); }
+  };
+
+  document.getElementById("fb-list").onclick = async () => {
+    try{
+      const res = await jfetch("/flow-definitions?limit=50");
+      const flows = res.data || res || [];
+      alert(flows.map(f => `${f.name} (${f.api_name}) — ${f.status} v${f.version} — ${f.id.slice(0,8)}`).join("\n") || "No flows");
+    }catch(e){ alert("List failed: " + e.message); }
+  };
+
+  flowSelect.onchange = async () => {
+    const fid = flowSelect.value;
+    if(!fid){
+      elements = []; connections = []; variables = []; flowId = null;
+      renderCanvas();
+      return;
+    }
+    flowId = fid;
+    try{
+      const res = await jfetch(`/flow-definitions/${fid}`);
+      elements = (res.elements || []).map(e => ({...e}));
+      connections = (res.connections || []).map(c => ({...c}));
+      variables = (res.variables || []).map(v => ({...v}));
+      selectedElementId = null;
+      renderCanvas();
+    }catch(e){ alert("Load failed: " + e.message); }
+  };
+
+  // Zoom/pan
+  canvas.onwheel = (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    scale = Math.min(2, Math.max(0.3, scale * delta));
+    renderCanvas();
+  };
+  canvas.onmousedown = (e) => {
+    if(e.button === 1 || (e.button === 0 && e.altKey)){
+      isPanning = true;
+      panStartX = e.clientX - panX;
+      panStartY = e.clientY - panY;
+      canvas.style.cursor = "grabbing";
+    }
+  };
+  window.addEventListener("mousemove", (e) => {
+    if(isPanning){
+      panX = e.clientX - panStartX;
+      panY = e.clientY - panStartY;
+      renderCanvas();
+    }
+  });
+  window.addEventListener("mouseup", () => {
+    if(isPanning){
+      isPanning = false;
+      canvas.style.cursor = "";
+    }
+  });
+
+  // Initial render
+  renderCanvas();
+}
+
 async function renderSearch(){
   const q = document.getElementById("global-q").value.trim();
   const main=document.getElementById("main");
@@ -1109,8 +1870,9 @@ const FIELD_HINTS = {
    feed_items: [{k:"parent_id",req:1},{k:"body",req:1},{k:"type"}],
    reports: [{k:"name",req:1},{k:"report_type",req:1},{k:"format"}],
    dashboards: [{k:"title",req:1},{k:"description"}],
-   flows: [{k:"label",req:1},{k:"api_name",req:1},{k:"status"}],
-   service_contracts: [{k:"account_id",req:1},{k:"start_date",req:1},{k:"status"}],
+flows: [{k:"label",req:1},{k:"api_name",req:1},{k:"status"}],
+  "flow-builder": [{k:"name",req:1},{k:"api_name",req:1},{k:"flow_type"},{k:"description"}],
+  service_contracts: [{k:"account_id",req:1},{k:"start_date",req:1},{k:"status"}],
    work_orders: [{k:"account_id",req:1},{k:"subject",req:1},{k:"status"}],
    knowledge_articles: [{k:"title",req:1},{k:"summary"}],
    invoices: [{k:"account_id",req:1},{k:"status"}],
@@ -1437,6 +2199,307 @@ document.getElementById("btn-logout").onclick = ()=>{
   TOKEN=""; localStorage.removeItem("custrel_token"); CLAIMS=null;
   showLogin();
 };
+
+async function renderPlatformEvents(){
+  const main=document.getElementById("main");
+  let events=[], subs=[], replayId=0;
+  try{
+    const [e,s]=await Promise.all([
+      jfetch("/platform-events?limit=100").catch(()=>({data:[]})),
+      jfetch("/platform-events/subscribe").catch(()=>({data:[]}))
+    ]);
+    events=e.data||e||[];
+    subs=s.data||s||[];
+    replayId=events.length? events[events.length-1].replay_id: 0;
+  }catch(e){ main.innerHTML=`<div class="card"><h2>Error</h2><pre>${esc(e.message)}</pre></div>`; return; }
+  main.innerHTML=`
+    <div class="card"><h2>Platform Events</h2>
+      <div class="grid2">
+        <div>
+          <h3>Publish Event</h3>
+          <div class="form">
+            <label>Event Name<input id="pe-name" placeholder="AccountCreated"></label>
+            <label>Payload JSON<textarea id="pe-payload" placeholder='{"account": {"id": "123", "name": "Acme"}}'></textarea></label>
+            <div class="row"><button class="btn primary" id="btn-pe-publish">POST /platform-events</button></div>
+            <pre id="pe-pub-out" class="muted">—</pre>
+          </div>
+        </div>
+        <div>
+          <h3>Subscribe (Webhook)</h3>
+          <div class="form">
+            <label>Event Name<input id="pe-sub-name" placeholder="AccountCreated"></label>
+            <label>Subscriber Type<select id="pe-sub-type"><option value="External">External</option><option value="Apex">Apex</option><option value="Flow">Flow</option></select></label>
+            <label>Endpoint URL<input id="pe-sub-url" placeholder="https://your-webhook.example.com/platform-events"></label>
+            <label>Auth Header (optional)<input id="pe-sub-auth" placeholder="Bearer token123"></label>
+            <div class="row"><button class="btn primary" id="btn-pe-subscribe">POST /platform-events/subscribe</button></div>
+            <pre id="pe-sub-out" class="muted">—</pre>
+          </div>
+        </div>
+      </div>
+      <div class="card"><h3>Subscriptions (${subs.length})</h3>
+        ${subs.length? `<table><thead><tr><th>ID</th><th>Event</th><th>Type</th><th>Endpoint</th><th>Active</th><th>Action</th></tr></thead><tbody>
+          ${subs.map(s=>`<tr><td><code>${esc(s.id||"").slice(0,8)}</code></td><td>${esc(s.event_name||"")}</td><td>${esc(s.subscriber_type||"")}</td><td><code>${esc(s.endpoint_url||"")}</code></td><td>${s.is_active?"✓":"✗"}</td><td><button class="btn" onclick="deleteSub('${esc(s.id)}')">Delete</button></td></tr>`).join("")}</tbody></table>` : `<p class="muted">No subscriptions.</p>`}
+      </div>
+      <div class="card"><h3>Events (replayId>${replayId}) — ${events.length} shown</h3>
+        <div class="form"><label>Replay ID<input type="number" id="pe-replay" value="${replayId}" placeholder="0"></label><div class="row"><button class="btn" id="btn-pe-refresh">Refresh</button></div></div>
+        <pre id="pe-events-out">${esc(JSON.stringify(events.slice(-50),null,2))}</pre>
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-pe-publish").onclick = async ()=>{
+    const name=document.getElementById("pe-name").value.trim();
+    let payload={}; try{ payload=JSON.parse(document.getElementById("pe-payload").value); }catch(e){ document.getElementById("pe-pub-out").textContent="Invalid JSON"; return; }
+    try{ const r=await jfetch("/platform-events", {method:"POST", body:{event_name:name, payload}}); document.getElementById("pe-pub-out").textContent=JSON.stringify(r,null,2); await renderPlatformEvents(); }catch(e){ document.getElementById("pe-pub-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-pe-subscribe").onclick = async ()=>{
+    const body={event_name:document.getElementById("pe-sub-name").value.trim(), subscriber_type:document.getElementById("pe-sub-type").value, endpoint_url:document.getElementById("pe-sub-url").value.trim(), auth_header:document.getElementById("pe-sub-auth").value.trim()||undefined};
+    try{ const r=await jfetch("/platform-events/subscribe", {method:"POST", body}); document.getElementById("pe-sub-out").textContent=JSON.stringify(r,null,2); await renderPlatformEvents(); }catch(e){ document.getElementById("pe-sub-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-pe-refresh").onclick = async ()=>{
+    const rid=parseInt(document.getElementById("pe-replay").value)||0;
+    try{ const r=await jfetch("/platform-events?replayId="+rid+"&limit=100"); document.getElementById("pe-events-out").textContent=JSON.stringify((r.data||r||[]).slice(-50),null,2); }catch(e){ document.getElementById("pe-events-out").textContent="Error: "+e.message; }
+  };
+}
+window.deleteSub = async (id)=>{
+  try{ await jfetch("/platform-events/subscribe/"+encodeURIComponent(id), {method:"DELETE"}); await renderPlatformEvents(); }catch(e){ alert("Delete failed: "+e.message); }
+};
+
+async function renderExternalServices(){
+  const main=document.getElementById("main");
+  let services=[];
+  try{ const r=await jfetch("/external-services"); services=r.data||r||[]; }catch(e){ main.innerHTML=`<div class="card"><h2>Error</h2><pre>${esc(e.message)}</pre></div>`; return; }
+  main.innerHTML=`
+    <div class="card"><h2>External Services</h2>
+      <div class="grid2">
+        <div>
+          <h3>Register Service (Admin)</h3>
+          <div class="form">
+            <label>Name<input id="es-name" placeholder="Payment Gateway"></label>
+            <label>Base URL<input id="es-base" placeholder="https://api.payment.example.com"></label>
+            <label>OpenAPI 3.0 Schema JSON<textarea id="es-schema" placeholder='{"openapi":"3.0.0","info":{"title":"Payment API","version":"1.0"},"paths":{"/charge":{"post":{"operationId":"charge","parameters":[],"requestBody":{"content":{"application/json":{"schema":{"type":"object","properties":{"amount":{"type":"number"},"currency":{"type":"string"}}}}}},"responses":{"200":{"description":"OK"}}}}}}'></textarea></label>
+            <label>Auth Config JSON (optional)<textarea id="es-auth" placeholder='{"type":"bearer","token":"sk_live_..."}'></textarea></label>
+            <div class="row"><button class="btn primary" id="btn-es-register">POST /external-services</button></div>
+            <pre id="es-reg-out" class="muted">—</pre>
+          </div>
+        </div>
+        <div>
+          <h3>Invoke Operation</h3>
+          <div class="form">
+            <label>Service<select id="es-svc">${services.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("")}</select></label>
+            <label>Operation ID<input id="es-op" placeholder="charge"></label>
+            <label>Parameters JSON<input id="es-params" placeholder='{"amount": 1000, "currency": "USD"}'></label>
+            <div class="row"><button class="btn primary" id="btn-es-invoke">POST /external-services/{id}/invoke</button></div>
+            <pre id="es-invoke-out" class="muted">—</pre>
+          </div>
+        </div>
+      </div>
+      <div class="card"><h3>Services (${services.length})</h3>
+        ${services.length? `<table><thead><tr><th>ID</th><th>Name</th><th>Base URL</th><th>Active</th><th>Actions</th></tr></thead><tbody>
+          ${services.map(s=>`<tr><td><code>${esc(s.id||"").slice(0,8)}</code></td><td>${esc(s.name||"")}</td><td><code>${esc(s.base_url||"")}</code></td><td>${s.is_active?"✓":"✗"}</td><td><button class="btn" onclick="viewService('${esc(s.id)}')">View</button> <button class="btn" onclick="deleteService('${esc(s.id)}')">Delete</button></td></tr>`).join("")}</tbody></table>` : `<p class="muted">No services registered.</p>`}
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-es-register").onclick = async ()=>{
+    const body={name:document.getElementById("es-name").value.trim(), base_url:document.getElementById("es-base").value.trim()};
+    let schema={}; try{ schema=JSON.parse(document.getElementById("es-schema").value); }catch(e){ document.getElementById("es-reg-out").textContent="Invalid schema JSON"; return; }
+    body.schema=schema;
+    const auth=document.getElementById("es-auth").value.trim(); if(auth){ try{ body.auth_config=JSON.parse(auth); }catch(e){ document.getElementById("es-reg-out").textContent="Invalid auth config JSON"; return; } }
+    try{ const r=await jfetch("/external-services", {method:"POST", body}); document.getElementById("es-reg-out").textContent=JSON.stringify(r,null,2); await renderExternalServices(); }catch(e){ document.getElementById("es-reg-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-es-invoke").onclick = async ()=>{
+    const svcId=document.getElementById("es-svc").value;
+    const op=document.getElementById("es-op").value.trim();
+    let params={}; try{ params=JSON.parse(document.getElementById("es-params").value); }catch(e){ document.getElementById("es-invoke-out").textContent="Invalid params JSON"; return; }
+    try{ const r=await jfetch("/external-services/"+encodeURIComponent(svcId)+"/invoke", {method:"POST", body:{operation_id:op, parameters:params}}); document.getElementById("es-invoke-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("es-invoke-out").textContent="Error: "+e.message; }
+  };
+}
+window.viewService = async (id)=>{
+  try{ const r=await jfetch("/external-services/"+encodeURIComponent(id)); alert(JSON.stringify(r,null,2)); }catch(e){ alert("Error: "+e.message); }
+};
+window.deleteService = async (id)=>{
+  try{ await jfetch("/external-services/"+encodeURIComponent(id), {method:"DELETE"}); await renderExternalServices(); }catch(e){ alert("Delete failed: "+e.message); }
+};
+
+// ── Custom Metadata Types render ──────────────────────────────────────
+async function renderCustomMetadata(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Custom Metadata Types</h2><p class="muted">Admin-only create type. Then manage records.</p>
+      <div class="grid2">
+        <div class="form">
+          <h3>Create Type (admin)</h3>
+          <label>API Name<input id="cmdt-name" value="AppConfig__mdt" placeholder="AppConfig__mdt"></label>
+          <label>Label<input id="cmdt-label" value="App Config" placeholder="App Config"></label>
+          <label>Plural Label<input id="cmdt-plural" value="App Configs" placeholder="App Configs"></label>
+          <label>Fields JSON<textarea id="cmdt-fields" placeholder='[{"name":"enable_feature_x","type":"Checkbox","default":false},{"name":"max_records","type":"Number","default":100}]'>[{"name":"enable_feature_x","type":"Checkbox","default":false},{"name":"max_records","type":"Number","default":100}]</textarea></label>
+          <div class="row"><button class="btn primary" id="btn-cmdt-create">POST /custom-metadata-types</button></div>
+          <pre id="cmdt-create-out">—</pre>
+        </div>
+        <div class="form">
+          <h3>Types</h3>
+          <button class="btn" id="btn-cmdt-list">Refresh</button>
+          <div id="cmdt-types-table" class="muted">Loading…</div>
+        </div>
+      </div>
+      <hr>
+      <div class="grid2">
+        <div class="form">
+          <h3>Manage Records</h3>
+          <label>Type Name<input id="cmdt-rec-type" placeholder="AppConfig__mdt"></label>
+          <button class="btn" id="btn-cmdt-rec-list">List Records</button>
+          <div id="cmdt-rec-table" class="muted" style="margin-top:.6rem">—</div>
+          <hr>
+          <h3>Upsert Record</h3>
+          <label>Record ID (optional for new)<input id="cmdt-rec-id" placeholder="auto-generated"></label>
+          <label>Values JSON<textarea id="cmdt-rec-vals" placeholder='{"enable_feature_x":true,"max_records":200}'>{"enable_feature_x":true,"max_records":200}</textarea></label>
+          <div class="row"><button class="btn primary" id="btn-cmdt-upsert">POST /records</button></div>
+          <pre id="cmdt-upsert-out">—</pre>
+        </div>
+        <div class="form">
+          <h3>Query Records</h3>
+          <label>Type Name<input id="cmdt-q-type" placeholder="AppConfig__mdt"></label>
+          <label>Filter Field<input id="cmdt-q-field" placeholder="enable_feature_x"></label>
+          <label>Filter Value<input id="cmdt-q-value" placeholder="true"></label>
+          <div class="row"><button class="btn" id="btn-cmdt-query">GET /records?filter_field=...</button></div>
+          <pre id="cmdt-query-out">—</pre>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-cmdt-create").onclick = async ()=>{
+    const body={id:document.getElementById("cmdt-name").value.trim(), label:document.getElementById("cmdt-label").value.trim(), plural_label:document.getElementById("cmdt-plural").value.trim()};
+    let fields=[]; try{ fields=JSON.parse(document.getElementById("cmdt-fields").value); }catch(e){}
+    body.fields=fields;
+    try{ const r=await jfetch("/custom-metadata-types",{method:"POST",body}); document.getElementById("cmdt-create-out").textContent=JSON.stringify(r,null,2); loadTypes(); }catch(e){ document.getElementById("cmdt-create-out").textContent="Error: "+e.message; }
+  };
+  async function loadTypes(){
+    try{ const r=await jfetch("/custom-metadata-types"); const types=r.custom_metadata_types||[]; document.getElementById("cmdt-types-table").innerHTML = types.length ? `<table><thead><tr><th>API Name</th><th>Label</th><th>Plural</th><th>Fields</th><th></th></tr></thead><tbody>${types.map(t=>`<tr><td><code>${esc(t.id)}</code></td><td>${esc(t.label)}</td><td>${esc(t.plural_label)}</td><td><code>${esc(JSON.stringify(t.fields))}</code></td><td><button class="btn danger" onclick="delCmdt('${t.id}')">Delete</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No types.</span>'; }catch(e){ document.getElementById("cmdt-types-table").textContent="Error: "+e.message; }
+  }
+  window.delCmdt=async(id)=>{ if(!confirm("Delete "+id+"?")) return; try{ await jfetch("/custom-metadata-types/"+encodeURIComponent(id),{method:"DELETE"}); loadTypes(); }catch(e){ alert(e.message); } };
+  document.getElementById("btn-cmdt-list").onclick=loadTypes;
+  document.getElementById("btn-cmdt-rec-list").onclick=async()=>{
+    const t=document.getElementById("cmdt-rec-type").value.trim();
+    if(!t){ alert("Type name required"); return; }
+    try{ const r=await jfetch("/custom-metadata-types/"+encodeURIComponent(t)+"/records"); const recs=r.records||[]; document.getElementById("cmdt-rec-table").innerHTML = recs.length ? `<table><thead><tr><th>ID</th><th>Values</th><th></th></tr></thead><tbody>${recs.map(r=>`<tr><td><code>${esc(r.id.slice(0,8))}</code></td><td><code>${esc(JSON.stringify(r.values))}</code></td><td><button class="btn" onclick="editCmdtRec('${t}','${r.id}')">Edit</button> <button class="btn danger" onclick="delCmdtRec('${t}','${r.id}')">Del</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No records.</span>'; }catch(e){ document.getElementById("cmdt-rec-table").textContent="Error: "+e.message; }
+  };
+  window.editCmdtRec=async(type,id)=>{
+    try{ const r=await jfetch("/custom-metadata-types/"+encodeURIComponent(type)+"/records/"+encodeURIComponent(id)); document.getElementById("cmdt-rec-id").value=r.id||""; document.getElementById("cmdt-rec-vals").value=JSON.stringify(r.values||{},null,2); document.getElementById("cmdt-rec-type").value=type; }catch(e){ alert("Error: "+e.message); }
+  };
+  window.delCmdtRec=async(type,id)=>{
+    if(!confirm("Delete record "+id.slice(0,8)+"?")) return;
+    try{ await jfetch("/custom-metadata-types/"+encodeURIComponent(type)+"/records/"+encodeURIComponent(id),{method:"DELETE"}); document.getElementById("btn-cmdt-rec-list").click(); }catch(e){ alert(e.message); }
+  };
+  document.getElementById("btn-cmdt-upsert").onclick=async()=>{
+    const t=document.getElementById("cmdt-rec-type").value.trim();
+    if(!t){ alert("Type name required"); return; }
+    let vals={}; try{ vals=JSON.parse(document.getElementById("cmdt-rec-vals").value); }catch(e){ document.getElementById("cmdt-upsert-out").textContent="Invalid JSON"; return; }
+    const id=document.getElementById("cmdt-rec-id").value.trim()||undefined;
+    const body=id?{id,values:vals}:{values:vals};
+    try{ const r=await jfetch("/custom-metadata-types/"+encodeURIComponent(t)+"/records",{method:"POST",body}); document.getElementById("cmdt-upsert-out").textContent=JSON.stringify(r,null,2); document.getElementById("btn-cmdt-rec-list").click(); }catch(e){ document.getElementById("cmdt-upsert-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-cmdt-query").onclick=async()=>{
+    const t=document.getElementById("cmdt-q-type").value.trim();
+    const f=document.getElementById("cmdt-q-field").value.trim();
+    const v=document.getElementById("cmdt-q-value").value.trim();
+    if(!t||!f){ alert("Type and filter field required"); return; }
+    try{ const r=await jfetch("/custom-metadata-types/"+encodeURIComponent(t)+"/records?filter_field="+encodeURIComponent(f)+"&filter_value="+encodeURIComponent(v)); document.getElementById("cmdt-query-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("cmdt-query-out").textContent="Error: "+e.message; }
+  };
+  loadTypes();
+}
+
+// ── Apex & Triggers render ────────────────────────────────────────────
+async function renderApex(){
+  const main=document.getElementById("main");
+  main.innerHTML=`
+    <div class="card"><h2>Apex Classes & Triggers</h2><p class="muted">Deploy Apex classes (Python-syntax validated), execute in sandbox, create triggers, view trigger execution logs.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form">
+          <h3>Deploy Apex Class (admin)</h3>
+          <label>Name<input id="apex-name" value="MyHandler" placeholder="MyHandler"></label>
+          <label>API Name<input id="apex-api" value="MyHandler" placeholder="MyHandler"></label>
+          <label>Status<select id="apex-status"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></label>
+          <label>Body (Python syntax)<textarea id="apex-body" style="min-height:12rem;font-family:ui-monospace,monospace;font-size:.8rem">def handle(input):
+    records = input.get("records", [])
+    for r in records:
+        r["processed"] = True
+    return {"processed": len(records)}</textarea></label>
+          <div class="row"><button class="btn primary" id="btn-apex-deploy">POST /apex/classes</button></div>
+          <pre id="apex-deploy-out">—</pre>
+        </div>
+        <div class="form">
+          <h3>Classes</h3>
+          <button class="btn" id="btn-apex-list">Refresh</button>
+          <div id="apex-classes-table" class="muted" style="margin-top:.6rem">Loading…</div>
+        </div>
+      </div>
+      <hr>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form">
+          <h3>Execute Class (Test)</h3>
+          <label>Class ID<input id="apex-exec-id" placeholder="paste class id"></label>
+          <label>Input JSON<textarea id="apex-exec-input" placeholder='{"records":[{"id":"1","name":"Test"}]}'>{"records":[{"id":"1","name":"Test"}]}</textarea></label>
+          <div class="row"><button class="btn primary" id="btn-apex-execute">POST /execute</button></div>
+          <pre id="apex-exec-out">—</pre>
+        </div>
+        <div class="form">
+          <h3>Create Trigger (admin)</h3>
+          <label>Name<input id="trig-name" value="AccountTrigger" placeholder="AccountTrigger"></label>
+          <label>Object Type<select id="trig-obj"><option value="Account">Account</option><option value="Contact">Contact</option><option value="Lead">Lead</option><option value="Opportunity">Opportunity</option><option value="Case">Case</option></select></label>
+          <label>Events (comma-separated)<input id="trig-events" value="before insert,after insert,before update,after update" placeholder="before insert, after update"></label>
+          <label>Status<select id="trig-status"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></label>
+          <label>Body (Python syntax)<textarea id="trig-body" style="min-height:10rem;font-family:ui-monospace,monospace;font-size:.8rem">def run(input):
+    records = input.get("records", [])
+    old = input.get("old_records", [])
+    event = input.get("event", "")
+    for r in records:
+        r["triggered_by"] = "AccountTrigger"
+    return {"triggered": len(records), "event": event}</textarea></label>
+          <div class="row"><button class="btn primary" id="btn-trig-create">POST /apex/triggers</button></div>
+          <pre id="trig-create-out">—</pre>
+        </div>
+      </div>
+      <hr>
+      <div class="form">
+        <h3>Triggers</h3>
+        <button class="btn" id="btn-trig-list">Refresh</button>
+        <div id="trig-table" class="muted" style="margin-top:.6rem">Loading…</div>
+      </div>
+    </div>
+  `;
+  document.getElementById("btn-apex-deploy").onclick = async ()=>{
+    const body={name:document.getElementById("apex-name").value.trim(), api_name:document.getElementById("apex-api").value.trim(), body:document.getElementById("apex-body").value, status:document.getElementById("apex-status").value};
+    if(!body.name||!body.api_name||!body.body){ document.getElementById("apex-deploy-out").textContent="All fields required"; return; }
+    try{ const r=await jfetch("/apex/classes",{method:"POST",body}); document.getElementById("apex-deploy-out").textContent=JSON.stringify(r,null,2); loadClasses(); }catch(e){ document.getElementById("apex-deploy-out").textContent="Error: "+e.message; }
+  };
+  async function loadClasses(){
+    try{ const r=await jfetch("/apex/classes"); const cls=r.apex_classes||[]; document.getElementById("apex-classes-table").innerHTML = cls.length ? `<table><thead><tr><th>ID</th><th>Name</th><th>API Name</th><th>Status</th><th>Valid</th><th></th></tr></thead><tbody>${cls.map(c=>`<tr><td><code>${esc(c.id.slice(0,8))}</code></td><td>${esc(c.name)}</td><td>${esc(c.api_name)}</td><td><span class="badge ${c.status==="Active"?"ok":"warn"}">${esc(c.status)}</span></td><td>${c.is_valid?"yes":"no"}</td><td><button class="btn" onclick="execApex('${c.id}')">Execute</button> <button class="btn danger" onclick="delApex('${c.id}')">Del</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No classes.</span>'; }catch(e){ document.getElementById("apex-classes-table").textContent="Error: "+e.message; }
+  }
+  window.execApex=async(id)=>{
+    document.getElementById("apex-exec-id").value=id;
+    document.getElementById("btn-apex-execute").click();
+  };
+  window.delApex=async(id)=>{ if(!confirm("Delete class "+id.slice(0,8)+"?")) return; try{ await jfetch("/apex/classes/"+encodeURIComponent(id),{method:"DELETE"}); loadClasses(); }catch(e){ alert(e.message); } };
+  document.getElementById("btn-apex-list").onclick=loadClasses;
+  document.getElementById("btn-apex-execute").onclick=async()=>{
+    const id=document.getElementById("apex-exec-id").value.trim();
+    let input={}; try{ input=JSON.parse(document.getElementById("apex-exec-input").value); }catch(e){ document.getElementById("apex-exec-out").textContent="Invalid JSON"; return; }
+    if(!id){ alert("Class ID required"); return; }
+    try{ const r=await jfetch("/apex/classes/"+encodeURIComponent(id)+"/execute",{method:"POST",body:input}); document.getElementById("apex-exec-out").textContent=JSON.stringify(r,null,2); }catch(e){ document.getElementById("apex-exec-out").textContent="Error: "+e.message; }
+  };
+  document.getElementById("btn-trig-create").onclick=async()=>{
+    const body={name:document.getElementById("trig-name").value.trim(), object_type:document.getElementById("trig-obj").value, events:document.getElementById("trig-events").value.split(",").map(s=>s.trim()).filter(Boolean), body:document.getElementById("trig-body").value, status:document.getElementById("trig-status").value};
+    if(!body.name||!body.object_type||!body.events.length||!body.body){ document.getElementById("trig-create-out").textContent="All fields required"; return; }
+    try{ const r=await jfetch("/apex/triggers",{method:"POST",body}); document.getElementById("trig-create-out").textContent=JSON.stringify(r,null,2); loadTriggers(); }catch(e){ document.getElementById("trig-create-out").textContent="Error: "+e.message; }
+  };
+  async function loadTriggers(){
+    try{ const r=await jfetch("/apex/triggers"); const trigs=r.apex_triggers||[]; document.getElementById("trig-table").innerHTML = trigs.length ? `<table><thead><tr><th>ID</th><th>Name</th><th>Object</th><th>Events</th><th>Status</th><th></th></tr></thead><tbody>${trigs.map(t=>`<tr><td><code>${esc(t.id.slice(0,8))}</code></td><td>${esc(t.name)}</td><td>${esc(t.object_type)}</td><td><code>${esc(t.events.join(","))}</code></td><td><span class="badge ${t.status==="Active"?"ok":"warn"}">${esc(t.status)}</span></td><td><button class="btn danger" onclick="delTrig('${t.id}')">Del</button></td></tr>`).join("")}</tbody></table>` : '<span class="muted">No triggers.</span>'; }catch(e){ document.getElementById("trig-table").textContent="Error: "+e.message; }
+  }
+  window.delTrig=async(id)=>{ if(!confirm("Delete trigger "+id.slice(0,8)+"?")) return; try{ await jfetch("/apex/triggers/"+encodeURIComponent(id),{method:"DELETE"}); loadTriggers(); }catch(e){ alert(e.message); } };
+  document.getElementById("btn-trig-list").onclick=loadTriggers;
+  loadClasses();
+  loadTriggers();
+}
+
 document.getElementById("btn-refresh").onclick = ()=> navigate(CURRENT);
 
 document.getElementById("global-q").addEventListener("keydown", e=>{
